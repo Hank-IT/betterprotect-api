@@ -56,7 +56,7 @@ Missing something from this list? Open an Issue and let me know! <a href="https:
 
 
 ## Getting Started
-Coming soon! (No, really!)
+<a href="https://github.com/MrCrankHank/Betterprotect/wiki/Getting-Started">Take a look at our Getting Started Guide</a>
 
 ## Contributing
 
