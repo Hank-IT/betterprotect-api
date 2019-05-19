@@ -12,7 +12,7 @@
     <a href="https://github.com/MrCrankHank/Betterprotect/wiki"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-
+    .
     <a href="https://github.com/MrCrankHank/Betterprotect/wiki/Screenshots-v1.0">Screenshots</a>
     ·
     <a href="https://github.com/MrCrankHank/Betterprotect/issues">Report Bug</a>
