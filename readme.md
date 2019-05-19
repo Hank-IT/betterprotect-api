@@ -39,7 +39,7 @@ There seems to be a lack of modern, high quality, easy to use postfix management
 The main features are:
 * **Log Parser**, which can search the log of multiple servers at once.
 * **Same configuration for multiple servers**. All changes are made inside a "Policy". This policy is then pushed to the server, making configuration of multiple servers a breeze.
-* **Black/Whitelist**. Allows to blacklist/whitelist source IPs, source networks and mail addresses (which is rarely useful).
+* **Black/Whitelist**. Allows to blacklist/whitelist source IPs, source networks and mail addresses.
 * **Recipients**. Betterprotect keeps a list of recipients for which postfix should accept mail. It is also able to pull recipient addresses from users and groups out of one or more Ldap Directories (currently only ActiveDirectory).
 * **LDAP Authentication** for Betterprotect admins. No need to open up another user management.
 
