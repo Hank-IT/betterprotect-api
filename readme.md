@@ -37,7 +37,7 @@
 There seems to be a lack of modern, high quality, easy to use postfix management interfaces - or atleast I couldn't find any. To take the pain out of daily postfix management I created Betterprotect, which tries to simplify day to day work with postfix.
 
 The main features are:
-* **Log Parser**, which can search the log from multiple servers at once.
+* **Log Parser**, which can search the log of multiple servers at once.
 * **Same configuration for multiple servers**. All changes are made inside a "Policy". This policy is then pushed to the server, making configuration of multiple servers a breeze.
 * **Black/Whitelist**. Allows to blacklist/whitelist source IPs, source networks and mail addresses (which is rarely useful).
 * **Recipients**. Betterprotect keeps a list of recipients for which postfix should accept mail. It is also able to pull recipient addresses from users and groups out of one or more Ldap Directories (currently only ActiveDirectory).
