@@ -64,7 +64,7 @@ Contributions are what make the open source community such an amazing place to b
 Please open an Issue before you start building your feature: <a href="https://github.com/MrCrankHank/Betterprotect/issues">Issues</a>
 
 ## Security
-If you find a security related issue, please contact me on the email address above. All security problems will be addressed as fast as possible.
+If you find a security related issue, please contact me on the email address below. All security problems will be addressed as fast as possible.
 
 ## License
 
