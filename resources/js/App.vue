@@ -7,7 +7,7 @@
 
             <sidebar v-if="$auth.check()">
                 <div class="content-wrapper col py-3">
-                    <div class="content">
+                    <div class="content mb-1">
                         <router-view></router-view>
                     </div>
                 </div>

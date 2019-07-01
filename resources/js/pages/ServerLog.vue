@@ -20,7 +20,7 @@
                                         <div slot="input" slot-scope="picker">{{ currentSelected }}</div>
                                     </date-range-picker>
                             </b-input-group-prepend>
-                            <b-form-input v-model="search" placeholder="Suche" @change="getLogs(currentPage)"/>
+                            <b-form-input v-model="search" placeholder="Suche" @change="refreshLogs"/>
                             <b-input-group-append>
                                 <b-btn>Leeren</b-btn>
                             </b-input-group-append>
@@ -54,7 +54,14 @@
             </template>
         </b-table>
 
-        <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-on:change="getLogs" v-if="!logsLoading"></b-pagination>
+        <b-row>
+            <b-col cols="1">
+                <b-form-select v-model="perPage" :options="displayedRowsOptions" v-if="!logsLoading" @change="refreshLogs"></b-form-select>
+            </b-col>
+            <b-col cols="2">
+                <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-on:change="getLogs" v-if="!logsLoading"></b-pagination>
+            </b-col>
+        </b-row>
 
         <div class="text-center" v-if="logsLoading">
             <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
@@ -148,6 +155,13 @@
                 totalRows: null,
                 sortBy: 'reported_at',
                 sortDesc: true,
+
+                displayedRowsOptions: [
+                    { value: 10, text: 10 },
+                    { value: 25, text: 25 },
+                    { value: 50, text: 50 },
+                    { value: 100, text: 100 },
+                ],
 
                 /**
                  * Search
