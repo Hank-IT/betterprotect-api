@@ -85,7 +85,7 @@ class PostfixLog
                     case 'smtpd': {
                         $message = $log->Message;
 
-                        if (Str::startsWith($message,'NOQUEUE:')) {
+                        if (Str::startsWith(trim($message),'NOQUEUE:')) {
                             $id = strtoupper(uniqid());
 
                             // Match status
@@ -95,7 +95,6 @@ class PostfixLog
                             // Match client
                             preg_match('/:\sRCPT\sfrom\s(.*?):/', $message, $client);
                             !isset($client[1]) ?: $messages[$id]['client'] = $client[1];
-
 
                             // Match response
                             preg_match('/;\s(.*?);\sfrom/', $message, $response);
@@ -139,7 +138,7 @@ class PostfixLog
                         break;
                     }
                     case 'cleanup': {
-                        $message = $log->Message;
+                        $message = trim($log->Message);
                         $queueId = $this->getQueueId($message);
 
                         if (!empty($queueId)) {

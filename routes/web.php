@@ -1,8 +1,6 @@
 <?php
 
-Route::get('/', function() {
-    return view('main');
-});
+Route::get('/', 'AppController');
 
 Route::group(['middleware' => 'jwt.auth'], function(){
     /**
