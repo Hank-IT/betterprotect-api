@@ -64,4 +64,8 @@
         margin-left: 2px;
         margin-right: 15px;
     }
+
+    body {
+        background-color: white;
+    }
 </style>
