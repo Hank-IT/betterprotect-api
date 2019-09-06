@@ -125,6 +125,15 @@
                             <th>Empfänger (Anzahl)</th>
                             <td>{{ detailedRow.nrcpt }}</td>
                         </tr>
+                        <tr v-if="detailedRow.encryption">
+                            <th>Verschlüsselung</th>
+                            <td v-if="detailedRow.encryption.length">Keine</td>
+                            <td v-else>{{ detailedRow.encryption.cipher }} ({{ detailedRow.encryption.type }})</td>
+                        </tr>
+                        <tr v-else>
+                            <th>Verschlüsselung</th>
+                            <td>Unbekannt</td>
+                        </tr>
                     </table>
 
                     <hr>

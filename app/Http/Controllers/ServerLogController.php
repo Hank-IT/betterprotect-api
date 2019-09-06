@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Server;
-use App\Services\PostfixLog;
 use Illuminate\Http\Request;
-use App\Services\ServerDatabase;
+use App\Postfix\DatabasePostfixLog;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ServerLogController extends Controller
@@ -21,44 +19,27 @@ class ServerLogController extends Controller
             'perPage' => 'required|int',
         ]);
 
-        $servers = Server::all();
+        $query = app(DatabasePostfixLog::class, [
+            'servers' => Server::all(),
+            'parameter' => ['startDate' => $request->startDate, 'endDate' => $request->endDate]
+        ]);
 
-        $logs = $servers->flatMap(function($server) use ($request) {
-            $logDB = (new ServerDatabase($server))->getLogConnection();
-
-            $query = $logDB->table('SystemEvents')
-                ->select(['DeviceReportedTime', 'FromHost', 'Message', 'SysLogTag']);
-
-            if ($request->startDate === $request->endDate) {
-                $query->whereDate('DeviceReportedTime', '=', $request->startDate);
-            } else {
-                $query->whereBetween('DeviceReportedTime', [Carbon::parse($request->startDate), Carbon::parse($request->endDate)]);
-            }
-
-            $data = $query->orderBy('DeviceReportedTime','desc')->get();
-
-            $data = app(PostfixLog::class)->parse($data->toArray());
-
-            if ($request->filled('search')) {
-                $pattern = $request->search;
-                $data = array_filter($data, function($a) use($pattern)  {
-                    return preg_grep('/' . $pattern . '/i', $a);
-                });
-            }
-
-            return $data;
-        });
+        if ($request->filled('search')) {
+            $log = $query->search($request->search);
+        } else {
+            $log = $query->get();
+        }
 
         // Paginate
-        $count = $logs->count();
+        $count = $log->count();
         $offset = ($request->currentPage-1) * $request->perPage;
-        $logs = array_slice($logs->toArray(), $offset, $request->perPage);
-        $logs = new LengthAwarePaginator($logs, $count, $request->perPage, $request->currentPage);
+        $log = array_slice($log->toArray(), $offset, $request->perPage);
+        $log = new LengthAwarePaginator($log, $count, $request->perPage, $request->currentPage);
 
         return response()->json([
             'status' => 'success',
             'message' => null,
-            'data' => $logs,
+            'data' => $log,
         ]);
     }
 }
