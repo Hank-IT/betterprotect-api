@@ -83,8 +83,10 @@ class Parser
                             !isset($relay[1]) ?: $messages[$queueId]['relay'] = $relay[1];
 
                             // Match encryption for relay
-                            preg_match('/\[(.*)\]/', $messages[$queueId]['relay'], $ip);
-                            $messages[$queueId]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
+                            if (isset($messages[$queueId])) {
+                                preg_match('/\[(.*)\]/', $messages[$queueId]['relay'], $ip);
+                                $messages[$queueId]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
+                            }
 
                             // Match delay
                             preg_match('/delay=(.*?),/', $message, $delay);
@@ -126,8 +128,10 @@ class Parser
                             !isset($client[1]) ?: $messages[$id]['client'] = $client[1];
 
                             // Match encryption for client
-                            preg_match('/\[(.*)\]/', $messages[$id]['client'], $ip);
-                            $messages[$id]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
+                            if (isset($messages[$id])) {
+                                preg_match('/\[(.*)\]/', $messages[$id]['client'], $ip);
+                                $messages[$id]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
+                            }
 
                             // Match response
                             preg_match('/;\s(.*?);\sfrom/', $message, $response);
@@ -203,8 +207,10 @@ class Parser
                             !isset($client[1]) ?: $messages[$queueId]['client'] = $client[1];
 
                             // Match encryption for client
-                            preg_match('/\[(.*)\]/', $messages[$queueId]['client'], $ip);
-                            $messages[$queueId]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
+                            if (isset($messages[$queueId])) {
+                                preg_match('/\[(.*)\]/', $messages[$queueId]['client'], $ip);
+                                $messages[$queueId]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
+                            }
 
                             // Match dsn
                             preg_match('/]:\s(.*?)\s/', $message, $dsn);

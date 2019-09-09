@@ -159,10 +159,6 @@
         text-shadow: 0 4px 48px rgba(255, 255, 255, 0.2);
     }
 
-    body {
-        background-color: #001f3f;
-    }
-
     .bubbles-container {
         position: absolute;
         top: 0;
