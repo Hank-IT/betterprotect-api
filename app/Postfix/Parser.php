@@ -18,210 +18,117 @@ class Parser
             // We can't get any direct association from the log between the lines which suggest
             // encryption and the actually transmitted email. We just create an index
             // of every encrypted connection and match the email client or relay.
-            preg_match('/(.*?)\sTLS\sconnection\sestablished/', $log->Message, $encryptionLevel);
+            preg_match('/^(Untrusted|Anonymous|Trusted|Verified) TLS connection established (from|to) ([^,]*\[(.*)\]): ([^,]*)$/', trim($log->Message), $result);
 
-            if (isset($encryptionLevel[1])) {
-                $this->encryptionIndex[$key]['type'] = trim($encryptionLevel[1]);
+            if (!empty($result)) {
+                $this->encryptionIndex[$key]['type'] = $result[1];
+                $this->encryptionIndex[$key]['direction'] = $result[2];
+                $this->encryptionIndex[$key]['ip'] = $result[4];
+                $this->encryptionIndex[$key]['cipher'] = $result[5];
                 $this->encryptionIndex[$key]['process'] = $log->SysLogTag;
-
-                // Match direction
-                preg_match('/\sTLS\sconnection\sestablished\s(.*?)\s/', $log->Message, $direction);
-                !isset($direction[1]) ?: $this->encryptionIndex[$key]['direction'] = trim($direction[1]);
-
-                // Match cipher
-                preg_match('/\s([^:]+)$/', $log->Message, $cipher);
-                !isset($cipher[1]) ?: $this->encryptionIndex[$key]['cipher'] = trim($cipher[1]);
-
-                // Match ip
-                preg_match('/\[(.*)\]/', $log->Message, $ip);
-                !isset($ip[1]) ?: $this->encryptionIndex[$key]['ip'] = $ip[1];
             }
 
             if (isset($daemon[1])) {
                 switch ($daemon[1]) {
+                    // ToDo
+                    /*
                     case 'bounce':
-                        $message = $log->Message;
-                        $queueId = $this->getQueueId($message);
+                        $message = trim($log->Message);
 
-                        if (!empty($queueId)) {
-                            preg_match('/:\s(.*)/', $message, $response);
-                            !isset($response[1]) ?: $messages[$queueId]['response'] = $response[1];
+                        preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): )? (sender non-delivery notification: [0-9A-Za-z]{14,16}|[0-9A-F]{10,11}$)/', $message, $result);
+
+                        if (isset($result[1])) {
+                            $messages[$result[1]]['queue_id'] = optional($result)[1];
+                            $messages[$result[1]]['response'] = optional($result)[2];
                         }
+
                         break;
+                    */
                     case 'qmgr':
-                        $message = $log->Message;
-                        $queueId = $this->getQueueId($message);
+                        $message = trim($log->Message);
 
-                        if (!empty($queueId)) {
-                            // Match from
-                            preg_match('/.*:\sfrom=<(.*)>/', $message, $from);
-                            !isset($from[1]) ?: $messages[$queueId]['from'] = $from[1];
+                        preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): )?from=<?([^>,]*)>?, (?:size=([0-9]+), nrcpt=([0-9]+))/', $message, $result);
 
-                            // Match size
-                            preg_match('/size=(\d*)/', $message, $size);
-                            !isset($size[1]) ?: $messages[$queueId]['size'] = $size[1];
-
-                            // Match nrcpt
-                            preg_match('/nrcpt=(\d*)/', $message, $nrcpt);
-                            !isset($nrcpt[1]) ?: $messages[$queueId]['nrcpt'] = $nrcpt[1];
-
-                            $messages[$queueId]['host'] = $log->FromHost;
-                            $messages[$queueId]['queue_id'] = $queueId;
+                        if (!empty($result)) {
+                            $messages[$result[1]]['queue_id'] = optional($result)[1];
+                            $messages[$result[1]]['from'] = optional($result)[2];
+                            $messages[$result[1]]['size'] = optional($result)[3];
+                            $messages[$result[1]]['nrcpt'] = optional($result)[4];
+                            $messages[$result[1]]['host'] = $log->FromHost;
+                            $messages[$result[1]]['reported_at'] = $log->DeviceReportedTime;
                         }
+
                         break;
                     case 'smtp':{
-                        $message = $log->Message;
-                        $queueId = $this->getQueueId($message);
+                        $message = trim($log->Message);
 
-                        if (!empty($queueId)) {
-                            // Match to
-                            preg_match('/to=<(.*?)>/', $message, $to);
-                            !isset($to[1]) ?: $messages[$queueId]['to'] = $to[1];
+                        preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): )?to=<?([^>,]*)>?, (?:orig_to=<?([^>,]*)>?, )?relay=([^,]*\[(.*)\]:[0-9]+), (?:conn_use=([0-9]+), )?delay=([^,]+), delays=([^,]+), dsn=([^,]+), status=(.*?) \((.*)\)$/', $message, $result);
 
-                            // Match relay
-                            preg_match('/relay=(.*?),/', $message, $relay);
-                            !isset($relay[1]) ?: $messages[$queueId]['relay'] = $relay[1];
-
-                            // Match encryption for relay
-                            if (isset($messages[$queueId])) {
-                                preg_match('/\[(.*)\]/', $messages[$queueId]['relay'], $ip);
-                                $messages[$queueId]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
-                            }
-
-                            // Match delay
-                            preg_match('/delay=(.*?),/', $message, $delay);
-                            !isset($delay[1]) ?: $messages[$queueId]['delay'] = $delay[1];
-
-                            // Match delays
-                            preg_match('/delays=(.*?),/', $message, $delays);
-                            !isset($delays[1]) ?: $messages[$queueId]['delays'] = $delays[1];
-
-                            // Match dsn
-                            preg_match('/dsn=(.*?),/', $message, $dsn);
-                            !isset($dsn[1]) ?: $messages[$queueId]['dsn'] = $dsn[1];
-
-                            // Match status
-                            preg_match('/status=([a-zA-Z0-9]+)/', $message, $status);
-                            !isset($status[1]) ?: $messages[$queueId]['status'] = $status[1];
-
-                            // Match response
-                            preg_match('/\s\((.*)\)/', $message, $response);
-                            !isset($response[1]) ?: $messages[$queueId]['response'] = $response[1];
-
-                            $messages[$queueId]['host'] = $log->FromHost;
-                            $messages[$queueId]['queue_id'] = $queueId;
+                        if (!empty($result)) {
+                            $messages[$result[1]]['queue_id'] = optional($result)[1];
+                            $messages[$result[1]]['to'] = optional($result)[2];
+                            $messages[$result[1]]['relay'] = optional($result)[4];
+                            $messages[$result[1]]['relay_ip'] = optional($result)[5];
+                            $messages[$result[1]]['delay'] = optional($result)[8];
+                            $messages[$result[1]]['delays'] = optional($result)[9];
+                            $messages[$result[1]]['dsn'] = optional($result)[9];
+                            $messages[$result[1]]['status'] = optional($result)[10];
+                            $messages[$result[1]]['response'] = optional($result)[11];
+                            $messages[$result[1]]['host'] = $log->FromHost;
+                            $messages[$result[1]]['encryption'] = optional($this->matchEncryptionIndex($messages[$result[1]]['relay_ip'], $log->SysLogTag))[0];
+                            $messages[$result[1]]['reported_at'] = $log->DeviceReportedTime;
                         }
                         break;
                     }
                     case 'smtpd': {
-                        $message = $log->Message;
+                        $message = trim($log->Message);
 
-                        if (Str::startsWith(trim($message),'NOQUEUE:')) {
+                        if (Str::startsWith($message,'NOQUEUE:')) {
                             $id = strtoupper(uniqid());
 
-                            // Match status
-                            preg_match('/\s([a-z]+):\s/', $message, $status);
-                            !isset($status[1]) ?: $messages[$id]['status'] = $status[1];
+                            preg_match('/NOQUEUE: ([a-z]+): RCPT from ([^,]*\[(.*)\]): (.*?); from=<?([^>,]*)>? to=<?([^>,]*)>? proto=(.*?) helo=<?([^>,]*)/', $message, $result);
 
-                            // Match client
-                            preg_match('/:\sRCPT\sfrom\s(.*?):/', $message, $client);
-                            !isset($client[1]) ?: $messages[$id]['client'] = $client[1];
-
-                            // Match encryption for client
-                            if (isset($messages[$id])) {
-                                preg_match('/\[(.*)\]/', $messages[$id]['client'], $ip);
-                                $messages[$id]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
-                            }
-
-                            // Match response
-                            preg_match('/;\s(.*?);\sfrom/', $message, $response);
-                            !isset($response[1]) ?: $messages[$id]['response'] = $response[1];
-
-                            // Match from
-                            preg_match('/from=<(.*?)>/', $message, $from);
-                            !isset($from[1]) ?: $messages[$id]['from'] = $from[1];
-
-                            // Match to
-                            preg_match('/to=<(.*?)>/', $message, $to);
-                            !isset($to[1]) ?: $messages[$id]['to'] = $to[1];
-
-                            preg_match('/]:\s(.*);/', $message, $response);
-                            !isset($response[1]) ?: $messages[$id]['response'] = $response[1];
-
-                            // Match proto
-                            preg_match('/proto=(.*)\s/', $message, $proto);
-                            !isset($proto[1]) ?: $messages[$id]['proto'] = $proto[1];
-
-                            // Match helo
-                            preg_match('/helo=<(.*?)>/', $message, $helo);
-                            !isset($helo[1]) ?: $messages[$id]['helo'] = $helo[1];
-
+                            $messages[$id]['status'] = optional($result)[1];
+                            $messages[$id]['client'] = optional($result)[2];
+                            $messages[$id]['client_ip'] = optional($result)[3];
+                            $messages[$id]['response'] = optional($result)[4];
+                            $messages[$id]['client_ip'] = optional($result)[3];
+                            $messages[$id]['from'] = optional($result)[5];
+                            $messages[$id]['to'] = optional($result)[6];
+                            $messages[$id]['proto'] = optional($result)[7];
+                            $messages[$id]['helo'] = optional($result)[8];
                             $messages[$id]['host'] = $log->FromHost;
                             $messages[$id]['reported_at'] = $log->DeviceReportedTime;
+                            $messages[$id]['encryption'] = optional($this->matchEncryptionIndex(optional($messages[$id])['client_ip'], $log->SysLogTag))[0];
                         } else {
-                            // Try to find the queue id
-                            $queueId = $this->getQueueId($message);
+                            preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): )?client=([^,]*\[(.*)\]+)/', $message, $result);
 
-                            if (! empty($queueId)) {
-                                // Match client
-                                preg_match('/client=(.*?)$/', $message, $client);
-                                $messages[$queueId]['client'] = isset($client[1]) ? $client[1]: null;
-
-                                // Match encryption for client
-                                preg_match('/\[(.*)\]/', $messages[$queueId]['client'], $ip);
-                                $messages[$queueId]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
-
-                                $messages[$queueId]['host'] = $log->FromHost;
-                                $messages[$queueId]['reported_at'] = $log->DeviceReportedTime;
-                                $messages[$queueId]['queue_id'] = $queueId;
+                            if (!empty($result)) {
+                                $messages[$result[1]]['queue_id'] = optional($result)[1];
+                                $messages[$result[1]]['client'] = optional($result)[2];
+                                $messages[$result[1]]['client_ip'] = optional($result)[3];
+                                $messages[$result[1]]['encryption'] = optional($this->matchEncryptionIndex(optional($messages[$result[1]])['client_ip'], $log->SysLogTag))[0];
+                                $messages[$result[1]]['host'] = $log->FromHost;
+                                $messages[$result[1]]['reported_at'] = $log->DeviceReportedTime;
                             }
                         }
                         break;
                     }
                     case 'cleanup': {
                         $message = trim($log->Message);
-                        $queueId = $this->getQueueId($message);
 
-                        if (!empty($queueId)) {
-                            preg_match('/]:\s[0-9]\.[0-9]\.[0-9]\s[a-zA-Z]*,\s[a-zA-Z]*=[0-9]*-[0-9]*\s-\s(.*);/', $message, $response);
-                            !isset($response[1]) ?: $messages[$queueId]['response'] = $response[1];
+                        preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11})): (.*): (END-OF-MESSAGE from (.*)): (([0-9]\.[0-9]\.[0-9]) (.*), (.*)) from=<?([^>,]*)>? to=<?([^>,]*)>? proto=(.*?) helo=<?([^>,]*)/', $message, $result);
 
-                            // Match from
-                            preg_match('/from=<(.*?)>/', $message, $from);
-                            !isset($from[1]) ?: $messages[$queueId]['from'] = $from[1];
-
-                            // Match to
-                            preg_match('/to=<(.*?)>/', $message, $to);
-                            !isset($to[1]) ?: $messages[$queueId]['to'] = $to[1];
-
-                            // Match proto
-                            preg_match('/proto=(.*?)\s/', $message, $proto);
-                            !isset($proto[1]) ?: $messages[$queueId]['proto'] = $proto[1];
-
-                            // Match helo
-                            preg_match('/helo=<(.*?)>/', $message, $helo);
-                            !isset($helo[1]) ?: $messages[$queueId]['helo'] = $helo[1];
-
-                            // Match client
-                            preg_match('/:\sEND-OF-MESSAGE\sfrom\s(.*?):/', $message, $client);
-                            !isset($client[1]) ?: $messages[$queueId]['client'] = $client[1];
-
-                            // Match encryption for client
-                            if (isset($messages[$queueId])) {
-                                preg_match('/\[(.*)\]/', $messages[$queueId]['client'], $ip);
-                                $messages[$queueId]['encryption'] = optional($this->matchEncryptionIndex(optional($ip)[1], $log->SysLogTag))[0];
-                            }
-
-                            // Match dsn
-                            preg_match('/]:\s(.*?)\s/', $message, $dsn);
-                            !isset($dsn[1]) ?: $messages[$queueId]['dsn'] = $dsn[1];
-
-                            // Match status
-                            preg_match('/]:\s[0-9]\.[0-9]\.[0-9]\s(.*?),\s/', $message, $status);
-                            !isset($status[1]) ?: $messages[$queueId]['status'] = strtolower($status[1]);
-
-                            $messages[$queueId]['host'] = $log->FromHost;
-                            $messages[$queueId]['queue_id'] = $queueId;
+                        if (!empty($result)) {
+                            $messages[$result[1]]['queue_id'] = optional($result)[1];
+                            $messages[$result[1]]['client'] = optional($result)[4];
+                            $messages[$result[1]]['response'] = optional($result)[5];
+                            $messages[$result[1]]['status'] = strtolower(optional($result)[7]);
+                            $messages[$result[1]]['from'] = strtolower(optional($result)[9]);
+                            $messages[$result[1]]['to'] = strtolower(optional($result)[10]);
+                            $messages[$result[1]]['proto'] = strtolower(optional($result)[11]);
+                            $messages[$result[1]]['helo'] = strtolower(optional($result)[12]);
+                            $messages[$result[1]]['host'] = $log->FromHost;
                         }
                         break;
                     }
@@ -242,11 +149,9 @@ class Parser
     protected function getQueueId($message)
     {
         preg_match('/^\s([A-Z0-9]+):\s/', $message, $queueId);
-
         if (isset($queueId[1])) {
             return $queueId[1];
         }
-
         return null;
     }
 }
