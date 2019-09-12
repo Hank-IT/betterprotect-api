@@ -12,8 +12,7 @@ class Parser
     {
         $messages = [];
         foreach($logs as $key => $log) {
-            // Match daemon
-            preg_match('/postfix\/([\w]+)/', $log->SysLogTag, $daemon);
+            $message = trim($log->Message);
 
             // We can't get any direct association from the log between the lines which suggest
             // encryption and the actually transmitted email. We just create an index
@@ -21,12 +20,15 @@ class Parser
             preg_match('/^(Untrusted|Anonymous|Trusted|Verified) TLS connection established (from|to) ([^,]*\[(.*)\]): ([^,]*)$/', trim($log->Message), $result);
 
             if (!empty($result)) {
-                $this->encryptionIndex[$key]['type'] = $result[1];
-                $this->encryptionIndex[$key]['direction'] = $result[2];
-                $this->encryptionIndex[$key]['ip'] = $result[4];
-                $this->encryptionIndex[$key]['cipher'] = $result[5];
+                $this->encryptionIndex[$key]['enc_type'] = $result[1];
+                $this->encryptionIndex[$key]['enc_direction'] = $result[2];
+                $this->encryptionIndex[$key]['enc_ip'] = $result[4];
+                $this->encryptionIndex[$key]['enc_cipher'] = $result[5];
                 $this->encryptionIndex[$key]['process'] = $log->SysLogTag;
             }
+
+            // Match daemon
+            preg_match('/postfix\/([\w]+)/', $log->SysLogTag, $daemon);
 
             if (isset($daemon[1])) {
                 switch ($daemon[1]) {
@@ -45,8 +47,6 @@ class Parser
                         break;
                     */
                     case 'qmgr':
-                        $message = trim($log->Message);
-
                         preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): )?from=<?([^>,]*)>?, (?:size=([0-9]+), nrcpt=([0-9]+))/', $message, $result);
 
                         if (!empty($result)) {
@@ -60,8 +60,6 @@ class Parser
 
                         break;
                     case 'smtp':{
-                        $message = trim($log->Message);
-
                         preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): )?to=<?([^>,]*)>?, (?:orig_to=<?([^>,]*)>?, )?relay=([^,]*\[(.*)\]:[0-9]+), (?:conn_use=([0-9]+), )?delay=([^,]+), delays=([^,]+), dsn=([^,]+), status=(.*?) \((.*)\)$/', $message, $result);
 
                         if (!empty($result)) {
@@ -75,14 +73,15 @@ class Parser
                             $messages[$result[1]]['status'] = optional($result)[10];
                             $messages[$result[1]]['response'] = optional($result)[11];
                             $messages[$result[1]]['host'] = $log->FromHost;
-                            $messages[$result[1]]['encryption'] = optional($this->matchEncryptionIndex($messages[$result[1]]['relay_ip'], $log->SysLogTag))[0];
                             $messages[$result[1]]['reported_at'] = $log->DeviceReportedTime;
+
+                            if (!empty($this->matchEncryptionIndex($messages[$result[1]]['relay_ip'], $log->SysLogTag)[0])) {
+                                array_merge($messages[$result[1]], $this->matchEncryptionIndex($messages[$result[1]]['relay_ip'], $log->SysLogTag)[0]);
+                            }
                         }
                         break;
                     }
                     case 'smtpd': {
-                        $message = trim($log->Message);
-
                         if (Str::startsWith($message,'NOQUEUE:')) {
                             $id = strtoupper(uniqid());
 
@@ -92,14 +91,16 @@ class Parser
                             $messages[$id]['client'] = optional($result)[2];
                             $messages[$id]['client_ip'] = optional($result)[3];
                             $messages[$id]['response'] = optional($result)[4];
-                            $messages[$id]['client_ip'] = optional($result)[3];
                             $messages[$id]['from'] = optional($result)[5];
                             $messages[$id]['to'] = optional($result)[6];
                             $messages[$id]['proto'] = optional($result)[7];
                             $messages[$id]['helo'] = optional($result)[8];
                             $messages[$id]['host'] = $log->FromHost;
                             $messages[$id]['reported_at'] = $log->DeviceReportedTime;
-                            $messages[$id]['encryption'] = optional($this->matchEncryptionIndex(optional($messages[$id])['client_ip'], $log->SysLogTag))[0];
+
+                            if (!empty($this->matchEncryptionIndex($messages[$id]['client_ip'], $log->SysLogTag)[0])) {
+                                array_merge($messages[$id], $this->matchEncryptionIndex($messages[$id]['client_ip'], $log->SysLogTag)[0]);
+                            }
                         } else {
                             preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): )?client=([^,]*\[(.*)\]+)/', $message, $result);
 
@@ -107,16 +108,18 @@ class Parser
                                 $messages[$result[1]]['queue_id'] = optional($result)[1];
                                 $messages[$result[1]]['client'] = optional($result)[2];
                                 $messages[$result[1]]['client_ip'] = optional($result)[3];
-                                $messages[$result[1]]['encryption'] = optional($this->matchEncryptionIndex(optional($messages[$result[1]])['client_ip'], $log->SysLogTag))[0];
                                 $messages[$result[1]]['host'] = $log->FromHost;
                                 $messages[$result[1]]['reported_at'] = $log->DeviceReportedTime;
+
+                                if (!empty($this->matchEncryptionIndex($messages[$result[1]]['client_ip'], $log->SysLogTag)[0])) {
+                                    array_merge($messages[$result[1]], $this->matchEncryptionIndex($messages[$result[1]]['client_ip'], $log->SysLogTag)[0]);
+                                }
+
                             }
                         }
                         break;
                     }
                     case 'cleanup': {
-                        $message = trim($log->Message);
-
                         preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11})): (.*): (END-OF-MESSAGE from (.*)): (([0-9]\.[0-9]\.[0-9]) (.*), (.*)) from=<?([^>,]*)>? to=<?([^>,]*)>? proto=(.*?) helo=<?([^>,]*)/', $message, $result);
 
                         if (!empty($result)) {
@@ -142,16 +145,7 @@ class Parser
     protected function matchEncryptionIndex($ip, $syslogTag)
     {
         return array_filter(array_reverse($this->encryptionIndex), function($data) use($ip, $syslogTag) {
-            return $data['process'] == $syslogTag && $data['ip'] == $ip;
+            return $data['process'] == $syslogTag && $data['enc_ip'] == $ip;
         });
-    }
-
-    protected function getQueueId($message)
-    {
-        preg_match('/^\s([A-Z0-9]+):\s/', $message, $queueId);
-        if (isset($queueId[1])) {
-            return $queueId[1];
-        }
-        return null;
     }
 }
