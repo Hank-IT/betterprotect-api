@@ -14,6 +14,9 @@
                                             :maxDate="maxDate"
                                             :locale-data="locale"
                                             :opens="opens"
+                                            :timePicker="timePicker"
+                                            :timePicker24Hour="timePicker24Hour"
+                                            v-model="dateRange"
                                             @update="updateSelectedDate"
                                     >
                                         <!--Optional scope for the input displaying the dates -->
@@ -182,9 +185,13 @@
                  */
                 currentSelected: this.moment().format('YYYY-MM-DD'),
                 maxDate: this.moment().format('YYYY-MM-DD'),
-                startDate: this.moment().format('YYYY-MM-DD'),
-                endDate: this.moment().format('YYYY-MM-DD'),
+                dateRange: {
+                    startDate: this.moment().format('YYYY-MM-DD'),
+                    endDate: this.moment().format('YYYY-MM-DD'),
+                },
                 opens: 'right',
+                timePicker: true,
+                timePicker24Hour: true,
                 locale: {
                     direction: 'ltr', //direction of text
                     format: 'DD-MM-YYYY HH:mm', //fomart of the dates displayed
@@ -240,12 +247,12 @@
 
                 axios.get('/server/log', {
                     params: {
-                        startDate: this.startDate,
-                        endDate: this.endDate,
+                        startDate: this.dateRange.startDate,
+                        endDate: this.dateRange.endDate,
                         currentPage: this.currentPage,
                         perPage: this.perPage,
                         sortBy: this.sortBy,
-                        sortDesc: this.sortDesc,
+                        sortDesc: this.sortDesc,s
                         search: this.search,
                     }
                 }).then((response) => {
