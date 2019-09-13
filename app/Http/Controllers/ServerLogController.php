@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Server;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Postfix\DatabasePostfixLog;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -13,15 +14,15 @@ class ServerLogController extends Controller
     {
         $this->validate($request, [
             'search' => 'nullable|string',
-            'startDate' => 'required|date_format:Y-m-d',
-            'endDate' => 'required|date_format:Y-m-d',
+            'startDate' => 'required|date_format:Y-m-d\TH:i:s.v\Z|before:endDate',
+            'endDate' => 'required|date_format:Y-m-d\TH:i:s.v\Z',
             'currentPage' => 'required|int',
             'perPage' => 'required|int',
         ]);
 
         $query = app(DatabasePostfixLog::class, [
             'servers' => Server::all(),
-            'parameter' => ['startDate' => $request->startDate, 'endDate' => $request->endDate]
+            'parameter' => ['startDate' => Carbon::parse($request->startDate), 'endDate' => Carbon::parse($request->endDate)]
         ]);
 
         if ($request->filled('search')) {

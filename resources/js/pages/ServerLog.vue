@@ -20,7 +20,7 @@
                                             @update="updateSelectedDate"
                                     >
                                         <!--Optional scope for the input displaying the dates -->
-                                        <div slot="input" slot-scope="picker">{{ currentSelected }}</div>
+                                        <div slot="input" slot-scope="picker">{{ currentStart | date }} - {{ currentEnd | date }}</div>
                                     </date-range-picker>
                             </b-input-group-prepend>
                             <b-form-input v-model="search" placeholder="Suche" @change="refreshLogs"/>
@@ -183,25 +183,26 @@
                 /**
                  * Datepicker
                  */
-                currentSelected: this.moment().format('YYYY-MM-DD'),
-                maxDate: this.moment().format('YYYY-MM-DD'),
+                maxDate: this.moment().format('YYYY/MM/DD'),
+                currentStart: this.moment().subtract(1, 'hours'),
+                currentEnd: this.moment(),
                 dateRange: {
-                    startDate: this.moment().format('YYYY-MM-DD'),
-                    endDate: this.moment().format('YYYY-MM-DD'),
+                    startDate: this.moment().subtract(1, 'hours').format('YYYY/MM/DD HH:mm'),
+                    endDate: this.moment().format('YYYY/MM/DD HH:mm'),
                 },
                 opens: 'right',
                 timePicker: true,
                 timePicker24Hour: true,
                 locale: {
                     direction: 'ltr', //direction of text
-                    format: 'DD-MM-YYYY HH:mm', //fomart of the dates displayed
+                    format: 'YYYY/MM/DD HH:mm', // format of the dates displayed
                     separator: ' - ', //separator between the two ranges
                     applyLabel: 'Apply',
                     cancelLabel: 'Cancel',
                     weekLabel: 'W',
-                    daysOfWeek: this.moment.weekdaysMin(), //array of days - see moment documenations for details
-                    monthNames: this.moment.monthsShort(), //array of month names - see moment documenations for details
-                    firstDay: 1 //ISO first day of week - see moment documenations for details
+                    daysOfWeek: this.moment.weekdaysMin(), //array of days - see moment documentation for details
+                    monthNames: this.moment.monthsShort(), //array of month names - see moment documentation for details
+                    firstDay: 1 //ISO first day of week - see moment documentation for details
                 },
 
                 logs: [],
@@ -236,13 +237,19 @@
                 detailedRow: [],
             }
         },
+        filters: {
+            date: function(value) {
+                if (!value) return '';
+
+                return value.format('YYYY/MM/DD HH:mm');
+            }
+        },
         methods: {
             refreshLogs() {
                 this.getLogs(this.currentPage);
             },
             getLogs(currentPage) {
                 this.currentPage = currentPage;
-
                 this.logsLoading = true;
 
                 axios.get('/server/log', {
@@ -252,12 +259,11 @@
                         currentPage: this.currentPage,
                         perPage: this.perPage,
                         sortBy: this.sortBy,
-                        sortDesc: this.sortDesc,s
+                        sortDesc: this.sortDesc,
                         search: this.search,
                     }
                 }).then((response) => {
                     this.logs = Object.values(response.data.data.data);
-                    console.log(this.logs);
                     this.totalRows = response.data.data.total;
                     this.logsLoading = false;
                 }).catch((error) => {
@@ -270,14 +276,8 @@
                 this.detailedRow = record;
             },
             updateSelectedDate(data) {
-                this.startDate = this.moment(data.startDate).format('YYYY-MM-DD');
-                this.endDate = this.moment(data.endDate).format('YYYY-MM-DD');
-
-                if (data.startDate.getTime() === data.endDate.getTime()) {
-                    this.currentSelected = this.startDate;
-                } else {
-                    this.currentSelected = this.startDate + ' - ' + this.endDate;
-                }
+                this.currentStart = this.moment(data.startDate);
+                this.currentEnd = this.moment(data.endDate);
 
                 this.getLogs(this.currentPage);
             }
