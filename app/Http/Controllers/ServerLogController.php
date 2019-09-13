@@ -19,7 +19,7 @@ class ServerLogController extends Controller
             'currentPage' => 'required|int',
             'perPage' => 'required|int',
         ]);
-
+dddd
         $query = app(DatabasePostfixLog::class, [
             'servers' => Server::all(),
             'parameter' => ['startDate' => Carbon::parse($request->startDate), 'endDate' => Carbon::parse($request->endDate)]
