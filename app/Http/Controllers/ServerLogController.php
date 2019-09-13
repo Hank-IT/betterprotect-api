@@ -14,8 +14,8 @@ class ServerLogController extends Controller
     {
         $this->validate($request, [
             'search' => 'nullable|string',
-            'startDate' => 'required|date_format:Y-m-d\TH:i:s.v\Z|before:endDate',
-            'endDate' => 'required|date_format:Y-m-d\TH:i:s.v\Z',
+            'startDate' => 'required|date_format:Y/m/d H:i|before:endDate',
+            'endDate' => 'required|date_format:Y/m/d H:i',
             'currentPage' => 'required|int',
             'perPage' => 'required|int',
         ]);

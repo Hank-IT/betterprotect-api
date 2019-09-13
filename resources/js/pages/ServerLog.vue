@@ -183,7 +183,7 @@
                 /**
                  * Datepicker
                  */
-                maxDate: this.moment().format('YYYY/MM/DD'),
+                maxDate: this.moment().format('YYYY/MM/DD HH:mm'),
                 currentStart: this.moment().subtract(1, 'hours'),
                 currentEnd: this.moment(),
                 dateRange: {
@@ -204,7 +204,6 @@
                     monthNames: this.moment.monthsShort(), //array of month names - see moment documentation for details
                     firstDay: 1 //ISO first day of week - see moment documentation for details
                 },
-
                 logs: [],
                 logsLoading: false,
                 fields: [
@@ -246,6 +245,9 @@
         },
         methods: {
             refreshLogs() {
+                this.currentStart = this.moment().subtract(1, 'hours');
+                this.currentEnd = this.moment();
+
                 this.getLogs(this.currentPage);
             },
             getLogs(currentPage) {
@@ -254,8 +256,8 @@
 
                 axios.get('/server/log', {
                     params: {
-                        startDate: this.dateRange.startDate,
-                        endDate: this.dateRange.endDate,
+                        startDate: this.currentStart.format('YYYY/MM/DD HH:mm'),
+                        endDate: this.currentEnd.format('YYYY/MM/DD HH:mm'),
                         currentPage: this.currentPage,
                         perPage: this.perPage,
                         sortBy: this.sortBy,
