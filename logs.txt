@@ -1,0 +1,6 @@
+postfix/smtpd
+NOQUEUE: reject: RCPT from spam.com[10.10.10.10]: 554 5.7.1 Service unavailable; Client host [10.10.10.10] blocked using zen.spamhaus.org; https://www.spamhaus.org/query/ip/10.10.10.10; from=<spam@spam.com> to=<our-users@contoso.com> proto=ESMTP helo=<spam.com>
+
+postfix/cleanup
+9D599104DFD: milter-reject: END-OF-MESSAGE from spam.com[10.10.10.10]: 5.7.0 Reject, id=11502-15 - BANNED: application/msword,.dat,Evil Word Macro Virus.doc; from=<spam@spam.com> to=<our-users@contoso.com> proto=ESMTP helo=<spam.com>
+0558910280B: message-id=<test-b16441a4-c8a2-4f4f-9c4b-26ad949ef669-1549276303302@3c-app-id-bs34>

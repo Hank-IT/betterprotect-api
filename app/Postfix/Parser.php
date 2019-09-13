@@ -82,24 +82,28 @@ class Parser
                         break;
                     }
                     case 'smtpd': {
-                        if (Str::startsWith($message,'NOQUEUE:')) {
-                            $id = strtoupper(uniqid());
+                        preg_match('/((?:NOQUEUE|[0-9A-Za-z]{14,16}|[0-9A-F]{10,11})): (.*): (RCPT|END-OF-MESSAGE) from ([^,]*\[(.*)\]): (.*?); from=<?([^>,]*)>? to=<?([^>,]*)>? proto=(.*?) helo=<?([^>,]*)/', $message, $result);
 
-                            preg_match('/NOQUEUE: ([a-z]+): RCPT from ([^,]*\[(.*)\]): (.*?); from=<?([^>,]*)>? to=<?([^>,]*)>? proto=(.*?) helo=<?([^>,]*)/', $message, $result);
+                        if (!empty($result)) {
+                            if ($result[1] == 'NOQUEUE') {
+                                $queueId = strtoupper(uniqid());
+                            } else {
+                                $queueId = $result[1];
+                            }
 
-                            $messages[$id]['status'] = optional($result)[1];
-                            $messages[$id]['client'] = optional($result)[2];
-                            $messages[$id]['client_ip'] = optional($result)[3];
-                            $messages[$id]['response'] = optional($result)[4];
-                            $messages[$id]['from'] = optional($result)[5];
-                            $messages[$id]['to'] = optional($result)[6];
-                            $messages[$id]['proto'] = optional($result)[7];
-                            $messages[$id]['helo'] = optional($result)[8];
-                            $messages[$id]['host'] = $log->FromHost;
-                            $messages[$id]['reported_at'] = $log->DeviceReportedTime;
+                            $messages[$queueId]['status'] = optional($result)[2];
+                            $messages[$queueId]['client'] = optional($result)[4];
+                            $messages[$queueId]['client_ip'] = optional($result)[5];
+                            $messages[$queueId]['response'] = optional($result)[6];
+                            $messages[$queueId]['from'] = optional($result)[7];
+                            $messages[$queueId]['to'] = optional($result)[8];
+                            $messages[$queueId]['proto'] = optional($result)[9];
+                            $messages[$queueId]['helo'] = optional($result)[10];
+                            $messages[$queueId]['host'] = $log->FromHost;
+                            $messages[$queueId]['reported_at'] = $log->DeviceReportedTime;
 
-                            if (!empty($this->matchEncryptionIndex($messages[$id]['client_ip'], $log->SysLogTag)[0])) {
-                                array_merge($messages[$id], $this->matchEncryptionIndex($messages[$id]['client_ip'], $log->SysLogTag)[0]);
+                            if (!empty($this->matchEncryptionIndex($messages[$queueId]['client_ip'], $log->SysLogTag)[0])) {
+                                array_merge($messages[$queueId], $this->matchEncryptionIndex($messages[$queueId]['client_ip'], $log->SysLogTag)[0]);
                             }
                         } else {
                             preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): )?client=([^,]*\[(.*)\]+)/', $message, $result);
@@ -114,13 +118,12 @@ class Parser
                                 if (!empty($this->matchEncryptionIndex($messages[$result[1]]['client_ip'], $log->SysLogTag)[0])) {
                                     array_merge($messages[$result[1]], $this->matchEncryptionIndex($messages[$result[1]]['client_ip'], $log->SysLogTag)[0]);
                                 }
-
                             }
+                            break;
                         }
-                        break;
                     }
                     case 'cleanup': {
-                        preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11})): (.*): (END-OF-MESSAGE from (.*)): (([0-9]\.[0-9]\.[0-9]) (.*), (.*)) from=<?([^>,]*)>? to=<?([^>,]*)>? proto=(.*?) helo=<?([^>,]*)/', $message, $result);
+                        preg_match('/^(?:([0-9A-Za-z]{14,16}|[0-9A-F]{10,11})): (.*): (END-OF-MESSAGE from (.*)): (([0-9]\.[0-9]\.[0-9]) (.*?), (.*)) from=<?([^>,]*)>? to=<?([^>,]*)>? proto=(.*?) helo=<?([^>,]*)/', $message, $result);
 
                         if (!empty($result)) {
                             $messages[$result[1]]['queue_id'] = optional($result)[1];

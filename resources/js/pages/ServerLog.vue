@@ -50,7 +50,7 @@
                 </span>
             </template>
             <template slot="status" slot-scope="data">
-                <p class="text-danger" v-if="data.item.status === 'reject'">{{ data.item.status }}</p>
+                <p class="text-danger" v-if="data.item.status === 'reject' || data.item.status === 'milter-reject'">{{ data.item.status }}</p>
                 <p class="text-warning" v-else-if="data.item.status === 'deferred'">{{ data.item.status }}</p>
                 <p class="text-success" v-else-if="data.item.status === 'sent'">{{ data.item.status }}</p>
                 <p class="text-secondary" v-else>{{ data.item.status }}</p>
@@ -77,17 +77,17 @@
                 <div class="stepwizard-row">
                     <div class="stepwizard-step">
                         <p>{{ detailedRow.client }}&nbsp;</p>
-                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' }">Client</button>
+                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' || detailedRow.status === 'milter-reject' }">Client</button>
                         <p class="stepwizard-step-subtitle">{{ detailedRow.from }}</p>
                     </div>
                     <div class="stepwizard-step">
                         <p>&nbsp;</p>
-                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' }">Server</button>
+                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' || detailedRow.status === 'milter-reject' }">Server</button>
                         <p class="stepwizard-step-subtitle">{{ detailedRow.host }}</p>
                     </div>
                     <div class="stepwizard-step">
                         <p>{{ detailedRow.relay }}&nbsp;</p>
-                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' }">Relay</button>
+                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' || detailedRow.status === 'milter-reject'  }">Relay</button>
                         <p class="stepwizard-step-subtitle">{{ detailedRow.to }}</p>
                     </div>
                 </div>
@@ -272,7 +272,12 @@
                     this.totalRows = response.data.data.total;
                     this.logsLoading = false;
                 }).catch((error) => {
-                    console.log(error);
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    }
                     this.logsLoading = false;
                 });
             },
