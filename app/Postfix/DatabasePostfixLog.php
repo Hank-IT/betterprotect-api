@@ -7,7 +7,7 @@ use App\Services\ServerDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class DatabasePostfixLog extends PostfixLog
+class DatabasePostfixLog
 {
     protected $servers;
 
@@ -20,9 +20,22 @@ class DatabasePostfixLog extends PostfixLog
         $this->parameter = $parameter;
     }
 
-    public function get()
+    public function search(string $pattern, string $status = null)
     {
-       return $this->servers->flatMap(function($server) {
+        $data = $this->get()->filter(function($a) use($pattern)  {
+            return preg_grep('/' . $pattern . '/i', $a);
+        });
+
+        if (!is_null($status)) {
+            return $data->where('status', $status);
+        }
+
+        return $data;
+    }
+
+    public function get(string $status = null)
+    {
+       $data = $this->servers->flatMap(function($server) use($status) {
             $logDB = (new ServerDatabase($server))->getLogConnection();
 
            $query = $logDB->table('SystemEvents')
@@ -52,5 +65,11 @@ class DatabasePostfixLog extends PostfixLog
 
            return $data;
        });
+
+        if (!is_null($status)) {
+            return $data->where('status', $status);
+        }
+
+        return $data;
     }
 }

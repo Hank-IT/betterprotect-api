@@ -6,7 +6,11 @@
                     <b-btn class="btn-primary" @click="currentLogs"><i class="fas fa-sync"></i></b-btn>
                 </b-col>
 
-                <b-col md="6" offset="5">
+                <b-col md="2">
+                    <b-form-select v-model="mailStatusSelected" :options="mailStatusOptions" @change="refreshLogs"></b-form-select>
+                </b-col>
+
+                <b-col md="6" offset="3">
                     <b-form-group >
                         <b-input-group>
                             <b-input-group-prepend>
@@ -176,6 +180,18 @@
                 ],
 
                 /**
+                 * Mail Status Filter
+                 */
+                mailStatusSelected: null,
+                mailStatusOptions: [
+                    { value: null, text: 'Status wählen' },
+                    { value: 'reject', text: 'reject' },
+                    { value: 'sent', text: 'sent' },
+                    { value: 'deferred', text: 'deferred' },
+                    { value: 'bounced', text: 'bounced' },
+                ],
+
+                /**
                  * Search
                  */
                 search: null,
@@ -266,6 +282,7 @@
                         sortBy: this.sortBy,
                         sortDesc: this.sortDesc,
                         search: this.search,
+                        status: this.mailStatusSelected,
                     }
                 }).then((response) => {
                     this.logs = Object.values(response.data.data.data);

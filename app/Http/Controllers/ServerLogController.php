@@ -14,6 +14,7 @@ class ServerLogController extends Controller
     {
         $this->validate($request, [
             'search' => 'nullable|string',
+            'filter' => 'nullable|string|in:reject,sent,deferred,bounced',
             'startDate' => 'required|date_format:Y/m/d H:i|before:endDate',
             'endDate' => 'required|date_format:Y/m/d H:i',
             'currentPage' => 'required|int',
@@ -26,9 +27,9 @@ class ServerLogController extends Controller
         ]);
 
         if ($request->filled('search')) {
-            $log = $query->search($request->search);
+            $log = $query->search($request->search, $request->get('status'));
         } else {
-            $log = $query->get();
+            $log = $query->get($request->get('status'));
         }
 
         // Paginate
