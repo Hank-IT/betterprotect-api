@@ -3,7 +3,7 @@
         <div class="toolbar">
             <b-row>
                 <b-col md="1">
-                    <b-btn class="btn-primary" @click="refreshLogs"><i class="fas fa-sync"></i></b-btn>
+                    <b-btn class="btn-primary" @click="currentLogs"><i class="fas fa-sync"></i></b-btn>
                 </b-col>
 
                 <b-col md="6" offset="5">
@@ -244,10 +244,13 @@
             }
         },
         methods: {
-            refreshLogs() {
+            currentLogs() {
                 this.currentStart = this.moment().subtract(1, 'hours');
                 this.currentEnd = this.moment();
 
+                this.getLogs(this.currentPage);
+            },
+            refreshLogs() {
                 this.getLogs(this.currentPage);
             },
             getLogs(currentPage) {
