@@ -1,6 +1,13 @@
 <template>
     <div class="server.index">
-        <button type="button" class="btn btn-primary mb-2" v-b-modal.server-store-modal><i class="fas fa-plus"></i></button>
+        <b-row class="mb-2">
+            <b-col md="1">
+                <b-button-group>
+                    <b-btn variant="primary" v-b-modal.server-store-modal><i class="fas fa-plus"></i></b-btn>
+                    <b-btn variant="secondary" @click="getAllServers"><i class="fas fa-sync"></i></b-btn>
+                </b-button-group>
+            </b-col>
+        </b-row>
 
         <!-- Modal Component -->
         <b-modal id="server-store-modal" ref="serverStoreModal" size="lg" title="Server hinzufügen" @ok="handleOk" @shown="modalShown" @hidden="modalHidden">
@@ -83,6 +90,7 @@
         <server-queue-modal v-bind:server="serverQueueModalServer"></server-queue-modal>
 
         <server
+                v-if="!loading"
                 v-for="server in servers"
                 v-bind:key="server.id"
                 v-bind:server="server"
@@ -91,6 +99,12 @@
                 v-on:open-server-terminal-modal="openServerTerminalModal"
                 v-on:open-server-queue-modal="openServerQueueModal"
         ></server>
+
+        <div class="text-center" v-if="loading">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Lade...</span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -114,6 +128,11 @@
                  * Server Queue Modal
                  */
                 serverQueueModalServer: null,
+
+                /**
+                 * Loader
+                 */
+                loading: false,
             }
         },
         created() {
@@ -174,18 +193,47 @@
 
                     this.$refs.serverStoreModal.hide();
                 }).catch(function (error) {
-                    // handle error
-                    console.log(error);
+                    if (error.response) {
+                        if (error.response.status === 422) {
+                            this.errors = error.response.data.errors;
+                        } else {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        }
+                    } else {
+                        this.$notify({
+                            title: 'Unbekannter Fehler',
+                            type: 'error'
+                        });
+                    }
+
+                    this.logsLoading = false;
                 });
 
                 this.serverFormUpdated = false;
             },
             getAllServers() {
+                this.loading = true;
                 axios.get('/server').then((response) => {
                     this.servers = response.data;
+
+                    this.loading = false;
                 }).catch(function (error) {
-                    // handle error
-                    console.log(error);
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    } else {
+                        this.$notify({
+                            title: 'Unbekannter Fehler',
+                            type: 'error'
+                        });
+                    }
+
+                    this.loading = false;
                 });
             },
             deleteServer(id) {

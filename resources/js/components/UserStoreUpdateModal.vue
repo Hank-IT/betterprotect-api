@@ -21,7 +21,7 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Passwort *">
+            <b-form-group label="Passwort *" v-if="user.objectguid == null">
                 <b-form-input :class="{ 'is-invalid': errors.password }" type="password" ref="email" v-model="form.password" placeholder="Passwort"></b-form-input>
 
                 <b-form-invalid-feedback>
@@ -31,7 +31,7 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Passwort bestätigen *">
+            <b-form-group label="Passwort bestätigen *" v-if="user.objectguid == null">
                 <b-form-input :class="{ 'is-invalid': errors.password_confirmation }" type="password" ref="password_confirmation" v-model="form.password_confirmation" placeholder="Passwort bestätigen"></b-form-input>
 
                 <b-form-invalid-feedback>

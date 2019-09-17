@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientSenderAccess;
 use Illuminate\Http\Request;
 use App\Models\LdapDirectory;
 use App\Exceptions\ErrorException;
@@ -9,13 +10,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LdapDirectoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json([
-            'status' => 'success',
-            'message' => null,
-            'data' => LdapDirectory::all(),
+        $this->validate($request, [
+            'search' => 'nullable|string',
+            'currentPage' => 'required|int',
+            'perPage' => 'required|int',
         ]);
+
+        return LdapDirectory::paginate($request->perPage, ['*'], 'page', $request->currentPage);
     }
 
     public function store(Request $request)
@@ -28,14 +31,14 @@ class LdapDirectoryController extends Controller
             'base_dn' => 'required|string|max:191',
             'bind_user' => 'required|string|max:191',
             'bind_password' => 'required|string|max:191',
-            'use_ssl' => 'boolean',
-            'use_tls' => 'boolean',
+            'use_ssl' => 'required|boolean',
+            'use_tls' => 'required|boolean',
 
             'ignored_domains' => 'nullable|string|max:50000',
 
             // Auth settings
             'group_dn' => 'nullable|string|max:191',
-            'password_sync' => 'boolean',
+            'password_sync' => 'required|boolean',
             'account_prefix' => 'nullable|string|max:191',
             'account_suffix' => 'nullable|string|max:191',
             'discover_attr' => 'nullable|string|max:191',
@@ -60,14 +63,14 @@ class LdapDirectoryController extends Controller
             'base_dn' => 'required|string|max:191',
             'bind_user' => 'required|string|max:191',
             'bind_password' => 'nullable|string|max:191',
-            'use_ssl' => 'boolean',
-            'use_tls' => 'boolean',
+            'use_ssl' => 'required|boolean',
+            'use_tls' => 'required|boolean',
 
             'ignored_domains' => 'nullable|string|max:50000',
 
             // Auth settings
             'group_dn' => 'nullable|string|max:191',
-            'password_sync' => 'boolean',
+            'password_sync' => 'required|boolean',
             'account_prefix' => 'nullable|string|max:191',
             'account_suffix' => 'nullable|string|max:191',
             'discover_attr' => 'nullable|string|max:191',

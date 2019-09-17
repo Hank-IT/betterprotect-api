@@ -31,6 +31,15 @@
             </template>
         </b-table>
 
+        <b-row v-if="totalRows > 10">
+            <b-col cols="1">
+                <b-form-select v-model="perPage" :options="displayedRowsOptions" @change="getAccessRules"></b-form-select>
+            </b-col>
+            <b-col cols="2">
+                <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
+            </b-col>
+        </b-row>
+
         <b-modal title="Beschreibung" ok-only id="access-description-modal">
             <p>{{ this.modalDescription }}</p>
         </b-modal>
@@ -44,6 +53,19 @@
         },
         data() {
             return {
+                /**
+                 * Pagination
+                 */
+                currentPage: 1,
+                perPage: 10,
+                totalRows: null,
+                displayedRowsOptions: [
+                    { value: 10, text: 10 },
+                    { value: 25, text: 25 },
+                    { value: 50, text: 50 },
+                    { value: 100, text: 100 },
+                ],
+
                 modalDescription: null,
                 rules: [],
                 filter: null,
@@ -89,11 +111,27 @@
 
                 this.$bvModal.show('access-description-modal');
             },
+            changePage(data) {
+                this.currentPage = data;
+                this.getAccessRules();
+            },
             getAccessRules() {
-                axios.get('/access').then((response) => {
-                    this.rules = response.data;
-                }).catch(function (error) {
-                    console.log(error);
+                axios.get('/access', {
+                    params: {
+                        currentPage: this.currentPage,
+                        perPage: this.perPage,
+                        search: this.search,
+                    }
+                }).then((response) => {
+                    this.rules = Object.values(response.data.data);
+                    this.totalRows = response.data.total;
+                }).catch((error) => {
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    }
                 });
             },
             addAccess(data) {
@@ -109,8 +147,13 @@
                         title: response.data.message,
                         type: 'success'
                     });
-                }).catch(function (error) {
-                    console.log(error);
+                }).catch((error) => {
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    }
                 });
             }
         }

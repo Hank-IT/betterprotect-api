@@ -7,7 +7,7 @@
                 </b-col>
 
                 <b-col md="2">
-                    <b-form-select v-model="mailStatusSelected" :options="mailStatusOptions" @change="refreshLogs"></b-form-select>
+                    <b-form-select v-model="mailStatusSelected" :options="mailStatusOptions" @change="getLogs"></b-form-select>
                 </b-col>
 
                 <b-col md="6" offset="3">
@@ -27,7 +27,7 @@
                                         <div slot="input" slot-scope="picker">{{ currentStart | date }} - {{ currentEnd | date }}</div>
                                     </date-range-picker>
                             </b-input-group-prepend>
-                            <b-form-input v-model="search" placeholder="Suche" @change="refreshLogs"/>
+                            <b-form-input v-model="search" placeholder="Suche" @change="getLogs"/>
                             <b-input-group-append>
                                 <b-btn>Leeren</b-btn>
                             </b-input-group-append>
@@ -37,42 +37,48 @@
             </b-row>
         </div>
 
-        <b-table hover :items="logs" :fields="fields" @row-clicked="showModal" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" v-if="!logsLoading">
-            <template slot="from" slot-scope="data">
+        <template v-if="!logsLoading">
+            <b-table hover :items="logs" :fields="fields" @row-clicked="showModal" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" v-if="logs.length">
+                <template slot="from" slot-scope="data">
                 <span v-b-popover.hover="data.item.from" v-if="data.item.from">
                     {{ data.item.from.trunc(40) }}
                 </span>
-            </template>
-            <template slot="to" slot-scope="data">
+                </template>
+                <template slot="to" slot-scope="data">
                 <span v-b-popover.hover="data.item.to" v-if="data.item.to">
                     {{ data.item.to.trunc(40) }}
                 </span>
-            </template>
-            <template slot="client" slot-scope="data">
+                </template>
+                <template slot="client" slot-scope="data">
                 <span v-b-popover.hover="data.item.client" v-if="data.item.client">
                     {{ data.item.client.trunc(40) }}
                 </span>
-            </template>
-            <template slot="status" slot-scope="data">
-                <p class="text-danger" v-if="data.item.status === 'reject' || data.item.status === 'milter-reject'">{{ data.item.status }}</p>
-                <p class="text-warning" v-else-if="data.item.status === 'deferred'">{{ data.item.status }}</p>
-                <p class="text-success" v-else-if="data.item.status === 'sent'">{{ data.item.status }}</p>
-                <p class="text-secondary" v-else>{{ data.item.status }}</p>
-            </template>
-        </b-table>
+                </template>
+                <template slot="status" slot-scope="data">
+                    <p class="text-danger" v-if="data.item.status === 'reject' || data.item.status === 'milter-reject'">{{ data.item.status }}</p>
+                    <p class="text-warning" v-else-if="data.item.status === 'deferred'">{{ data.item.status }}</p>
+                    <p class="text-success" v-else-if="data.item.status === 'sent'">{{ data.item.status }}</p>
+                    <p class="text-secondary" v-else>{{ data.item.status }}</p>
+                </template>
+            </b-table>
 
-        <b-row>
-            <b-col cols="1">
-                <b-form-select v-model="perPage" :options="displayedRowsOptions" v-if="!logsLoading" @change="refreshLogs"></b-form-select>
-            </b-col>
-            <b-col cols="2">
-                <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-on:change="getLogs" v-if="!logsLoading"></b-pagination>
-            </b-col>
-        </b-row>
+            <b-row v-if="totalRows > 10">
+                <b-col cols="1">
+                    <b-form-select v-model="perPage" :options="displayedRowsOptions" v-if="!logsLoading" @change="getLogs"></b-form-select>
+                </b-col>
+                <b-col cols="2">
+                    <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage" v-if="!logsLoading"></b-pagination>
+                </b-col>
+            </b-row>
+
+            <b-alert show variant="warning" v-else>
+                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+            </b-alert>
+        </template>
 
         <div class="text-center" v-if="logsLoading">
             <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only">Lade...</span>
             </div>
         </div>
 
@@ -171,7 +177,6 @@
                 totalRows: null,
                 sortBy: 'reported_at',
                 sortDesc: true,
-
                 displayedRowsOptions: [
                     { value: 10, text: 10 },
                     { value: 25, text: 25 },
@@ -263,14 +268,13 @@
             currentLogs() {
                 this.currentStart = this.moment().subtract(1, 'hours');
                 this.currentEnd = this.moment();
-
-                this.getLogs(this.currentPage);
+                this.getLogs();
             },
-            refreshLogs() {
-                this.getLogs(this.currentPage);
+            changePage(data) {
+                this.currentPage = data;
+                this.getLogs();
             },
-            getLogs(currentPage) {
-                this.currentPage = currentPage;
+            getLogs() {
                 this.logsLoading = true;
 
                 axios.get('/server/log', {
@@ -288,13 +292,23 @@
                     this.logs = Object.values(response.data.data.data);
                     this.totalRows = response.data.data.total;
                     this.logsLoading = false;
-                }).catch((error) => {
+                }).catch(function (error) {
                     if (error.response) {
+                        if (error.response.status === 422) {
+                            this.errors = error.response.data.errors;
+                        } else {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        }
+                    } else {
                         this.$notify({
-                            title: error.response.data.message,
+                            title: 'Unbekannter Fehler',
                             type: 'error'
                         });
                     }
+
                     this.logsLoading = false;
                 });
             },

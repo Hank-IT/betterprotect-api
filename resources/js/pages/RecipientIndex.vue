@@ -32,7 +32,7 @@
             </template>
         </b-table>
 
-        <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage"></b-pagination>
+        <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-if="totalRows > 10"></b-pagination>
 
         <recipient-store
                 v-on:recipient-stored="addRecipient"
@@ -107,7 +107,21 @@
 
                         this.$delete(this.recipients, recipientIndex);
                     }).catch(function (error) {
-                    console.log(error);
+                    if (error.response) {
+                        if (error.response.status === 422) {
+                            this.errors = error.response.data.errors;
+                        } else {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        }
+                    } else {
+                        this.$notify({
+                            title: 'Unbekannter Fehler',
+                            type: 'error'
+                        });
+                    }
                 });
             },
             addRecipient(data) {

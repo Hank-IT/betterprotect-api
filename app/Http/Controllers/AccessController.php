@@ -11,9 +11,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AccessController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return ClientSenderAccess::all();
+        $this->validate($request, [
+            'search' => 'nullable|string',
+            'currentPage' => 'required|int',
+            'perPage' => 'required|int',
+        ]);
+
+        return ClientSenderAccess::paginate($request->perPage, ['*'], 'page', $request->currentPage);
     }
 
     public function store(Request $request)

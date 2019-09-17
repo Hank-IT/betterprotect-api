@@ -49,6 +49,11 @@ class UserController extends Controller
             'email' => 'nullable|email|string',
         ]);
 
+        // Prevent password change for ldap users
+        if ($user->objectguid) {
+            $request->request->remove('password');
+        }
+
         $user->update($request->all());
 
         return response()->json([

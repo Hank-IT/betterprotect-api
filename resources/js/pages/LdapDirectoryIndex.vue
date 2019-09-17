@@ -2,13 +2,22 @@
     <div class="ldap-index">
         <button type="button" class="btn btn-primary mb-2" @click="openStoreModal()"><i class="fas fa-plus"></i></button>
 
-        <b-table hover :items="ldapDirectories" :fields="fields" :filter="filter" :current-page="currentPage" :per-page="perPage">
+        <b-table hover :items="ldapDirectories" :fields="fields" :current-page="currentPage" :per-page="perPage">
             <!-- A virtual composite column -->
-            <template slot="app_actions" slot-scope="ldapDirectory">
-                <button class="btn btn-secondary btn-sm" @click="openUpdateModal(ldapDirectory)"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-warning btn-sm" @click="deleteLdapDirectory(ldapDirectory)"><i class="fas fa-trash-alt"></i></button>
+            <template v-slot:cell(app_actions)="data">
+                <button class="btn btn-secondary btn-sm" @click="openUpdateModal(data)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-warning btn-sm" @click="deleteLdapDirectory(data)"><i class="fas fa-trash-alt"></i></button>
             </template>
         </b-table>
+
+        <b-row v-if="totalRows > 10">
+            <b-col cols="1">
+                <b-form-select v-model="perPage" :options="displayedRowsOptions" @change="getLdapDirectories"></b-form-select>
+            </b-col>
+            <b-col cols="2">
+                <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
+            </b-col>
+        </b-row>
 
         <ldap-directory-store-update-modal
                 v-bind:ldapDirectory="modalLdapDirectory"
@@ -25,12 +34,21 @@
         },
         data() {
             return {
-                modalLdapDirectory: null,
+                /**
+                 * Pagination
+                 */
                 currentPage: 1,
                 perPage: 10,
                 totalRows: null,
+                displayedRowsOptions: [
+                    { value: 10, text: 10 },
+                    { value: 25, text: 25 },
+                    { value: 50, text: 50 },
+                    { value: 100, text: 100 },
+                ],
+
+                modalLdapDirectory: null,
                 ldapDirectories: [],
-                filter: null,
                 fields: [
                     {
                         key: 'connection',
@@ -49,13 +67,27 @@
         },
         methods: {
             getLdapDirectories() {
-                axios.get('/ldap').then((response) => {
-                    this.ldapDirectories = response.data.data;
-
-                    this.totalRows = this.ldapDirectories.length;
-                }).catch(function (error) {
-                    console.log(error);
+                axios.get('/ldap', {
+                    params: {
+                        currentPage: this.currentPage,
+                        perPage: this.perPage,
+                    }
+                }).then((response) => {
+                    console.log(response);
+                    this.ldapDirectories = Object.values(response.data.data);
+                    this.totalRows = response.data.total;
+                }).catch((error) => {
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    }
                 });
+            },
+            changePage(data) {
+                this.currentPage = data;
+                this.getLdapDirectories();
             },
             deleteLdapDirectory(data) {
                 axios.delete('/ldap/' + data.item.id)

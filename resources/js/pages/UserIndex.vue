@@ -10,7 +10,7 @@
             </template>
         </b-table>
 
-        <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage"></b-pagination>
+        <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-if="totalRows > 10"></b-pagination>
 
         <user-store-update-modal
                 v-bind:user="modalUser"

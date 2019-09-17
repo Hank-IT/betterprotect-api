@@ -9,7 +9,7 @@
             </template>
         </b-table>
 
-        <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage"></b-pagination>
+        <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-if="totalRows > 10"></b-pagination>
 
         <transport-store-modal v-on:transport-stored="getTransports"></transport-store-modal>
     </div>

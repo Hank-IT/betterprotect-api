@@ -72,7 +72,7 @@
             </b-form-group>
 
             <b-form-group label="SSL benutzen">
-                <b-form-checkbox :class="{ 'is-invalid': errors.use_ssl }" type="checkbox" ref="use_ssl" v-model="form.use_ssl" placeholder="SSL benutzen"></b-form-checkbox>
+                <b-form-checkbox :class="{ 'is-invalid': errors.use_ssl }" type="checkbox" ref="use_ssl" v-model="form.use_ssl" placeholder="SSL benutzen" value="1" unchecked-value="0"></b-form-checkbox>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -82,7 +82,7 @@
             </b-form-group>
 
             <b-form-group label="TLS benutzen">
-                <b-form-checkbox :class="{ 'is-invalid': errors.use_tls }" type="checkbox" ref="use_tls" v-model="form.use_tls" placeholder="TLS benutzen"></b-form-checkbox>
+                <b-form-checkbox :class="{ 'is-invalid': errors.use_tls }" type="checkbox" ref="use_tls" v-model="form.use_tls" placeholder="TLS benutzen" value="1" unchecked-value="0"></b-form-checkbox>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -167,7 +167,7 @@
                 </b-form-group>
 
                 <b-form-group label="Passwort Sync">
-                    <b-form-checkbox :class="{ 'is-invalid': errors.password_sync }" type="checkbox" ref="password_sync" v-model="form.password_sync" placeholder="Passwort Sync"></b-form-checkbox>
+                    <b-form-checkbox :class="{ 'is-invalid': errors.password_sync }" type="checkbox" ref="password_sync" v-model="form.password_sync" placeholder="Passwort Sync" value="1" unchecked-value="0"></b-form-checkbox>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -214,7 +214,7 @@
                     });
                 }
 
-                this.$refs.username.focus();
+                this.$refs.connection.focus();
 
                 this.errors = [];
             },
