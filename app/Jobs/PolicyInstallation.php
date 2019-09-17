@@ -169,6 +169,8 @@ class PolicyInstallation implements ShouldQueue
     {
         $transportMaps = Transport::all();
 
+        // ToDo: Empty nexthop
+
         $data = $transportMaps->map(function ($row) {
             if ($row->nexthop_type == 'ipv4' || $row->nexthop_type == 'ipv6') {
                 $nexthop = '[' . $row->nexthop . ']';
