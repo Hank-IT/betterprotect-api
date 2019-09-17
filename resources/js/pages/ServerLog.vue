@@ -2,12 +2,11 @@
     <div class="server.log">
         <div class="toolbar">
             <b-row>
-                <b-col md="1">
-                    <b-btn class="btn-primary" @click="currentLogs"><i class="fas fa-sync"></i></b-btn>
-                </b-col>
-
-                <b-col md="2">
-                    <b-form-select v-model="mailStatusSelected" :options="mailStatusOptions" @change="getLogs"></b-form-select>
+                <b-col md="3">
+                    <form class="form-inline">
+                        <b-btn variant="secondary" @click="currentLogs"><i class="fas fa-sync"></i></b-btn>
+                        <b-select v-model="mailStatusSelected" :options="mailStatusOptions" @change="getLogs" class="ml-1"></b-select>
+                    </form>
                 </b-col>
 
                 <b-col md="6" offset="3">
@@ -55,10 +54,7 @@
                 </span>
                 </template>
                 <template slot="status" slot-scope="data">
-                    <p class="text-danger" v-if="data.item.status === 'reject' || data.item.status === 'milter-reject'">{{ data.item.status }}</p>
-                    <p class="text-warning" v-else-if="data.item.status === 'deferred'">{{ data.item.status }}</p>
-                    <p class="text-success" v-else-if="data.item.status === 'sent'">{{ data.item.status }}</p>
-                    <p class="text-secondary" v-else>{{ data.item.status }}</p>
+                    <p v-bind:class="statusClassObject(data)">{{ data.item.status }}</p>
                 </template>
             </b-table>
 
@@ -255,6 +251,16 @@
                     },
                 ],
                 detailedRow: [],
+            }
+        },
+        computed: {
+            statusClassObject: function (data) {
+                return {
+                    'text-danger': data.item.status === 'reject',
+                    'text-warning': data.item.status === 'deferred',
+                    'text-success': data.item.status === 'sent',
+                    'text-secondary': data.item.status
+                }
             }
         },
         filters: {

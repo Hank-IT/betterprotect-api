@@ -1,13 +1,13 @@
 <template>
     <div class="access.index">
         <b-row>
-            <b-col md="6" >
+            <b-col md="3" >
                 <access-store
                         v-on:access-stored="addAccess"
                 ></access-store>
             </b-col>
 
-            <b-col md="6" >
+            <b-col md="4" offset="5">
                 <b-form-group >
                     <b-input-group>
                         <b-form-input v-model="filter" placeholder="Suche" />

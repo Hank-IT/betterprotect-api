@@ -100,6 +100,10 @@
                 v-on:open-server-queue-modal="openServerQueueModal"
         ></server>
 
+        <b-alert show variant="warning" v-if="!servers.length && !loading">
+            <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+        </b-alert>
+
         <div class="text-center" v-if="loading">
             <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Lade...</span>
@@ -173,11 +177,18 @@
                     if (error.response) {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors;
+                        } else {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
                         }
+                    } else {
+                        this.$notify({
+                            title: 'Unbekannter Fehler',
+                            type: 'error'
+                        });
                     }
-
-                    // handle error
-                    console.log(error);
                 });
             },
             updateServer() {
@@ -192,7 +203,9 @@
                     this.$set(this.servers, serverIndex, this.serverForm);
 
                     this.$refs.serverStoreModal.hide();
-                }).catch(function (error) {
+
+                    this.serverFormUpdated = false;
+                }).catch((error) => {
                     if (error.response) {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors;
@@ -208,11 +221,7 @@
                             type: 'error'
                         });
                     }
-
-                    this.logsLoading = false;
                 });
-
-                this.serverFormUpdated = false;
             },
             getAllServers() {
                 this.loading = true;
@@ -249,8 +258,17 @@
 
                     this.$refs.serverStoreModal.show();
                 }).catch(function (error) {
-                    // handle error
-                    console.log(error);
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    } else {
+                        this.$notify({
+                            title: 'Unbekannter Fehler',
+                            type: 'error'
+                        });
+                    }
                 });
             },
             openServerTerminalModal(server) {

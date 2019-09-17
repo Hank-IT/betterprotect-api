@@ -86,12 +86,12 @@
                             type: 'success'
                         });
                     }).catch(function (error) {
-                    if (error.response) {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: 'error'
-                        });
-                    }
+                        if (error.response) {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        }
                 });
             },
             deleteServer() {
