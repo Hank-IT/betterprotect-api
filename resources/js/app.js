@@ -9,6 +9,8 @@ import AppFooter from './app/Footer';
 import Task from './components/Task';
 import AccessIndex from './pages/AccessIndex';
 import AccessStore from './components/AccessStore';
+import TransportIndex from './pages/TransportIndex';
+import TransportStoreModal from './components/TransportStoreModal';
 import UserIndex from './pages/UserIndex';
 import UserStoreUpdateModal from './components/UserStoreUpdateModal';
 import LdapDirectoryStoreUpdateModal from './components/LdapDirectoryStoreUpdateModal';
@@ -139,6 +141,14 @@ Vue.router = new Router({
             }
         },
         {
+            path: '/transport',
+            name: 'transport.index',
+            component: TransportIndex,
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: '/user',
             name: 'user.index',
             component: UserIndex,
@@ -187,6 +197,7 @@ Vue.component('DateRangePicker', DateRangePicker);
 Vue.component('ServerTerminalModal', ServerTerminalModal);
 Vue.component('UserStoreUpdateModal', UserStoreUpdateModal);
 Vue.component('LdapDirectoryStoreUpdateModal', LdapDirectoryStoreUpdateModal);
+Vue.component('TransportStoreModal', TransportStoreModal);
 
 App.router = Vue.router;
 

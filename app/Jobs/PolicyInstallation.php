@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Transport;
 use Carbon\Carbon;
 use App\Support\IPv4;
 use App\Models\Server;
@@ -66,6 +67,8 @@ class PolicyInstallation implements ShouldQueue
         $this->insertSenderAccess();
 
         $this->insertRecipientAccess();
+
+        $this->insertTransportMaps();
 
         $viewTask->finishedSuccess('Policy erfolgreich auf Server ' . $this->server->hostname . ' installiert.');
 
@@ -156,6 +159,40 @@ class PolicyInstallation implements ShouldQueue
         $this->dbConnection->table('relay_recipients')->truncate();
 
         $this->dbConnection->table('relay_recipients')->insert($data->toArray());
+
+        $this->dbConnection->getPdo()->exec('unlock tables');
+
+        $this->dbConnection->commit();
+    }
+
+    protected function insertTransportMaps()
+    {
+        $transportMaps = Transport::all();
+
+        $data = $transportMaps->map(function ($row) {
+            if ($row->nexthop_type == 'ipv4' || $row->nexthop_type == 'ipv6') {
+                $nexthop = '[' . $row->nexthop . ']';
+            } else {
+                if ($row->nexthop_mx) {
+                    $nexthop = $row->nexthop;
+                } else {
+                    $nexthop = '[' . $row->nexthop . ']';
+                }
+            }
+
+            return collect([
+                'domain' => $row->domain,
+                'payload' => $row->transport . ':' . $nexthop . ':' . $row->nexthop_port,
+            ]);
+        });
+
+        $this->dbConnection->beginTransaction();
+
+        $this->dbConnection->getPdo()->exec('lock tables transport_maps write');
+
+        $this->dbConnection->table('transport_maps')->truncate();
+
+        $this->dbConnection->table('transport_maps')->insert($data->toArray());
 
         $this->dbConnection->getPdo()->exec('unlock tables');
 

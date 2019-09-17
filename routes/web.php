@@ -67,6 +67,13 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::delete('/recipient/{recipient}', 'RecipientController@destroy')->name('recipient.destroy');
 
     /**
+     * Transport
+     */
+    Route::get('/transport', 'TransportController@index')->name('transport.index');
+    Route::post('/transport', 'TransportController@store')->name('transport.store');
+    Route::delete('/transport/{transport}', 'TransportController@destroy')->name('transport.destroy');
+
+    /**
      * RecipientAccessLdap
      */
     Route::post('/recipient/ldap/{ldapDirectory}', 'RecipientLdapController')->name('recipient.ldap');
