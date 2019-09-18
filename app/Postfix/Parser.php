@@ -2,8 +2,6 @@
 
 namespace App\Postfix;
 
-use Illuminate\Support\Str;
-
 class Parser
 {
     protected $encryptionIndex = [];

@@ -161,7 +161,7 @@
 <script>
     export default {
         created() {
-            this.getLogs(this.currentPage);
+            this.getLogs();
         },
         data() {
             return {
@@ -274,6 +274,7 @@
             currentLogs() {
                 this.currentStart = this.moment().subtract(1, 'hours');
                 this.currentEnd = this.moment();
+                this.currentPage = 1;
                 this.getLogs();
             },
             changePage(data) {
