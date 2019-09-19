@@ -99,59 +99,62 @@
                 </div>
             </div>
 
-            <b-card title="Details">
-                <div class="card-text">
-                    <table class="table">
-                        <tr>
-                            <th>Erhalten am</th>
-                            <td>{{ detailedRow.reported_at }}</td>
-                        </tr>
-                        <tr>
-                            <th>Queue ID</th>
-                            <td>{{ detailedRow.queue_id }}</td>
-                        </tr>
-                        <tr>
-                            <th>Code</th>
-                            <td>{{ detailedRow.dsn }}</td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td>{{ detailedRow.status }}</td>
-                        </tr>
-                        <tr>
-                            <th>Helo</th>
-                            <td>{{ detailedRow.helo }}</td>
-                        </tr>
-                        <tr>
-                            <th>Größe (Bytes)</th>
-                            <td>{{ detailedRow.size }}</td>
-                        </tr>
-                        <tr>
-                            <th>Delays</th>
-                            <td>{{ detailedRow.delays }}</td>
-                        </tr>
-                        <tr>
-                            <th>Empfänger (Anzahl)</th>
-                            <td>{{ detailedRow.nrcpt }}</td>
-                        </tr>
-                        <tr v-if="detailedRow.encryption">
-                            <th>Verschlüsselung</th>
-                            <td v-if="detailedRow.encryption.length">Keine</td>
-                            <td v-else>{{ detailedRow.encryption.cipher }} ({{ detailedRow.encryption.type }})</td>
-                        </tr>
-                        <tr v-else>
-                            <th>Verschlüsselung</th>
-                            <td>Unbekannt</td>
-                        </tr>
-                    </table>
+            <table class="table">
+                <tr v-if="detailedRow.client_ip">
+                    <th>Aktionen</th>
+                    <td>
+                        <b-btn size="sm" variant="primary" @click="whitelist(detailedRow)" v-if="detailedRow.status === 'reject' || detailedRow.status === 'bounced'">Whitelist</b-btn>
+                        <b-btn size="sm" variant="primary" @click="blacklist(detailedRow)" v-if="detailedRow.status === 'sent'">Blacklist</b-btn>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Erhalten am</th>
+                    <td>{{ detailedRow.reported_at }}</td>
+                </tr>
+                <tr>
+                    <th>Queue ID</th>
+                    <td>{{ detailedRow.queue_id }}</td>
+                </tr>
+                <tr>
+                    <th>Code</th>
+                    <td>{{ detailedRow.dsn }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ detailedRow.status }}</td>
+                </tr>
+                <tr>
+                    <th>Helo</th>
+                    <td>{{ detailedRow.helo }}</td>
+                </tr>
+                <tr>
+                    <th>Größe (Bytes)</th>
+                    <td>{{ detailedRow.size }}</td>
+                </tr>
+                <tr>
+                    <th>Delays</th>
+                    <td>{{ detailedRow.delays }}</td>
+                </tr>
+                <tr>
+                    <th>Empfänger (Anzahl)</th>
+                    <td>{{ detailedRow.nrcpt }}</td>
+                </tr>
+                <tr v-if="detailedRow.encryption">
+                    <th>Verschlüsselung</th>
+                    <td v-if="detailedRow.encryption.length">Keine</td>
+                    <td v-else>{{ detailedRow.encryption.cipher }} ({{ detailedRow.encryption.type }})</td>
+                </tr>
+                <tr v-else>
+                    <th>Verschlüsselung</th>
+                    <td>Unbekannt</td>
+                </tr>
+            </table>
 
-                    <hr>
+            <hr>
 
-                    <h5>Antwort:</h5>
+            <h5>Antwort:</h5>
 
-                    <p>{{ detailedRow.response }}</p>
-                </div>
-            </b-card>
+            <p>{{ detailedRow.response }}</p>
 
             <div slot="modal-footer"></div>
         </b-modal>
@@ -271,6 +274,60 @@
             }
         },
         methods: {
+            blacklist(row) {
+                axios.post('/access', {
+                    payload: row.client_ip,
+                    type: 'client_ipv4',
+                    action: 'reject',
+                    description: 'Über Mail Log hinzugefügt.',
+                }).then((response) => {
+                        this.$notify({
+                            title: response.data.message,
+                            type: 'success'
+                        });
+                    }).catch((error) => {
+                    if (error.response) {
+                        if (error.response.status === 422) {
+                            this.$notify({
+                                title: error.response.data.errors.payload[0],
+                                type: 'error'
+                            });
+                        } else {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            },
+            whitelist(row) {
+                axios.post('/access', {
+                    payload: row.client_ip,
+                    type: 'client_ipv4',
+                    action: 'ok',
+                    description: 'Über Mail Log hinzugefügt.',
+                }).then((response) => {
+                    this.$notify({
+                        title: response.data.message,
+                        type: 'success'
+                    });
+                }).catch((error) => {
+                    if (error.response) {
+                        if (error.response.status === 422) {
+                            this.$notify({
+                                title: error.response.data.errors.payload[0],
+                                type: 'error'
+                            });
+                        } else {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            },
             currentLogs() {
                 this.currentStart = this.moment().subtract(1, 'hours');
                 this.currentEnd = this.moment();

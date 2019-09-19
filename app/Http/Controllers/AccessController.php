@@ -25,7 +25,7 @@ class AccessController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'payload' => 'required|string',
+            'payload' => 'required|string|unique:client_sender_access',
             'type' => 'required|in:client_hostname,client_ipv4,client_ipv4_net,mail_from_address,mail_from_domain,mail_from_localpart',
             'description' => 'string|nullable',
             'action' => 'required|string|in:ok,reject'

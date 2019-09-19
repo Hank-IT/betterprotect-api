@@ -19,7 +19,7 @@ class RecipientController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-           'payload' => 'required|string',
+           'payload' => 'required|string|unique:relay_recipients',
            'action' => 'required|string|in:OK',
            'data_source' => 'required|string|in:local',
         ]);

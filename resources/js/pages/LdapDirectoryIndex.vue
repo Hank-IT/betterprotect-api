@@ -22,7 +22,6 @@
 
         <template v-if="!loading">
             <b-table hover :items="ldapDirectories" :fields="fields" :current-page="currentPage" :per-page="perPage" v-if="ldapDirectories.length">
-                <!-- A virtual composite column -->
                 <template v-slot:cell(app_actions)="data">
                     <button class="btn btn-secondary btn-sm" @click="openUpdateModal(data)"><i class="fas fa-edit"></i></button>
                     <button class="btn btn-warning btn-sm" @click="deleteLdapDirectory(data)"><i class="fas fa-trash-alt"></i></button>
@@ -104,7 +103,12 @@
         methods: {
             getLdapDirectories() {
                 this.loading = true;
-                axios.get('/ldap').then((response) => {
+                axios.get('/ldap', {
+                    params: {
+                        currentPage: this.currentPage,
+                        perPage: this.perPage,
+                    }
+                }).then((response) => {
                     this.ldapDirectories = Object.values(response.data.data);
                     this.totalRows = response.data.total;
                     this.loading = false;

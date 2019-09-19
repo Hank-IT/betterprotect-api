@@ -156,8 +156,6 @@
             },
             deleteAccess(row) {
                 axios.delete('/access/' + row.item.id).then((response) => {
-                    let ruleIndex = this.rules.findIndex(x => x.id === row.item.id);
-
                     this.getAccessRules();
 
                     this.$notify({
