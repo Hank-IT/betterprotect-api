@@ -14,7 +14,7 @@
 
                 <router-link :to="{ name: 'server.log' }" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="menu-collapsed">Mail Logs</span>
+                        <span class="menu-collapsed">Log sViewer</span>
                     </div>
                 </router-link>
 
