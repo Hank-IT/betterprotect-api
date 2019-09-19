@@ -1,14 +1,15 @@
 <template>
     <div class="recipient.index">
         <b-row>
-            <b-col md="1" >
+            <b-col md="3" >
                 <b-button-group>
                     <button type="button" class="btn btn-primary" v-b-modal.recipient-store-modal><i class="fas fa-plus"></i></button>
+                    <b-btn variant="secondary" @click="getRecipients"><i class="fas fa-sync"></i></b-btn>
                     <button type="button" class="btn btn-secondary" v-b-modal.ldap-query-modal>LDAP</button>
                 </b-button-group>
             </b-col>
 
-            <b-col md="6" offset="5" >
+            <b-col md="4" offset="5" >
                 <b-form-group >
                     <b-input-group>
                         <b-form-input v-model="filter" placeholder="Suche" />
@@ -20,22 +21,32 @@
             </b-col>
         </b-row>
 
-        <b-table hover :items="recipients" :fields="fields" :filter="filter" :current-page="currentPage" :per-page="perPage">
-            <template slot="action" slot-scope="data">
-                <p :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</p>
-            </template>
+        <template v-if="!loading">
+            <b-table hover :items="recipients" :fields="fields" :filter="filter" :current-page="currentPage" :per-page="perPage" v-if="recipients.length">
+                <template slot="action" slot-scope="data">
+                    <p :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</p>
+                </template>
 
-            <!-- A virtual composite column -->
-            <template slot="app_actions" slot-scope="data">
-                <!-- <button class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i></button> -->
-                <button class="btn btn-warning btn-sm" @click="deleteRecipient(data)"><i class="fas fa-trash-alt"></i></button>
-            </template>
-        </b-table>
+                <template v-slot:cell(app_actions)="data">
+                    <button class="btn btn-warning btn-sm" @click="deleteRecipient(data)"><i class="fas fa-trash-alt"></i></button>
+                </template>
+            </b-table>
 
-        <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-if="totalRows > 10"></b-pagination>
+            <b-alert show variant="warning" v-else>
+                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+            </b-alert>
+
+            <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-if="totalRows > 10"></b-pagination>
+        </template>
+
+        <div class="text-center" v-if="loading">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Lade...</span>
+            </div>
+        </div>
 
         <recipient-store
-                v-on:recipient-stored="addRecipient"
+                v-on:recipient-stored="getRecipients"
         ></recipient-store>
         <query-ldap-recipients></query-ldap-recipients>
     </div>
@@ -57,6 +68,11 @@
         },
         data() {
             return {
+                /**
+                 * Loader
+                 */
+                loading: false,
+
                 currentPage: 1,
                 perPage: 10,
                 totalRows: null,
@@ -87,12 +103,19 @@
         },
         methods: {
             getRecipients() {
+                this.loading = true;
                 axios.get('/recipient').then((response) => {
                     this.recipients = response.data.data;
-
                     this.totalRows = this.recipients.length;
+                    this.loading = false;
                 }).catch(function (error) {
-                    console.log(error);
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    }
+                    this.loading = false;
                 });
             },
             deleteRecipient(data) {
@@ -103,9 +126,7 @@
                             type: 'success'
                         });
 
-                        let recipientIndex = this.recipients.findIndex(x => x.id === data.item.id);
-
-                        this.$delete(this.recipients, recipientIndex);
+                        this.getRecipients();
                     }).catch(function (error) {
                     if (error.response) {
                         if (error.response.status === 422) {
@@ -123,9 +144,6 @@
                         });
                     }
                 });
-            },
-            addRecipient(data) {
-                this.recipients.push(data);
             }
         }
     }

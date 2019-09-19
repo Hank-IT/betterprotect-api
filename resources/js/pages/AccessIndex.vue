@@ -3,7 +3,8 @@
         <b-row>
             <b-col md="3" >
                 <access-store
-                        v-on:access-stored="addAccess"
+                        v-on:access-stored="getAccessRules"
+                        v-on:reload-table="getAccessRules"
                 ></access-store>
             </b-col>
 
@@ -19,30 +20,41 @@
             </b-col>
         </b-row>
 
-        <b-table hover :items="rules" :fields="fields" :filter="filter" @row-clicked="showModal">
-            <template slot="action" slot-scope="data">
-                <p :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</p>
-            </template>
+        <template v-if="!loading">
+            <b-table hover :items="rules" :fields="fields" :filter="filter" @row-clicked="showModal" v-if="rules.length">
+                <template slot="action" slot-scope="data">
+                    <p :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</p>
+                </template>
 
-            <!-- A virtual composite column -->
-            <template slot="app_actions" slot-scope="data">
-                <!-- <button class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i></button> -->
-                <button class="btn btn-warning btn-sm" @click="deleteAccess(data)"><i class="fas fa-trash-alt"></i></button>
-            </template>
-        </b-table>
+                <template v-slot:cell(app_actions)="data">
+                    <button class="btn btn-warning btn-sm" @click="deleteAccess(data)"><i class="fas fa-trash-alt"></i></button>
+                </template>
+            </b-table>
 
-        <b-row v-if="totalRows > 10">
-            <b-col cols="1">
-                <b-form-select v-model="perPage" :options="displayedRowsOptions" @change="getAccessRules"></b-form-select>
-            </b-col>
-            <b-col cols="2">
-                <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
-            </b-col>
-        </b-row>
+            <b-alert show variant="warning" v-else>
+                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+            </b-alert>
+
+            <b-row v-if="totalRows > 10">
+                <b-col cols="1">
+                    <b-form-select v-model="perPage" :options="displayedRowsOptions" @change="getAccessRules"></b-form-select>
+                </b-col>
+                <b-col cols="2">
+                    <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
+                </b-col>
+            </b-row>
+        </template>
+
 
         <b-modal title="Beschreibung" ok-only id="access-description-modal">
             <p>{{ this.modalDescription }}</p>
         </b-modal>
+
+        <div class="text-center" v-if="loading">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Lade...</span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -65,6 +77,11 @@
                     { value: 50, text: 50 },
                     { value: 100, text: 100 },
                 ],
+
+                /**
+                 * Loader
+                 */
+                loading: false,
 
                 modalDescription: null,
                 rules: [],
@@ -116,6 +133,7 @@
                 this.getAccessRules();
             },
             getAccessRules() {
+                this.loading = true;
                 axios.get('/access', {
                     params: {
                         currentPage: this.currentPage,
@@ -125,6 +143,7 @@
                 }).then((response) => {
                     this.rules = Object.values(response.data.data);
                     this.totalRows = response.data.total;
+                    this.loading = false;
                 }).catch((error) => {
                     if (error.response) {
                         this.$notify({
@@ -132,16 +151,14 @@
                             type: 'error'
                         });
                     }
+                    this.loading = false;
                 });
-            },
-            addAccess(data) {
-                this.rules.push(data);
             },
             deleteAccess(row) {
                 axios.delete('/access/' + row.item.id).then((response) => {
                     let ruleIndex = this.rules.findIndex(x => x.id === row.item.id);
 
-                    this.$delete(this.rules, ruleIndex);
+                    this.getAccessRules();
 
                     this.$notify({
                         title: response.data.message,

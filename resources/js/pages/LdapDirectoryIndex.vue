@@ -1,29 +1,59 @@
 <template>
     <div class="ldap-index">
-        <button type="button" class="btn btn-primary mb-2" @click="openStoreModal()"><i class="fas fa-plus"></i></button>
-
-        <b-table hover :items="ldapDirectories" :fields="fields" :current-page="currentPage" :per-page="perPage">
-            <!-- A virtual composite column -->
-            <template v-slot:cell(app_actions)="data">
-                <button class="btn btn-secondary btn-sm" @click="openUpdateModal(data)"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-warning btn-sm" @click="deleteLdapDirectory(data)"><i class="fas fa-trash-alt"></i></button>
-            </template>
-        </b-table>
-
-        <b-row v-if="totalRows > 10">
-            <b-col cols="1">
-                <b-form-select v-model="perPage" :options="displayedRowsOptions" @change="getLdapDirectories"></b-form-select>
+        <b-row>
+            <b-col md="3" >
+                <b-button-group>
+                    <button type="button" class="btn btn-primary" @click="openStoreModal"><i class="fas fa-plus"></i></button>
+                    <b-btn variant="secondary" @click="getLdapDirectories"><i class="fas fa-sync"></i></b-btn>
+                </b-button-group>
             </b-col>
-            <b-col cols="2">
-                <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
+
+            <b-col md="4" offset="5">
+                <b-form-group >
+                    <b-input-group>
+                        <b-form-input v-model="filter" placeholder="Suche" />
+                        <b-input-group-append>
+                            <b-btn :disabled="!filter" @click="filter = ''">Leeren</b-btn>
+                        </b-input-group-append>
+                    </b-input-group>
+                </b-form-group>
             </b-col>
         </b-row>
+
+        <template v-if="!loading">
+            <b-table hover :items="ldapDirectories" :fields="fields" :current-page="currentPage" :per-page="perPage" v-if="ldapDirectories.length">
+                <!-- A virtual composite column -->
+                <template v-slot:cell(app_actions)="data">
+                    <button class="btn btn-secondary btn-sm" @click="openUpdateModal(data)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-warning btn-sm" @click="deleteLdapDirectory(data)"><i class="fas fa-trash-alt"></i></button>
+                </template>
+            </b-table>
+
+            <b-alert show variant="warning" v-else>
+                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+            </b-alert>
+
+            <b-row v-if="totalRows > 10">
+                <b-col cols="1">
+                    <b-form-select v-model="perPage" :options="displayedRowsOptions" @change="getLdapDirectories"></b-form-select>
+                </b-col>
+                <b-col cols="2">
+                    <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
+                </b-col>
+            </b-row>
+        </template>
 
         <ldap-directory-store-update-modal
                 v-bind:ldapDirectory="modalLdapDirectory"
                 v-on:ldap-stored="getLdapDirectories"
                 v-on:ldap-updated="getLdapDirectories"
         ></ldap-directory-store-update-modal>
+
+        <div class="text-center" v-if="loading">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Lade...</span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -40,12 +70,18 @@
                 currentPage: 1,
                 perPage: 10,
                 totalRows: null,
+                filter: null,
                 displayedRowsOptions: [
                     { value: 10, text: 10 },
                     { value: 25, text: 25 },
                     { value: 50, text: 50 },
                     { value: 100, text: 100 },
                 ],
+
+                /**
+                 * Loader
+                 */
+                loading: false,
 
                 modalLdapDirectory: null,
                 ldapDirectories: [],
@@ -67,15 +103,11 @@
         },
         methods: {
             getLdapDirectories() {
-                axios.get('/ldap', {
-                    params: {
-                        currentPage: this.currentPage,
-                        perPage: this.perPage,
-                    }
-                }).then((response) => {
-                    console.log(response);
+                this.loading = true;
+                axios.get('/ldap').then((response) => {
                     this.ldapDirectories = Object.values(response.data.data);
                     this.totalRows = response.data.total;
+                    this.loading = false;
                 }).catch((error) => {
                     if (error.response) {
                         this.$notify({
@@ -83,6 +115,7 @@
                             type: 'error'
                         });
                     }
+                    this.loading = false;
                 });
             },
             changePage(data) {
@@ -97,14 +130,14 @@
                             type: 'success'
                         });
 
-                        let index = this.ldapDirectories.findIndex(x => x.id === data.item.id);
-
-                        this.$delete(this.ldapDirectories, index);
+                        this.getLdapDirectories();
                     }).catch((error) => {
-                    this.$notify({
-                        title: error.response.data.message,
-                        type: error.response.data.status
-                    });
+                        if (error.response) {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        }
                 });
             },
             openUpdateModal(data) {

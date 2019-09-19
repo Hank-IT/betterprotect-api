@@ -58,6 +58,10 @@
                 </template>
             </b-table>
 
+            <b-alert show variant="warning" v-else>
+                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+            </b-alert>
+
             <b-row v-if="totalRows > 10">
                 <b-col cols="1">
                     <b-form-select v-model="perPage" :options="displayedRowsOptions" v-if="!logsLoading" @change="getLogs"></b-form-select>
@@ -66,10 +70,6 @@
                     <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage" v-if="!logsLoading"></b-pagination>
                 </b-col>
             </b-row>
-
-            <b-alert show variant="warning" v-else>
-                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
-            </b-alert>
         </template>
 
         <div class="text-center" v-if="logsLoading">

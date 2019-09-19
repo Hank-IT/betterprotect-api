@@ -22,10 +22,20 @@
                 this.getLdapDirectories();
             },
             getLdapDirectories() {
-                axios.get('/ldap').then((response) => {
+                axios.get('/ldap', {
+                    params: {
+                        currentPage: this.currentPage,
+                        perPage: this.perPage,
+                    }
+                }).then((response) => {
                     this.ldapDirectories = response.data.data;
                 }).catch(function (error) {
-                    console.log(error);
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    }
                 });
             },
             handleOk(event) {
@@ -43,10 +53,12 @@
 
                     this.$refs.ldapQueryModal.hide();
                 }).catch(function (error) {
-                    this.$notify({
-                        title: error.response.data.message,
-                        type: 'error'
-                    });
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    }
                 });
             }
         }

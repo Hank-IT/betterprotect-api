@@ -1,6 +1,13 @@
 <template>
     <div class="access.store">
-        <button type="button" class="btn btn-primary mb-2" v-b-modal.access-store-modal><i class="fas fa-plus"></i></button>
+        <b-row class="mb-2">
+            <b-col md="1">
+                <b-button-group>
+                    <button type="button" class="btn btn-primary" v-b-modal.access-store-modal><i class="fas fa-plus"></i></button>
+                    <b-btn variant="secondary" @click="$emit('reload-table')"><i class="fas fa-sync"></i></b-btn>
+                </b-button-group>
+            </b-col>
+        </b-row>
 
         <!-- Modal Component -->
         <b-modal id="access-store-modal" ref="accessStoreModal" size="lg" title="Blacklist/Whitelist Eintrag" @ok="handleOk" @shown="modalShown">

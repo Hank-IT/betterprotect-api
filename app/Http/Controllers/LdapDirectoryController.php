@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientSenderAccess;
 use Illuminate\Http\Request;
 use App\Models\LdapDirectory;
 use App\Exceptions\ErrorException;
@@ -14,11 +13,19 @@ class LdapDirectoryController extends Controller
     {
         $this->validate($request, [
             'search' => 'nullable|string',
-            'currentPage' => 'required|int',
-            'perPage' => 'required|int',
+            'currentPage' => 'nullable|int',
+            'perPage' => 'nullable|int',
         ]);
 
-        return LdapDirectory::paginate($request->perPage, ['*'], 'page', $request->currentPage);
+        if ($request->filled('currentPage', 'perPage')) {
+            return LdapDirectory::paginate($request->perPage, ['*'], 'page', $request->currentPage);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => null,
+            'data' => LdapDirectory::all(),
+        ]);
     }
 
     public function store(Request $request)
