@@ -6,13 +6,19 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
+/**
+ * Class LdapEmailSanitizer
+ * @package App\Services
+ *
+ * ToDo: Needs some refactoring.
+ */
 class LdapEmailSanitizer
 {
     protected $addresses;
 
     protected $ignoredDomains;
 
-    public function __construct (Collection $addresses, string $ignoredDomains)
+    public function __construct (Collection $addresses, ?string $ignoredDomains)
     {
         $this->addresses = $addresses;
 
@@ -36,10 +42,12 @@ class LdapEmailSanitizer
                 return null;
             }
 
-            if ($this->hasIgnoredDomain($address)) {
-                Log::debug('LdapEmailSanitizer: Address has ignored domain.');
+            if (! empty($this->ignoredDomains)) {
+                if ($this->hasIgnoredDomain($address)) {
+                    Log::debug('LdapEmailSanitizer: Address has ignored domain.');
 
-                return null;
+                    return null;
+                }
             }
 
             if ($this->isIgnoredAddresses($address)) {

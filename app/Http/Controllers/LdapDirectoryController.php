@@ -38,14 +38,14 @@ class LdapDirectoryController extends Controller
             'base_dn' => 'required|string|max:191',
             'bind_user' => 'required|string|max:191',
             'bind_password' => 'required|string|max:191',
-            'use_ssl' => 'required|boolean',
-            'use_tls' => 'required|boolean',
+            'use_ssl' => 'nullable|boolean',
+            'use_tls' => 'nullable|boolean',
 
             'ignored_domains' => 'nullable|string|max:50000',
 
             // Auth settings
             'group_dn' => 'nullable|string|max:191',
-            'password_sync' => 'required|boolean',
+            'password_sync' => 'nullable|boolean',
             'account_prefix' => 'nullable|string|max:191',
             'account_suffix' => 'nullable|string|max:191',
             'discover_attr' => 'nullable|string|max:191',
@@ -70,14 +70,14 @@ class LdapDirectoryController extends Controller
             'base_dn' => 'required|string|max:191',
             'bind_user' => 'required|string|max:191',
             'bind_password' => 'nullable|string|max:191',
-            'use_ssl' => 'required|boolean',
-            'use_tls' => 'required|boolean',
+            'use_ssl' => 'nullable|boolean',
+            'use_tls' => 'nullable|boolean',
 
             'ignored_domains' => 'nullable|string|max:50000',
 
             // Auth settings
             'group_dn' => 'nullable|string|max:191',
-            'password_sync' => 'required|boolean',
+            'password_sync' => 'nullable|boolean',
             'account_prefix' => 'nullable|string|max:191',
             'account_suffix' => 'nullable|string|max:191',
             'discover_attr' => 'nullable|string|max:191',

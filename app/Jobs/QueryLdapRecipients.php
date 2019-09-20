@@ -25,7 +25,7 @@ class QueryLdapRecipients implements ShouldQueue
 
     protected $ignoredDomains;
 
-    public function __construct($addresses, ViewTask $viewTask, $ldapConnection, string $ignoredDomains)
+    public function __construct($addresses, ViewTask $viewTask, $ldapConnection, ?string $ignoredDomains)
     {
         $this->addresses = $addresses;
 
@@ -69,7 +69,7 @@ class QueryLdapRecipients implements ShouldQueue
             RelayRecipient::firstOrcreate([
                 'payload' => $address,
                 'data_source' => $source,
-                'action' => 'ok',
+                'action' => 'OK',
             ]);
         });
 
