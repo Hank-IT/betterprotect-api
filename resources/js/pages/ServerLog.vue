@@ -60,11 +60,14 @@
             </b-alert>
 
             <b-row v-if="totalRows > 10">
-                <b-col cols="1">
+                <b-col cols="2">
                     <b-form-select v-model="perPage" :options="displayedRowsOptions" v-if="!logsLoading" @change="getLogs"></b-form-select>
                 </b-col>
-                <b-col cols="2">
+                <b-col cols="2" offset="3">
                     <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage" v-if="!logsLoading"></b-pagination>
+                </b-col>
+                <b-col cols="2" offset="3" v-if="logs.length">
+                    <p class="mt-1">Zeige Zeile {{ from }} bis {{ to }} von {{ totalRows }} Zeilen.</p>
                 </b-col>
             </b-row>
         </template>
@@ -170,6 +173,8 @@
                  */
                 currentPage: 1,
                 perPage: 10,
+                to: 0,
+                from: 0,
                 totalRows: null,
                 sortBy: 'reported_at',
                 sortDesc: true,
@@ -352,6 +357,8 @@
                 }).then((response) => {
                     this.logs = Object.values(response.data.data.data);
                     this.totalRows = response.data.data.total;
+                    this.from = response.data.data.from;
+                    this.to = response.data.data.to;
                     this.logsLoading = false;
                 }).catch((error) => {
                     if (error.response) {
