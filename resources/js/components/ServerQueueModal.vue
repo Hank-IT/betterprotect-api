@@ -1,6 +1,8 @@
 <template>
     <div class="server.queue">
         <b-modal id="server-queue-modal" size="xl" title="Server Mail Queue" @shown="modalShown">
+            <b-btn variant="secondary" @click="modalShown" class="mb-2"><i class="fas fa-sync"></i></b-btn>
+
             <div class="text-center" v-if="queuedMailsLoading">
                 <div class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
