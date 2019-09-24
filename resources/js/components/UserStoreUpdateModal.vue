@@ -74,7 +74,7 @@
 
                     axios.get('/user/' + this.user.id).then((response) => {
                         this.form = response.data;
-                    }).catch(function (error) {
+                    }).catch((error) => {
                         if (error.response) {
                             if (error.response.status === 422) {
                                 this.errors = error.response.data.errors;

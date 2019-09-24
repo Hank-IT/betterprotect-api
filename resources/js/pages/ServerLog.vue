@@ -27,9 +27,6 @@
                                     </date-range-picker>
                             </b-input-group-prepend>
                             <b-form-input v-model="search" placeholder="Suche" @change="getLogs"/>
-                            <b-input-group-append>
-                                <b-btn>Leeren</b-btn>
-                            </b-input-group-append>
                         </b-input-group>
                     </b-form-group>
                 </b-col>
@@ -281,11 +278,11 @@
                     action: 'reject',
                     description: 'Über Mail Log hinzugefügt.',
                 }).then((response) => {
-                        this.$notify({
-                            title: response.data.message,
-                            type: 'success'
-                        });
-                    }).catch((error) => {
+                    this.$notify({
+                        title: response.data.message,
+                        type: 'success'
+                    });
+                }).catch((error) => {
                     if (error.response) {
                         if (error.response.status === 422) {
                             this.$notify({
@@ -356,7 +353,7 @@
                     this.logs = Object.values(response.data.data.data);
                     this.totalRows = response.data.data.total;
                     this.logsLoading = false;
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error.response) {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors;
@@ -384,7 +381,7 @@
                 this.currentStart = this.moment(data.startDate);
                 this.currentEnd = this.moment(data.endDate);
 
-                this.getLogs(this.currentPage);
+                this.getLogs();
             }
         }
     }

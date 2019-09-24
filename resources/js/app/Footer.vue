@@ -53,7 +53,7 @@
             getTasks() {
                 axios.get('/task').then((response) => {
                     this.tasks = response.data;
-                }).catch(function (error) {
+                }).catch((error) => {
                     console.log(error);
                 });
             },

@@ -28,7 +28,7 @@
                         title: response.data.message,
                         type: 'success'
                     });
-                }).catch(function (error) {
+                }).catch((error) => {
                     console.log(error);
                 });
             },
@@ -46,7 +46,7 @@
                     }
 
                     this.servers = data;
-                }).catch(function (error) {
+                }).catch((error) => {
                     this.$notify({
                         title: error.response.data.message,
                         type: 'error'

@@ -12,23 +12,20 @@
             <b-col md="4" offset="5" >
                 <b-form-group >
                     <b-input-group>
-                        <b-form-input v-model="filter" placeholder="Suche" />
-                        <b-input-group-append>
-                            <b-btn :disabled="!filter" @click="filter = ''">Leeren</b-btn>
-                        </b-input-group-append>
+                        <b-form-input v-model="search" placeholder="Suche" @change="getRecipients"/>
                     </b-input-group>
                 </b-form-group>
             </b-col>
         </b-row>
 
-        <template v-if="!loading">
-            <b-table hover :items="recipients" :fields="fields" :filter="filter" :current-page="currentPage" :per-page="perPage" v-if="recipients.length">
-                <template slot="action" slot-scope="data">
-                    <p :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</p>
+        <div v-if="!recipientsLoading">
+            <b-table hover :items="recipients" :fields="fields" v-if="recipients.length">
+                <template v-slot:cell(action)="data">
+                    <p :class="{ 'text-success': data.value.toString().toLowerCase() === 'ok', 'text-danger': data.value.toString().toLowerCase() === 'reject' }">{{ data.value }}</p>
                 </template>
 
                 <template v-slot:cell(app_actions)="data">
-                    <button class="btn btn-warning btn-sm" @click="deleteRecipient(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-warning btn-sm" @click="deleteRecipient"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 
@@ -36,10 +33,21 @@
                 <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
             </b-alert>
 
-            <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-if="totalRows > 10"></b-pagination>
-        </template>
+            <b-row v-if="totalRows > 10">
+                <b-col cols="2">
+                    <b-form-select v-model="perPage" :options="displayedRowsOptions" @change="getRecipients"></b-form-select>
+                </b-col>
+                <b-col cols="2" offset="3">
+                    <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
+                </b-col>
 
-        <div class="text-center" v-if="loading">
+                <b-col cols="2" offset="3" v-if="recipients.length">
+                    <p class="mt-1">Zeige Zeile {{ from }} bis {{ to }} von {{ totalRows }} Zeilen.</p>
+                </b-col>
+            </b-row>
+        </div>
+
+        <div class="text-center" v-if="recipientsLoading">
             <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Lade...</span>
             </div>
@@ -71,13 +79,31 @@
                 /**
                  * Loader
                  */
-                loading: false,
+                recipientsLoading: false,
+                ldapQueryLoading: false,
 
+                /**
+                 * Pagination
+                 */
                 currentPage: 1,
                 perPage: 10,
-                totalRows: null,
+                totalRows: 0,
+                from: 0,
+                to: 0,
+                displayedRowsOptions: [
+                    { value: 10, text: 10 },
+                    { value: 25, text: 25 },
+                    { value: 50, text: 50 },
+                    { value: 100, text: 100 },
+                ],
+
+                /**
+                 * Search
+                 */
+                search: null,
+
                 recipients: [],
-                filter: null,
+
                 fields: [
                     {
                         key: 'payload',
@@ -102,20 +128,40 @@
             }
         },
         methods: {
+            changePage(data) {
+                this.currentPage = data;
+                this.getRecipients();
+            },
             getRecipients() {
-                this.loading = true;
-                axios.get('/recipient').then((response) => {
-                    this.recipients = response.data.data;
-                    this.totalRows = this.recipients.length;
-                    this.loading = false;
-                }).catch(function (error) {
+                this.recipientsLoading = true;
+
+                axios.get('/recipient', {
+                    params: {
+                        currentPage: this.currentPage,
+                        perPage: this.perPage,
+                        search: this.search,
+                    }
+                }).then((response) => {
+                    this.recipients = response.data.data.data;
+                    this.totalRows = response.data.data.total;
+                    this.from = response.data.data.from;
+                    this.to = response.data.data.to;
+                    this.recipientsLoading = false;
+
+                    console.log(this.recipients.length);
+                }).catch((error) => {
                     if (error.response) {
                         this.$notify({
                             title: error.response.data.message,
                             type: 'error'
                         });
+                    } else {
+                        this.$notify({
+                            title: 'Unbekannter Fehler',
+                            type: 'error'
+                        });
                     }
-                    this.loading = false;
+                    this.recipientsLoading = false;
                 });
             },
             deleteRecipient(data) {
@@ -127,23 +173,19 @@
                         });
 
                         this.getRecipients();
-                    }).catch(function (error) {
-                    if (error.response) {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors;
-                        } else {
+                    }).catch((error) => {
+                        if (error.response) {
                             this.$notify({
                                 title: error.response.data.message,
                                 type: 'error'
                             });
+                        } else {
+                            this.$notify({
+                                title: 'Unbekannter Fehler',
+                                type: 'error'
+                            });
                         }
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
-                });
+                    });
             }
         }
     }

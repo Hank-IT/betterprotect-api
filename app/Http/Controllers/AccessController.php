@@ -19,7 +19,17 @@ class AccessController extends Controller
             'perPage' => 'required|int',
         ]);
 
-        return ClientSenderAccess::paginate($request->perPage, ['*'], 'page', $request->currentPage);
+        if ($request->filled('search')) {
+            $clientSenderAccess = ClientSenderAccess::where('payload', 'LIKE', '%' . $request->search . '%');
+        } else {
+            $clientSenderAccess = ClientSenderAccess::query();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => null,
+            'data' => $clientSenderAccess->paginate($request->perPage, ['*'], 'page', $request->currentPage),
+        ]);
     }
 
     public function store(Request $request)

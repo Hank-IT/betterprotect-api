@@ -7,12 +7,24 @@ use App\Models\RelayRecipient;
 
 class RecipientController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $this->validate($request, [
+            'search' => 'nullable|string',
+            'currentPage' => 'required|int',
+            'perPage' => 'required|int',
+        ]);
+
+        if ($request->filled('search')) {
+            $recipients = RelayRecipient::where('payload', 'LIKE', '%' . $request->search . '%');
+        } else {
+            $recipients = RelayRecipient::query();
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => null,
-            'data' => RelayRecipient::all(),
+            'data' => $recipients->paginate($request->perPage, ['*'], 'page', $request->currentPage),
         ]);
     }
 

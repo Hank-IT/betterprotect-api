@@ -73,7 +73,7 @@
                         }
 
                         this.checkSchemaLoading = false;
-                    }).catch(function (error) {
+                    }).catch((error) => {
                         this.schemaError = true;
                         this.checkSchemaLoading = false;
                     });
@@ -85,7 +85,7 @@
                             title: response.data.message,
                             type: 'success'
                         });
-                    }).catch(function (error) {
+                    }).catch((error) => {
                         if (error.response) {
                             this.$notify({
                                 title: error.response.data.message,
@@ -103,7 +103,7 @@
                         });
 
                         this.$emit('server-deleted', this.server.id);
-                    }).catch(function (error) {
+                    }).catch((error) => {
                         console.log(error);
                     });
             },

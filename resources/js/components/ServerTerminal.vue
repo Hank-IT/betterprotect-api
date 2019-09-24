@@ -44,7 +44,7 @@
                 axios.get('/server/' + this.server.id + '/terminal')
                     .then((response) => {
                         this.serverTerminalForm = response.data.data;
-                    }).catch(function (error) {
+                    }).catch((error) => {
                         console.log(error);
                     });
 

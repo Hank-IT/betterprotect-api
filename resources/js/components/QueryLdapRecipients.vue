@@ -22,14 +22,9 @@
                 this.getLdapDirectories();
             },
             getLdapDirectories() {
-                axios.get('/ldap', {
-                    params: {
-                        currentPage: this.currentPage,
-                        perPage: this.perPage,
-                    }
-                }).then((response) => {
+                axios.get('/ldap').then((response) => {
                     this.ldapDirectories = response.data.data;
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error.response) {
                         this.$notify({
                             title: error.response.data.message,
@@ -52,7 +47,7 @@
                     });
 
                     this.$refs.ldapQueryModal.hide();
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error.response) {
                         this.$notify({
                             title: error.response.data.message,

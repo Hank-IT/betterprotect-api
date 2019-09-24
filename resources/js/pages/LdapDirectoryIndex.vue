@@ -21,7 +21,7 @@
         </b-row>
 
         <template v-if="!loading">
-            <b-table hover :items="ldapDirectories" :fields="fields" :current-page="currentPage" :per-page="perPage" v-if="ldapDirectories.length">
+            <b-table hover :items="ldapDirectories" :fields="fields" v-if="ldapDirectories.length">
                 <template v-slot:cell(app_actions)="data">
                     <button class="btn btn-secondary btn-sm" @click="openUpdateModal(data)"><i class="fas fa-edit"></i></button>
                     <button class="btn btn-warning btn-sm" @click="deleteLdapDirectory(data)"><i class="fas fa-trash-alt"></i></button>

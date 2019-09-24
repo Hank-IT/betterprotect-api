@@ -101,7 +101,7 @@
                     this.users = response.data.data;
                     this.totalRows = this.users.length;
                     this.loading = false;
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error.response) {
                         this.$notify({
                             title: error.response.data.message,

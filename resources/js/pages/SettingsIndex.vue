@@ -94,7 +94,7 @@
             getActiveLdap() {
                 axios.get('/settings/auth/ldap').then((response) => {
                     this.ldapAuthForm.ldap_directory = response.data.data;
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error.response) {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors;
@@ -115,7 +115,7 @@
             getLdapDirectories() {
                 axios.get('/ldap').then((response) => {
                     this.ldapDirectories = response.data.data;
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error.response) {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors;
@@ -200,7 +200,7 @@
             getActiveAuthFallback() {
                 axios.get('/settings/auth/fallback').then((response) => {
                     this.login_fallback = response.data.data;
-                }).catch(function (error) {
+                }).catch((error) => {
                     if (error.response) {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors;

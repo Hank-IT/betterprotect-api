@@ -208,7 +208,7 @@
                 } else {
                     axios.get('/ldap/' + this.ldapDirectory.id).then((response) => {
                         this.form = response.data;
-                    }).catch(function (error) {
+                    }).catch((error) => {
                         // handle error
                         console.log(error);
                     });
