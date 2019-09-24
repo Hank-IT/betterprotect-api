@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientSenderAccess;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Exceptions\ErrorException;
@@ -10,12 +11,24 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $this->validate($request, [
+            'search' => 'nullable|string',
+            'currentPage' => 'required|int',
+            'perPage' => 'required|int',
+        ]);
+
+        if ($request->filled('search')) {
+            $user = User::where('username', 'LIKE', '%' . $request->search . '%');
+        } else {
+            $user = User::query();
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => null,
-            'data' => User::all()
+            'data' => $user->paginate($request->perPage, ['*'], 'page', $request->currentPage),
         ]);
     }
 

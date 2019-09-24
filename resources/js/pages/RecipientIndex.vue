@@ -12,7 +12,7 @@
             <b-col md="4" offset="5" >
                 <b-form-group >
                     <b-input-group>
-                        <b-form-input v-model="search" placeholder="Suche" @change="getRecipients"/>
+                        <b-form-input v-model="search" placeholder="Suche Eintrag" @change="getRecipients"/>
                     </b-input-group>
                 </b-form-group>
             </b-col>

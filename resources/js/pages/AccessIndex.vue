@@ -11,7 +11,7 @@
             <b-col md="4" offset="5">
                 <b-form-group >
                     <b-input-group>
-                        <b-form-input v-model="search" placeholder="Suche" @change="getAccessRules"/>
+                        <b-form-input v-model="search" placeholder="Suche Eintrag" @change="getAccessRules"/>
                     </b-input-group>
                 </b-form-group>
             </b-col>
@@ -39,7 +39,6 @@
                 <b-col cols="2" offset="3">
                     <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
                 </b-col>
-
                 <b-col cols="2" offset="3" v-if="rules.length">
                     <p class="mt-1">Zeige Zeile {{ from }} bis {{ to }} von {{ totalRows }} Zeilen.</p>
                 </b-col>

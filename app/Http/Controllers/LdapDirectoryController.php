@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientSenderAccess;
 use Illuminate\Http\Request;
 use App\Models\LdapDirectory;
 use App\Exceptions\ErrorException;
@@ -18,7 +19,17 @@ class LdapDirectoryController extends Controller
         ]);
 
         if ($request->filled('currentPage', 'perPage')) {
-            return LdapDirectory::paginate($request->perPage, ['*'], 'page', $request->currentPage);
+            if ($request->filled('search')) {
+                $ldapDirectory = LdapDirectory::where('connection', 'LIKE', '%' . $request->search . '%');
+            } else {
+                $ldapDirectory = LdapDirectory::query();
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => null,
+                'data' => $ldapDirectory->paginate($request->perPage, ['*'], 'page', $request->currentPage),
+            ]);
         }
 
         return response()->json([

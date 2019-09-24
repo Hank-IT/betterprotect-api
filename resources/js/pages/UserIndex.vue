@@ -11,17 +11,14 @@
             <b-col md="4" offset="5" >
                 <b-form-group >
                     <b-input-group>
-                        <b-form-input v-model="filter" placeholder="Suche" />
-                        <b-input-group-append>
-                            <b-btn :disabled="!filter" @click="filter = ''">Leeren</b-btn>
-                        </b-input-group-append>
+                        <b-form-input v-model="filter" placeholder="Suche Benutzername" @change="getUsers"/>
                     </b-input-group>
                 </b-form-group>
             </b-col>
         </b-row>
 
         <template v-if="!loading">
-            <b-table hover :items="users" :fields="fields" :filter="filter" :current-page="currentPage" :per-page="perPage" v-if="users.length">
+            <b-table hover :items="users" :fields="fields" v-if="users.length">
                 <template v-slot:cell(app_actions)="data">
                     <button class="btn btn-secondary btn-sm" @click="openUpdateModal(data)"><i class="fas fa-edit"></i></button>
                     <button class="btn btn-warning btn-sm" @click="deleteUser(data)"><i class="fas fa-trash-alt"></i></button>
@@ -32,7 +29,17 @@
                 <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
             </b-alert>
 
-            <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-if="totalRows > 10"></b-pagination>
+            <b-row v-if="totalRows > 10">
+                <b-col cols="2">
+                    <b-form-select v-model="perPage" :options="displayedRowsOptions" @change="getUsers"></b-form-select>
+                </b-col>
+                <b-col cols="2" offset="3">
+                    <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-if="totalRows > 10"  @change="changePage"></b-pagination>
+                </b-col>
+                <b-col cols="2" offset="3" v-if="users.length">
+                    <p class="mt-1">Zeige Zeile {{ from }} bis {{ to }} von {{ totalRows }} Zeilen.</p>
+                </b-col>
+            </b-row>
         </template>
 
         <div class="text-center" v-if="loading">
@@ -61,12 +68,32 @@
                  */
                 loading: false,
 
-                modalUser: null,
+                /**
+                 * Pagination
+                 */
                 currentPage: 1,
                 perPage: 10,
-                totalRows: null,
+                totalRows: 0,
+                from: 0,
+                to: 0,
+                displayedRowsOptions: [
+                    { value: 10, text: 10 },
+                    { value: 25, text: 25 },
+                    { value: 50, text: 50 },
+                    { value: 100, text: 100 },
+                ],
+
+                /**
+                 * Search
+                 */
+                search: null,
+
+                modalUser: null,
                 users: [],
-                filter: null,
+
+                /**
+                 * Table
+                 */
                 fields: [
                     {
                         key: 'username',
@@ -95,16 +122,33 @@
             }
         },
         methods: {
+            changePage(data) {
+                this.currentPage = data;
+                this.getUsers();
+            },
             getUsers() {
                 this.loading = true;
-                axios.get('/user').then((response) => {
-                    this.users = response.data.data;
-                    this.totalRows = this.users.length;
+                axios.get('/user', {
+                    params: {
+                        currentPage: this.currentPage,
+                        perPage: this.perPage,
+                        search: this.search,
+                    }
+                }).then((response) => {
+                    this.users = response.data.data.data;
+                    this.totalRows = response.data.data.total;
+                    this.from = response.data.data.from;
+                    this.to = response.data.data.to;
                     this.loading = false;
                 }).catch((error) => {
                     if (error.response) {
                         this.$notify({
                             title: error.response.data.message,
+                            type: 'error'
+                        });
+                    } else {
+                        this.$notify({
+                            title: 'Unbekannter Fehler',
                             type: 'error'
                         });
                     }
@@ -121,10 +165,17 @@
 
                         this.getUsers();
                     }).catch((error) => {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: error.response.data.status
-                        });
+                        if (error.response) {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        } else {
+                            this.$notify({
+                                title: 'Unbekannter Fehler',
+                                type: 'error'
+                            });
+                        }
                 });
             },
             openUpdateModal(data) {

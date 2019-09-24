@@ -8,12 +8,24 @@ use Illuminate\Support\Facades\Validator;
 
 class TransportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $this->validate($request, [
+            'search' => 'nullable|string',
+            'currentPage' => 'required|int',
+            'perPage' => 'required|int',
+        ]);
+
+        if ($request->filled('search')) {
+            $transport = Transport::where('domain', 'LIKE', '%' . $request->search . '%');
+        } else {
+            $transport = Transport::query();
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => null,
-            'data' => Transport::all(),
+            'data' => $transport->paginate($request->perPage, ['*'], 'page', $request->currentPage),
         ]);
     }
 
