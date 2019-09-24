@@ -21,7 +21,7 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Passwort *" v-if="user && user.objectguid == null">
+            <b-form-group label="Passwort *" v-if="user == null || (user && user.objectguid === null)">
                 <b-form-input :class="{ 'is-invalid': errors.password }" type="password" ref="email" v-model="form.password" placeholder="Passwort"></b-form-input>
 
                 <b-form-invalid-feedback>
@@ -31,7 +31,7 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Passwort bestätigen *" v-if="user && user.objectguid == null">
+            <b-form-group label="Passwort bestätigen *" v-if="user == null || (user && user.objectguid === null)">
                 <b-form-input :class="{ 'is-invalid': errors.password_confirmation }" type="password" ref="password_confirmation" v-model="form.password_confirmation" placeholder="Passwort bestätigen"></b-form-input>
 
                 <b-form-invalid-feedback>
@@ -70,6 +70,8 @@
                 if (this.user == null) {
                     this.form = {};
                 } else {
+                    console.log(this.user);
+
                     axios.get('/user/' + this.user.id).then((response) => {
                         this.form = response.data;
                     }).catch(function (error) {
