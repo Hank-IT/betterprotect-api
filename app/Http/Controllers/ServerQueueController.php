@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Server;
 use App\Exceptions\ErrorException;
+use App\Postfix\Queue;
 use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
 
 class ServerQueueController extends Controller
@@ -17,34 +18,7 @@ class ServerQueueController extends Controller
      */
     public function index(Server $server)
     {
-        if (empty($server->sudo)) {
-            throw new ErrorException('Terminalzugriff ist nicht konfiguriert.');
-        }
-
-        $console = $server->console();
-
-        $console->sudo($server->sudo)
-            ->bin($server->postqueue)
-            ->param('-j')
-            ->exec();
-
-        if ($console->getExitStatus() !== 0) {
-            throw new ErrorException;
-        }
-
-        $output = $console->getOutput();
-
-        // each mail is its own json object
-        $output = explode("\n", $output);
-
-        // remove last newline
-        array_pop($output);
-
-        $mails = [];
-
-        foreach($output as $mail) {
-            $mails[] = json_decode($mail, true);
-        }
+        $mails = (new Queue($server))->get();
 
         return response()->json([
             'status' => 'success',
@@ -53,52 +27,38 @@ class ServerQueueController extends Controller
         ]);
     }
 
+    /**
+     * @param Server $server
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ErrorException
+     */
     public function store(Server $server)
     {
-        if (empty($server->sudo)) {
-            throw new ErrorException('Terminalzugriff ist nicht konfiguriert.');
-        }
-
-        $console = $server->console();
-
-        $console->sudo($server->sudo)
-            ->bin($server->postqueue)
-            ->param('-f')
-            ->exec();
-
-        if ($console->getExitStatus() !== 0) {
-            throw new ErrorException;
-        }
+        $output = (new Queue($server))->flush();
 
         return response()->json([
             'status' => 'success',
             'message' => 'Mail Queue erfolgreich geflushed.',
-            'data' => $console->getOutput(),
+            'data' =>$output,
         ]);
     }
 
+    /**
+     * @param Server $server
+     * @param $queueId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ErrorException
+     * @throws PublicKeyMismatchException
+     * @throws \MrCrankHank\ConsoleAccess\Exceptions\MissingCommandException
+     */
     public function destroy(Server $server, $queueId)
     {
-        if (empty($server->sudo)) {
-            throw new ErrorException('Terminalzugriff ist nicht konfiguriert.');
-        }
-
-        $console = $server->console();
-
-        $console->sudo($server->sudo)
-            ->bin($server->postsuper)
-            ->param('-d')
-            ->param($queueId)
-            ->exec();
-
-        if ($console->getExitStatus() !== 0) {
-            throw new ErrorException;
-        }
+       $output = (new Queue($server))->deleteMail($queueId);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Mail erfolgreich gelöscht.',
-            'data' => $console->getOutput(),
+            'data' => $output,
         ]);
     }
 }
