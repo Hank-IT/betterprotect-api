@@ -55,6 +55,8 @@ import faEnvelope from '@fortawesome/fontawesome-free-solid/faEnvelope';
 import faKey from '@fortawesome/fontawesome-free-solid/faKey';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 import faArrowsAltV from '@fortawesome/fontawesome-free-solid/faArrowsAltV';
+//import faMailBulk from '@fortawesome/fontawesome-free-solid/faMailBulk';
+import faPaperPlane from '@fortawesome/fontawesome-free-solid/faPaperPlane';
 
 fontawesome.library.add(faUser);
 fontawesome.library.add(faSignOutAlt);
@@ -70,6 +72,8 @@ fontawesome.library.add(faEnvelope);
 fontawesome.library.add(faKey);
 fontawesome.library.add(faUpload);
 fontawesome.library.add(faArrowsAltV);
+//fontawesome.library.add(faMailBulk);
+fontawesome.library.add(faPaperPlane);
 
 /*
  * Axios

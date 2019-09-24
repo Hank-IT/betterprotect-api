@@ -56,7 +56,7 @@ class ServerQueueController extends Controller
     public function store(Server $server)
     {
         if (empty($server->sudo)) {
-            throw new ErrorException('Terminalzugriff ist nocht konfiguriert.');
+            throw new ErrorException('Terminalzugriff ist nicht konfiguriert.');
         }
 
         $console = $server->console();
@@ -80,7 +80,7 @@ class ServerQueueController extends Controller
     public function destroy(Server $server, $queueId)
     {
         if (empty($server->sudo)) {
-            throw new ErrorException('Terminalzugriff ist nocht konfiguriert.');
+            throw new ErrorException('Terminalzugriff ist nicht konfiguriert.');
         }
 
         $console = $server->console();

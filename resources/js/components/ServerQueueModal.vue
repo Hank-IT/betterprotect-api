@@ -1,7 +1,14 @@
 <template>
     <div class="server.queue">
         <b-modal id="server-queue-modal" size="xl" title="Server Mail Queue" @shown="modalShown">
-            <b-btn variant="secondary" @click="modalShown" class="mb-2"><i class="fas fa-sync"></i></b-btn>
+            <b-row class="mb-2">
+                <b-col md="2">
+                    <b-button-group>
+                        <b-btn variant="primary" @click="flushQueue"><i class="fas fa-paper-plane"></i> Flush</b-btn>
+                        <b-btn variant="secondary" @click="getQueue"><i class="fas fa-sync"></i></b-btn>
+                    </b-button-group>
+                </b-col>
+            </b-row>
 
             <div class="text-center" v-if="queuedMailsLoading">
                 <div class="spinner-border" role="status">
@@ -90,18 +97,13 @@
             }
         },
         methods: {
-            modalShown() {
-                this.error = false;
-                this.queuedMails = [];
-
+            getQueue() {
                 axios.get('/server/' + this.server.id + '/queue')
                     .then((response) => {
                         this.queuedMails = response.data.data;
                         this.queuedMailsLoading = false;
-                })
+                    })
                     .catch((error) => {
-                        console.log(error);
-
                         if (error.response.status === 500) {
                             this.error = error.response.data.message;
                         } else {
@@ -112,7 +114,13 @@
                         }
 
                         this.queuedMailsLoading = false;
-                });
+                    });
+            },
+            modalShown() {
+                this.error = false;
+                this.queuedMails = [];
+
+                this.getQueue();
             },
             deleteQueuedMail(data) {
                 axios.delete('/server/' + this.server.id + '/queue/' + data.item.queue_id)
@@ -122,9 +130,7 @@
                             type: 'success'
                         });
 
-                        let queuedMailsIndex = this.queuedMails.findIndex(x => x.queue_id === data.item.queue_id);
-
-                        this.$delete(this.queuedMails, queuedMailsIndex);
+                        this.getQueue();
                     })
                     .catch((error) => {
                         if (error.response.status === 500) {
@@ -132,6 +138,30 @@
                         } else {
                             this.$notify({
                                 title: error.response.data.message,
+                                type: 'error'
+                            });
+                        }
+                    });
+            },
+            flushQueue() {
+                axios.post('/server/' + this.server.id + '/queue')
+                    .then((response) => {
+                        this.$notify({
+                            title: response.data.message,
+                            type: 'success'
+                        });
+
+                        this.getQueue();
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        } else {
+                            this.$notify({
+                                title: 'Unbekannter Fehler',
                                 type: 'error'
                             });
                         }
