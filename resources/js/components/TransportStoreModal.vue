@@ -51,7 +51,7 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-checkbox id="nexthop_mx" v-model="form.nexthop_mx" name="nexthop_mx" value="true" unchecked-value="false" v-if="form.nexthop_type === 'hostname'">Nexthop MX Lookup</b-form-checkbox>
+            <b-form-checkbox id="nexthop_mx" v-model="form.nexthop_mx" name="nexthop_mx" value="1" unchecked-value="0" v-if="form.nexthop_type === 'hostname'">Nexthop MX Lookup</b-form-checkbox>
         </b-form>
     </b-modal>
 </template>

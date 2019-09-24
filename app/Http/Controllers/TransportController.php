@@ -25,7 +25,7 @@ class TransportController extends Controller
             'nexthop_type' => 'nullable|string|in:ipv4,ipv6,hostname',
             'nexthop' => 'nullable|string',
             'nexthop_port' => 'nullable|integer|max:65535|required_unless:nexthop_type,null',
-            'nexthop_mx' => 'nullable|in:true,false|required_if:nexthop_type,hostname',
+            'nexthop_mx' => 'nullable|boolean',
         ]);
 
         $validator->sometimes('nexthop', 'required', function ($input) {

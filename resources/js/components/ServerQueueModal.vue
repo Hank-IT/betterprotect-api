@@ -14,24 +14,23 @@
                      :sort-desc.sync="sortDesc"
                      v-else
             >
-                <template slot="arrival_time" slot-scope="data">
+                <template v-slot:cell(arrival_time)="data">
                     {{ moment.unix(data.item.arrival_time).format("YYYY-MM-DD HH:mm:ss") }}
                 </template>
 
-                <template slot="sender" slot-scope="data">
+                <template v-slot:cell(sender)="data">
                     <span v-b-popover.hover="data.item.sender">
                         {{ data.item.sender.trunc(40) }}
                     </span>
                 </template>
 
-                <template slot="recipients" slot-scope="data">
+                <template v-slot:cell(recipients)="data">
                     <ul class="list-group">
                         <li class="list-group-item" v-for="recipient in data.item.recipients">{{ recipient.address }} ({{ recipient.delay_reason }})</li>
                     </ul>
                 </template>
 
-                <!-- A virtual composite column -->
-                <template slot="app_actions" slot-scope="data">
+                <template v-slot:cell(app_actions)="data">
                     <button class="btn btn-warning btn-sm" @click="deleteQueuedMail(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
