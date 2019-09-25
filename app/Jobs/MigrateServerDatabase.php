@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Task;
 use App\Models\Server;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -50,9 +51,9 @@ class MigrateServerDatabase implements ShouldQueue
         ]);
 
         if ($serverDatabase->migrate() == 0) {
-            $task->update(['message' => 'Datenbank erfolgreich aktualisiert.', 'status' => Task::STATUS_FINISHED]);
+            $task->update(['message' => 'Datenbank erfolgreich aktualisiert.', 'status' => Task::STATUS_FINISHED, 'endDate' => Carbon::now()]);
         } else {
-            $task->update(['message' => 'Datenbank konnte nicht aktualisiert werden.', 'status' => Task::STATUS_ERROR]);
+            $task->update(['message' => 'Datenbank konnte nicht aktualisiert werden.', 'status' => Task::STATUS_ERROR, 'endDate' => Carbon::now()]);
         }
     }
 }
