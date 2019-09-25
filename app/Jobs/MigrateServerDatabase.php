@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\Task;
 use App\Models\Server;
-use App\Services\ViewTask;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -39,7 +39,7 @@ class MigrateServerDatabase implements ShouldQueue
      */
     public function handle()
     {
-        $viewTask = app(ViewTask::class, [
+        $task = Task::create([
             'message' => 'Datenbank auf Server ' . $this->server->hostname . ' wird aktualisiert...',
             'task' => 'migrate-server-db',
             'username' => $this->user->username,
@@ -50,9 +50,9 @@ class MigrateServerDatabase implements ShouldQueue
         ]);
 
         if ($serverDatabase->migrate() == 0) {
-            $viewTask->finishedSuccess('Datenbank erfolgreich aktualisiert.');
+            $task->update(['message' => 'Datenbank erfolgreich aktualisiert.', 'status' => Task::STATUS_FINISHED]);
         } else {
-            $viewTask->finishedError('Datenbank konnte nicht aktualisiert werden.');
+            $task->update(['message' => 'Datenbank konnte nicht aktualisiert werden.', 'status' => Task::STATUS_ERROR]);
         }
     }
 }

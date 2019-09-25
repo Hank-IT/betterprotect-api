@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Services\ViewTask;
 use Carbon\Carbon;
 use App\Models\Task;
 use Illuminate\Console\Command;
@@ -30,12 +29,11 @@ class TaskCleanCommand extends Command
      */
     public function handle()
     {
-        Task::where('startDate', '<=', Carbon::now()
-            ->subHour(2))
+        Task::where('startDate', '<=', Carbon::now()->subHour(2))
             ->whereNull('endDate')
             ->get()
             ->each(function($task) {
-                ViewTask::fromModel($task)->finishedError('Timeout');
+                $task->update(['message' => 'Timeout', 'status' => Task::STATUS_ERROR]);
         });
     }
 }

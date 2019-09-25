@@ -4,13 +4,14 @@ namespace App\Services;
 
 use App\Models\LdapDirectory;
 use App\Jobs\QueryLdapRecipients;
+use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 
 class LdapRecipientQuery
 {
     public static function run(LdapDirectory $ldapDirectory)
     {
-        $viewTask = app(ViewTask::class, [
+        $task = Task::create([
             'message' => 'LDAP ' . $ldapDirectory->connection . ': Abfrage wird durchgeführt.',
             'task' => 'query-ldap-recipients',
             'username' => Auth::user()->username,
@@ -31,6 +32,6 @@ class LdapRecipientQuery
         // Remove null values, reorder and flatten
         $addresses = $recipients->filter()->values()->flatten();
 
-        QueryLdapRecipients::dispatch(base64_encode(serialize($addresses)), $viewTask, $ldapDirectory->connection, $ldapDirectory->ignored_domains)->onQueue('task');
+        QueryLdapRecipients::dispatch(base64_encode(serialize($addresses)), $task, $ldapDirectory->connection, $ldapDirectory->ignored_domains)->onQueue('task');
     }
 }

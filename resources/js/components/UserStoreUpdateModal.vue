@@ -70,8 +70,6 @@
                 if (this.user == null) {
                     this.form = {};
                 } else {
-                    console.log(this.user);
-
                     axios.get('/user/' + this.user.id).then((response) => {
                         this.form = response.data;
                     }).catch((error) => {

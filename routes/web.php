@@ -67,6 +67,13 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::delete('/recipient/{recipient}', 'RecipientController@destroy')->name('recipient.destroy');
 
     /**
+     * Relay Domains
+     */
+    Route::get('/relay-domain', 'RelayDomainController@index')->name('relay-domain.index');
+    Route::post('/relay-domain', 'RelayDomainController@store')->name('relay-domain.store');
+    Route::delete('/relay-domain/{relayDomain}', 'RelayDomainController@destroy')->name('relay-domain.destroy');
+
+    /**
      * Transport
      */
     Route::get('/transport', 'TransportController@index')->name('transport.index');

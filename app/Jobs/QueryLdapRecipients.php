@@ -2,8 +2,9 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
 use Email\Parse;
-use App\Services\ViewTask;
+use App\Models\Task;
 use Illuminate\Bus\Queueable;
 use App\Models\RelayRecipient;
 use Illuminate\Support\Facades\Log;
@@ -19,17 +20,17 @@ class QueryLdapRecipients implements ShouldQueue
 
     protected $addresses;
 
-    protected $viewTask;
+    protected $task;
 
     protected $ldapConnection;
 
     protected $ignoredDomains;
 
-    public function __construct($addresses, ViewTask $viewTask, $ldapConnection, ?string $ignoredDomains)
+    public function __construct($addresses, Task $task, $ldapConnection, ?string $ignoredDomains)
     {
         $this->addresses = $addresses;
 
-        $this->viewTask = $viewTask;
+        $this->task = $task;
 
         $this->ldapConnection = $ldapConnection;
 
@@ -49,7 +50,7 @@ class QueryLdapRecipients implements ShouldQueue
 
         $source = 'ldap:' . $this->ldapConnection;
 
-        $this->viewTask->update('LDAP ' .  $this->ldapConnection . ': Abfrage erfolgreich. Empfänger werden eingefügt...');
+        $this->task->update(['message' => 'LDAP ' .  $this->ldapConnection . ': Abfrage erfolgreich. Empfänger werden eingefügt...']);
 
         // Parse and validate addresses
         $parsedLdapRecipients = $addresses->map(function($address) {
@@ -73,7 +74,7 @@ class QueryLdapRecipients implements ShouldQueue
             ]);
         });
 
-        $this->viewTask->update('LDAP ' .  $this->ldapConnection . ': Alte Empfänger werden entfernt...');
+        $this->task->update(['message' => 'LDAP ' .  $this->ldapConnection . ': Alte Empfänger werden entfernt...']);
 
         // Diff data and remove non existent records
         // Pull all records
@@ -89,7 +90,11 @@ class QueryLdapRecipients implements ShouldQueue
             }
         });
 
-        $this->viewTask->finishedSuccess('LDAP ' .  $this->ldapConnection . ': Empfänger wurden erfolgreich aktualisiert.');
+        $this->task->update([
+            'message' => 'LDAP ' .  $this->ldapConnection . ': Empfänger wurden erfolgreich aktualisiert.',
+            'status' => Task::STATUS_FINISHED,
+            'endDate' => Carbon::now(),
+        ]);
     }
 
     protected function parseAddress($address)

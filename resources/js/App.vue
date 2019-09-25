@@ -38,6 +38,7 @@
                     wssPort: 443,
                     wsPath: '/ws',
                     disableStats: true,
+                    enabledTransports: ['ws', 'wss'],
                     auth: {
                         headers: {
                             Authorization: 'Bearer ' + this.$auth.token(),

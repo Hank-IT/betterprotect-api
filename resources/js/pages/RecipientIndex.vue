@@ -147,8 +147,6 @@
                     this.from = response.data.data.from;
                     this.to = response.data.data.to;
                     this.recipientsLoading = false;
-
-                    console.log(this.recipients.length);
                 }).catch((error) => {
                     if (error.response) {
                         this.$notify({
