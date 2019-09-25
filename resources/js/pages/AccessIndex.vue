@@ -24,7 +24,7 @@
                 </template>
 
                 <template v-slot:cell(app_actions)="data">
-                    <button class="btn btn-warning btn-sm" @click="deleteAccess(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 
@@ -48,6 +48,8 @@
         <b-modal title="Beschreibung" ok-only id="access-description-modal">
             <p>{{ this.modalDescription }}</p>
         </b-modal>
+
+        <are-you-sure-modal v-on:answered-yes="deleteAccess" v-on:answered-no="row = null"></are-you-sure-modal>
 
         <div class="text-center" v-if="loading">
             <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
@@ -126,9 +128,17 @@
                         label: ''
                     }
                 ],
+                /**
+                 * Are you sure modal
+                 */
+                row: null,
             }
         },
         methods: {
+            deleteRow(data) {
+                this.row = data.item;
+                this.$bvModal.show('are-you-sure-modal');
+            },
             showModal(row) {
                 this.modalDescription = row.description;
 
@@ -167,8 +177,8 @@
                     this.loading = false;
                 });
             },
-            deleteAccess(row) {
-                axios.delete('/access/' + row.item.id).then((response) => {
+            deleteAccess() {
+                axios.delete('/access/' + this.row.id).then((response) => {
                     this.getAccessRules();
 
                     this.$notify({

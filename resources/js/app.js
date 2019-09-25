@@ -25,6 +25,7 @@ import Login from './components/auth/Login';
 import ServerTerminalModal from './components/ServerTerminalModal';
 import ServerQueueModal from './components/ServerQueueModal';
 import RelayDomainStoreModal from './components/RelayDomainStoreModal';
+import AreYouSureModal from './components/AreYouSureModal';
 import RelayDomainIndex from "./pages/RelayDomainIndex";
 import ServerLog from './pages/ServerLog';
 import moment from 'moment';
@@ -59,6 +60,7 @@ import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 import faArrowsAltV from '@fortawesome/fontawesome-free-solid/faArrowsAltV';
 //import faMailBulk from '@fortawesome/fontawesome-free-solid/faMailBulk';
 import faPaperPlane from '@fortawesome/fontawesome-free-solid/faPaperPlane';
+import faExclamation from '@fortawesome/fontawesome-free-solid/faExclamation';
 
 fontawesome.library.add(faUser);
 fontawesome.library.add(faSignOutAlt);
@@ -76,6 +78,7 @@ fontawesome.library.add(faUpload);
 fontawesome.library.add(faArrowsAltV);
 //fontawesome.library.add(faMailBulk);
 fontawesome.library.add(faPaperPlane);
+fontawesome.library.add(faExclamation);
 
 /*
  * Axios
@@ -213,6 +216,7 @@ Vue.component('UserStoreUpdateModal', UserStoreUpdateModal);
 Vue.component('LdapDirectoryStoreUpdateModal', LdapDirectoryStoreUpdateModal);
 Vue.component('TransportStoreModal', TransportStoreModal);
 Vue.component('RelayDomainStoreModal', RelayDomainStoreModal);
+Vue.component('AreYouSureModal', AreYouSureModal);
 
 App.router = Vue.router;
 

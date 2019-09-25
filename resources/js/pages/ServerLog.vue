@@ -35,23 +35,23 @@
 
         <template v-if="!logsLoading">
             <b-table hover :items="logs" :fields="fields" @row-clicked="showModal" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" v-if="logs.length">
-                <template slot="from" slot-scope="data">
-                <span v-b-popover.hover="data.item.from" v-if="data.item.from">
-                    {{ data.item.from.trunc(40) }}
-                </span>
+                <template v-slot:cell(from)="data">
+                    <span v-b-popover.hover="data.item.from" v-if="data.item.from">
+                        {{ data.item.from.trunc(40) }}
+                    </span>
                 </template>
-                <template slot="to" slot-scope="data">
-                <span v-b-popover.hover="data.item.to" v-if="data.item.to">
-                    {{ data.item.to.trunc(40) }}
-                </span>
+                <template v-slot:cell(to)="data">
+                    <span v-b-popover.hover="data.item.to" v-if="data.item.to">
+                        {{ data.item.to.trunc(40) }}
+                    </span>
                 </template>
-                <template slot="client" slot-scope="data">
-                <span v-b-popover.hover="data.item.client" v-if="data.item.client">
-                    {{ data.item.client.trunc(40) }}
-                </span>
+                <template v-slot:cell(client)="data">
+                    <span v-b-popover.hover="data.item.client" v-if="data.item.client">
+                        {{ data.item.client.trunc(40) }}
+                    </span>
                 </template>
-                <template slot="status" slot-scope="data">
-                    <p v-bind:class="statusClassObject(data)">{{ data.item.status }}</p>
+                <template v-slot:cell(status)="data">
+                    <p v-bind:class="getStatusClass(data)">{{ data.item.status }}</p>
                 </template>
             </b-table>
 
@@ -258,16 +258,6 @@
                 detailedRow: [],
             }
         },
-        computed: {
-            statusClassObject: function (data) {
-                return {
-                    'text-danger': data.item.status === 'reject',
-                    'text-warning': data.item.status === 'deferred',
-                    'text-success': data.item.status === 'sent',
-                    'text-secondary': data.item.status
-                }
-            }
-        },
         filters: {
             date: function(value) {
                 if (!value) return '';
@@ -389,6 +379,18 @@
                 this.currentEnd = this.moment(data.endDate);
 
                 this.getLogs();
+            },
+            getStatusClass(data) {
+                switch(data.item.status) {
+                    case 'sent':
+                        return 'text-success';
+                    case 'reject':
+                        return 'text-danger';
+                    case 'deferred':
+                        return 'text-warning';
+                    default:
+                        return 'text-secondary';
+                }
             }
         }
     }

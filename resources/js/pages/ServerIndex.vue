@@ -94,7 +94,7 @@
                 v-for="server in servers"
                 v-bind:key="server.id"
                 v-bind:server="server"
-                v-on:server-deleted="deleteServer"
+                v-on:server-deleted="getAllServers"
                 v-on:edit-server="editServer"
                 v-on:open-server-terminal-modal="openServerTerminalModal"
                 v-on:open-server-queue-modal="openServerQueueModal"
@@ -244,11 +244,6 @@
 
                     this.loading = false;
                 });
-            },
-            deleteServer(id) {
-                let serverIndex = this.servers.findIndex(x => x.id === id);
-
-                this.$delete(this.servers, serverIndex);
             },
             editServer(id) {
                 this.serverFormUpdated = true;

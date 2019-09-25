@@ -25,7 +25,7 @@
                 </template>
 
                 <template v-slot:cell(app_actions)="data">
-                    <button class="btn btn-warning btn-sm" @click="deleteRecipient"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 
@@ -57,6 +57,7 @@
                 v-on:recipient-stored="getRecipients"
         ></recipient-store>
         <query-ldap-recipients></query-ldap-recipients>
+        <are-you-sure-modal v-on:answered-yes="deleteRecipient" v-on:answered-no="row = null"></are-you-sure-modal>
     </div>
 </template>
 
@@ -124,10 +125,19 @@
                         key: 'app_actions',
                         label: ''
                     }
-                ]
+                ],
+
+                /**
+                 * Are you sure modal
+                 */
+                row: null,
             }
         },
         methods: {
+            deleteRow(data) {
+                this.row = data.item;
+                this.$bvModal.show('are-you-sure-modal');
+            },
             changePage(data) {
                 this.currentPage = data;
                 this.getRecipients();
@@ -162,8 +172,8 @@
                     this.recipientsLoading = false;
                 });
             },
-            deleteRecipient(data) {
-                axios.delete('/recipient/' + data.item.id)
+            deleteRecipient() {
+                axios.delete('/recipient/' + this.row.id)
                     .then((response) => {
                         this.$notify({
                             title: response.data.message,

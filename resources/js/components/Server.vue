@@ -18,11 +18,13 @@
 
             <div class="mt-1">
                 <button class="btn btn-secondary" @click="openModal"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-warning" @click="deleteServer"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn btn-warning" @click="deleteRow"><i class="fas fa-trash-alt"></i></button>
                 <b-btn class="btn btn-secondary" @click="$emit('open-server-terminal-modal', server)" v-b-modal.server-terminal-modal><i class="fas fa-terminal"></i></b-btn>
                 <b-btn class="btn btn-secondary" @click="$emit('open-server-queue-modal', server)" v-b-modal.server-queue-modal><i class="fas fa-fw fa-envelope"></i> Queue</b-btn>
             </div>
         </div>
+
+        <are-you-sure-modal v-on:answered-yes="deleteServer" v-on:answered-no="row = null"></are-you-sure-modal>
     </div>
 </template>
 
@@ -51,6 +53,9 @@
             }
         },
         methods: {
+            deleteRow() {
+                this.$bvModal.show('are-you-sure-modal');
+            },
             checkSchema() {
                 this.checkSchemaLoading = true;
                 this.schemaError = false;

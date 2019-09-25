@@ -20,7 +20,7 @@
         <template v-if="!loading">
             <b-table hover :items="relayDomains" :fields="fields" v-if="relayDomains.length">
                 <template v-slot:cell(app_actions)="data">
-                    <button class="btn btn-warning btn-sm" @click="deleteRelayDomain(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 
@@ -46,6 +46,8 @@
                 <span class="sr-only">Lade...</span>
             </div>
         </div>
+
+        <are-you-sure-modal v-on:answered-yes="deleteRelayDomain" v-on:answered-no="row = null"></are-you-sure-modal>
 
         <relay-domain-store-modal v-on:relay-domain-stored="getRelayDomains"></relay-domain-store-modal>
     </div>
@@ -104,9 +106,18 @@
                         label: ''
                     }
                 ],
+
+                /**
+                 * Are you sure modal
+                 */
+                row: null,
             }
         },
         methods: {
+            deleteRow(data) {
+                this.row = data.item;
+                this.$bvModal.show('are-you-sure-modal');
+            },
             openModal() {
                 this.$bvModal.show('relay-domain-store-modal');
             },
@@ -143,8 +154,8 @@
                     this.loading = false;
                 });
             },
-            deleteRelayDomain(data) {
-                axios.delete('/relay-domain/' + data.item.id)
+            deleteRelayDomain() {
+                axios.delete('/relay-domain/' + this.row.id)
                     .then((response) => {
                         this.$notify({
                             title: response.data.message,

@@ -21,7 +21,7 @@
             <b-table hover :items="users" :fields="fields" v-if="users.length">
                 <template v-slot:cell(app_actions)="data">
                     <button class="btn btn-secondary btn-sm" @click="openUpdateModal(data)"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-warning btn-sm" @click="deleteUser(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 
@@ -41,6 +41,8 @@
                 </b-col>
             </b-row>
         </template>
+
+        <are-you-sure-modal v-on:answered-yes="deleteUser" v-on:answered-no="row = null"></are-you-sure-modal>
 
         <div class="text-center" v-if="loading">
             <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
@@ -118,10 +120,19 @@
                         key: 'app_actions',
                         label: ''
                     },
-                ]
+                ],
+
+                /**
+                 * Are you sure modal
+                 */
+                row: null,
             }
         },
         methods: {
+            deleteRow(data) {
+                this.row = data.item;
+                this.$bvModal.show('are-you-sure-modal');
+            },
             changePage(data) {
                 this.currentPage = data;
                 this.getUsers();
@@ -155,8 +166,8 @@
                     this.loading = false;
                 });
             },
-            deleteUser(data) {
-                axios.delete('/user/' + data.item.id)
+            deleteUser() {
+                axios.delete('/user/' + this.row.id)
                     .then((response) => {
                         this.$notify({
                             title: response.data.message,

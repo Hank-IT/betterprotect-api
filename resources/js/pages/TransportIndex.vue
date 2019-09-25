@@ -20,7 +20,7 @@
         <template v-if="!loading">
             <b-table hover :items="transports" :fields="fields" v-if="transports.length">
                 <template v-slot:cell(app_actions)="data">
-                    <button class="btn btn-warning btn-sm" @click="deleteTransport(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 
@@ -46,6 +46,8 @@
                 <span class="sr-only">Lade...</span>
             </div>
         </div>
+
+        <are-you-sure-modal v-on:answered-yes="deleteTransport" v-on:answered-no="row = null"></are-you-sure-modal>
 
         <transport-store-modal v-on:transport-stored="getTransports"></transport-store-modal>
     </div>
@@ -123,9 +125,18 @@
                         label: ''
                     },
                 ],
+
+                /**
+                 * Are you sure modal
+                 */
+                row: null,
             }
         },
         methods: {
+            deleteRow(data) {
+                this.row = data.item;
+                this.$bvModal.show('are-you-sure-modal');
+            },
             openModal() {
                 this.$bvModal.show('transport-store-modal');
             },
@@ -162,8 +173,8 @@
                     this.loading = false;
                 });
             },
-            deleteTransport(data) {
-                axios.delete('/transport/' + data.item.id)
+            deleteTransport() {
+                axios.delete('/transport/' + this.row.id)
                     .then((response) => {
                         this.$notify({
                             title: response.data.message,

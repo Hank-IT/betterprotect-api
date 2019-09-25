@@ -92,7 +92,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title text-center mb-4"><i class="fas fa-envelope"></i> Betterprotect</h3>
-                        <form autocomplete="off" @submit.prevent="login" method="post">
+                        <form autocomplete="off" @submit.stop.prevent="login" method="post">
                             <div class="form-group">
                                 <label for="username"><i class="fas fa-user"></i> Benutzer</label>
                                 <input :class="{ 'is-invalid': error }" type="text" id="username" class="form-control" v-model="username" autofocus @click="clearError">
