@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\RelayDomain;
-use App\Models\RelayRecipient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -18,9 +17,9 @@ class RelayDomainController extends Controller
         ]);
 
         if ($request->filled('search')) {
-            $relayRecipient = RelayRecipient::where('domain', 'LIKE', '%' . $request->search . '%');
+            $relayRecipient = RelayDomain::where('domain', 'LIKE', '%' . $request->search . '%');
         } else {
-            $relayRecipient = RelayRecipient::query();
+            $relayRecipient = RelayDomain::query();
         }
 
         return response()->json([
@@ -39,7 +38,7 @@ class RelayDomainController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Domäne wurde erfolgreich hinzugefügt.',
-            'data' => RelayRecipient::create($request->all()),
+            'data' => RelayDomain::create($request->all()),
         ], Response::HTTP_CREATED);
     }
 

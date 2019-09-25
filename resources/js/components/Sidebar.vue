@@ -40,6 +40,12 @@
                     </div>
                 </router-link>
 
+                <router-link :to="{ name: 'relay-domain.index' }" aria-expanded="false" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-start align-items-center">
+                        <span class="menu-collapsed">Relay Domänen</span>
+                    </div>
+                </router-link>
+
                 <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                     <small>System</small>
                 </li>

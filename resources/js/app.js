@@ -24,6 +24,8 @@ import RecipientStore from './components/RecipientStore';
 import Login from './components/auth/Login';
 import ServerTerminalModal from './components/ServerTerminalModal';
 import ServerQueueModal from './components/ServerQueueModal';
+import RelayDomainStoreModal from './components/RelayDomainStoreModal';
+import RelayDomainIndex from "./pages/RelayDomainIndex";
 import ServerLog from './pages/ServerLog';
 import moment from 'moment';
 import DateRangePicker from 'vue2-daterange-picker';
@@ -153,6 +155,14 @@ Vue.router = new Router({
             }
         },
         {
+            path: '/relay-domain',
+            name: 'relay-domain.index',
+            component: RelayDomainIndex,
+            meta: {
+                auth: true
+            }
+        },
+        {
             path: '/user',
             name: 'user.index',
             component: UserIndex,
@@ -202,6 +212,7 @@ Vue.component('ServerTerminalModal', ServerTerminalModal);
 Vue.component('UserStoreUpdateModal', UserStoreUpdateModal);
 Vue.component('LdapDirectoryStoreUpdateModal', LdapDirectoryStoreUpdateModal);
 Vue.component('TransportStoreModal', TransportStoreModal);
+Vue.component('RelayDomainStoreModal', RelayDomainStoreModal);
 
 App.router = Vue.router;
 
