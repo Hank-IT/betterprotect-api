@@ -29,7 +29,7 @@ class Queue
         $console = $this->server->console();
 
         $console->sudo($this->server->sudo)
-            ->bin($this->server->sudo)
+            ->bin($this->server->postqueue)
             ->param('-j')
             ->exec();
 
