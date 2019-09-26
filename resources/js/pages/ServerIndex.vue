@@ -3,11 +3,35 @@
         <b-row class="mb-2">
             <b-col md="1">
                 <b-button-group>
-                    <b-btn variant="primary" v-b-modal.server-store-modal><i class="fas fa-plus"></i></b-btn>
+                    <b-btn variant="primary" v-b-modal.server-wizard ><i class="fas fa-plus"></i></b-btn>
                     <b-btn variant="secondary" @click="getAllServers"><i class="fas fa-sync"></i></b-btn>
                 </b-button-group>
             </b-col>
         </b-row>
+
+        <div>
+            <b-modal id="server-wizard" size="xl" title="Server Wizard" >
+                <form-wizard color="#007bff">
+                    <h2 slot="title"></h2>
+
+                    <tab-content title="Server" icon="fas fa-server">
+                        <server-wizard-server-form ref="serverWizardServerForm"></server-wizard-server-form>
+                    </tab-content>
+                    <tab-content title="Postfix" icon="fas fa-envelope">
+                        <server-wizard-postfix-form></server-wizard-postfix-form>
+                    </tab-content>
+                    <tab-content title="Konsole" icon="fas fa-terminal">
+                        <server-wizard-console-form></server-wizard-console-form>
+                    </tab-content>
+                    <tab-content title="Logging" icon="fas fa-tasks">
+                        <server-wizard-logging-form></server-wizard-logging-form>
+                    </tab-content>
+                    <tab-content title="Amavis" icon="fas fa-trash">
+                        <server-wizard-amavis-form></server-wizard-amavis-form>
+                    </tab-content>
+                </form-wizard>
+            </b-modal>
+        </div>
 
         <!-- Modal Component -->
         <b-modal id="server-store-modal" ref="serverStoreModal" size="lg" title="Server hinzufügen" @ok="handleOk" @shown="modalShown" @hidden="modalHidden">
@@ -275,3 +299,9 @@
         }
     }
 </script>
+
+<style>
+    .vue-form-wizard .wizard-icon {
+        height: inherit;
+    }
+</style>

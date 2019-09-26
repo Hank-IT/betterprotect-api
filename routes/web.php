@@ -28,6 +28,15 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::delete('/server/{server}', 'ServerController@destroy')->name('server.destroy');
 
     /**
+     * Server Wizard
+     */
+    Route::post('/server-wizard', 'Server\ServerController@store')->name('server-wizard.store');
+    Route::post('/server-wizard/{server}/postfix', 'Server\PostfixController@store')->name('server-wizard.postfix.store');
+    Route::post('/server-wizard/{server}/console', 'Server\ConsoleController@store')->name('server-wizard.console.store');
+    Route::post('/server-wizard/{server}/log', 'Server\LogController@store')->name('server-wizard.log.store');
+    Route::post('/server-wizard/{server}/amavis', 'Server\AmavisController@store')->name('server-wizard.amavis.store');
+
+    /**
      * Server Database Schema
      */
     Route::post('/server/{server}/schema', 'ServerSchemaController@store')->name('server.schema.store');

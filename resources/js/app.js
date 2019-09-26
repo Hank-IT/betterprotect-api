@@ -25,11 +25,17 @@ import Login from './components/auth/Login';
 import ServerTerminalModal from './components/ServerTerminalModal';
 import ServerQueueModal from './components/ServerQueueModal';
 import RelayDomainStoreModal from './components/RelayDomainStoreModal';
+import ServerWizardServerForm from "./components/ServerWizardServerForm";
+import ServerWizardPostfixForm from "./components/ServerWizardPostfixForm";
+import ServerWizardConsoleForm from "./components/ServerWizardConsoleForm";
+import ServerWizardLoggingForm from "./components/ServerWizardLoggingForm";
+import ServerWizardAmavisForm from "./components/ServerWizardAmavisForm";
 import AreYouSureModal from './components/AreYouSureModal';
 import RelayDomainIndex from "./pages/RelayDomainIndex";
 import ServerLog from './pages/ServerLog';
 import moment from 'moment';
 import DateRangePicker from 'vue2-daterange-picker';
+import VueFormWizard from 'vue-form-wizard'
 
 Vue.prototype.moment = moment;
 
@@ -61,6 +67,7 @@ import faArrowsAltV from '@fortawesome/fontawesome-free-solid/faArrowsAltV';
 //import faMailBulk from '@fortawesome/fontawesome-free-solid/faMailBulk';
 import faPaperPlane from '@fortawesome/fontawesome-free-solid/faPaperPlane';
 import faExclamation from '@fortawesome/fontawesome-free-solid/faExclamation';
+import faTrash from '@fortawesome/fontawesome-free-solid/faTrash';
 
 fontawesome.library.add(faUser);
 fontawesome.library.add(faSignOutAlt);
@@ -79,6 +86,7 @@ fontawesome.library.add(faArrowsAltV);
 //fontawesome.library.add(faMailBulk);
 fontawesome.library.add(faPaperPlane);
 fontawesome.library.add(faExclamation);
+fontawesome.library.add(faTrash);
 
 /*
  * Axios
@@ -102,6 +110,11 @@ Vue.use(BootstrapVue);
  */
 import Notifications from 'vue-notification'
 Vue.use(Notifications);
+
+/*
+ * Vue Form Wizard
+ */
+Vue.use(VueFormWizard);
 
 /*
  * Vue
@@ -217,6 +230,11 @@ Vue.component('LdapDirectoryStoreUpdateModal', LdapDirectoryStoreUpdateModal);
 Vue.component('TransportStoreModal', TransportStoreModal);
 Vue.component('RelayDomainStoreModal', RelayDomainStoreModal);
 Vue.component('AreYouSureModal', AreYouSureModal);
+Vue.component('ServerWizardServerForm', ServerWizardServerForm);
+Vue.component('ServerWizardPostfixForm', ServerWizardPostfixForm);
+Vue.component('ServerWizardConsoleForm', ServerWizardConsoleForm);
+Vue.component('ServerWizardLoggingForm', ServerWizardLoggingForm);
+Vue.component('ServerWizardAmavisForm', ServerWizardAmavisForm);
 
 App.router = Vue.router;
 
