@@ -48,7 +48,7 @@ class PolicyInstallation implements ShouldQueue
             $this->delete();
         }
 
-        $db = app(ServerDatabaseService::class, ['server' => $this->server]);
+        $serverDatabase = app($this->database, ['server' => $this->server]);
 
         $task = Task::create([
             'message' => 'Policy wird auf Server ' . $this->server->hostname . ' installiert...',
@@ -56,16 +56,14 @@ class PolicyInstallation implements ShouldQueue
             'username' => $this->user->username,
         ]);
 
-        if ($db->needsMigrate()) {
+        if ($serverDatabase->needsMigrate()) {
             $task->update(['message' => 'Die Datenbank auf Server ' . $this->server->hostname . ' muss vor der Installation aktualisiert werden.', 'status' => Task::STATUS_ERROR]);
 
             return;
         }
 
-        $dbPolicy = $db->getPolicyConnection();
-
         foreach ($this->handler as $handler) {
-            app($handler, ['dbConnection' => $dbPolicy, 'task' => $task])->install();
+            app($handler, ['dbConnection' => $serverDatabase->getConnection(), 'task' => $task])->install();
         }
 
         $task->update([

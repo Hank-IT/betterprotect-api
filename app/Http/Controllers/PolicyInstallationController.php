@@ -16,7 +16,7 @@ class PolicyInstallationController extends Controller
             'server_id' => 'required|integer|exists:servers,id'
         ]);
 
-        PolicyInstallation::dispatch(Server::findOrFail($request->server_id), Auth::user())
+        PolicyInstallation::dispatch(Server::findOrFail($request->server_id), Auth::user(), 'postfix_db')
             ->onQueue('task');
 
         return response()->json([

@@ -6,6 +6,8 @@ use App\Models\RelayDomain;
 
 class RelayDomainHandler extends AbstractHandler
 {
+    const CONNECTION = 'postfix_db';
+
     /**
      * @throws \Exception
      */

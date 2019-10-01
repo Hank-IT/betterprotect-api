@@ -6,6 +6,8 @@ use App\Models\ClientSenderAccess;
 
 class SenderAccessHandler extends AbstractHandler
 {
+    const CONNECTION = 'postfix_db';
+
     /**
      * @throws \Exception
      */

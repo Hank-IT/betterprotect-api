@@ -6,6 +6,8 @@ use App\Models\RelayRecipient;
 
 class RecipientAccessHandler extends AbstractHandler
 {
+    const CONNECTION = 'postfix_db';
+
     /**
      * @throws \Exception
      */
