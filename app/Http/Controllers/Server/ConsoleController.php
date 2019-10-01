@@ -5,10 +5,17 @@ namespace App\Http\Controllers\Server;
 use App\Models\Server;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
 
 class ConsoleController extends Controller
 {
+    protected $console;
+
+    protected $server;
+
     public function store(Request $request, Server $server)
     {
         $this->validate($request, [
@@ -20,22 +27,78 @@ class ConsoleController extends Controller
             'ssh_command_postsuper' => 'required|string',
         ]);
 
-        // ToDo: Connection test
-
-        $server->update([
+        $server->fill([
             'ssh_user' => $request->ssh_user,
             'ssh_public_key' => $request->ssh_public_key,
             'ssh_private_key' => $request->ssh_private_key,
             'ssh_command_sudo' => $request->ssh_command_sudo,
             'ssh_command_postqueue' => $request->ssh_command_postqueue,
             'ssh_command_postsuper' => $request->ssh_command_postsuper,
-            'ssh_feature_enabled_at' => true,
+            'ssh_feature_enabled_' => true,
         ]);
+
+        $this->server = $server;
+
+        $this->console = $this->validateConsole();
+
+        $this->validateSudo();
+
+        $this->validatePostsuper();
+
+        $this->validatePostqueue();
+
+        $server->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Postfix Feature erfolgreich aktiviert..',
+            'message' => 'Konsole erfolgreich aktiviert.',
             'data' => $server
         ], Response::HTTP_OK);
+    }
+
+    protected function validateConsole()
+    {
+        try {
+            return tap($this->server->console(), function($console) {
+                $console->available();
+            })->access();
+        } catch(\ErrorException $exception) {
+            throw ValidationException::withMessages(['ssh_user' => 'Verbindung fehlgeschlagen.']);
+        } catch(PublicKeyMismatchException $exception) {
+            throw ValidationException::withMessages(['ssh_public_key' => 'Public Key stimmt nicht überein.']);
+        }
+    }
+
+    protected function validateSudo()
+    {
+        $this->console->bin($this->server->ssh_command_sudo . ' -h')->exec();
+
+        Log::debug($this->console->getOutput());
+
+        if ($this->console->getExitStatus() !== 0) {
+            throw ValidationException::withMessages(['ssh_command_sudo' => 'Befehl konnte nicht ausgeführt werden.']);
+        }
+    }
+
+    protected function validatePostqueue()
+    {
+        $this->console->sudo($this->server->ssh_command_sudo . ' -n')->bin($this->server->ssh_command_postqueue)->param('-j')->exec();
+
+        Log::debug($this->console->getOutput());
+
+        if ($this->console->getExitStatus() !== 0) {
+            throw ValidationException::withMessages(['ssh_command_postqueue' => 'Befehl konnte nicht ausgeführt werden.']);
+        }
+    }
+
+    protected function validatePostsuper()
+    {
+        $this->console->sudo($this->server->ssh_command_sudo . ' -n')->bin($this->server->ssh_command_postsuper)->exec();
+
+        Log::debug($this->console->getOutput());
+
+        if ($this->console->getExitStatus() !== 0) {
+            throw ValidationException::withMessages(['ssh_command_postsuper' => 'Befehl konnte nicht ausgeführt werden.']);
+        }
     }
 }

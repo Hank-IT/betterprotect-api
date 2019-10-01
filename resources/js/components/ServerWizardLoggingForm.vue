@@ -2,7 +2,7 @@
     <div class="server-wizard.server">
         <b-form>
             <b-form-group label="Datenbankhost *">
-                <b-form-input :class="{ 'is-invalid': errors.log_db_host }" type="text" v-model="form.log_db_host" placeholder="Datenbankhost"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.log_db_host, 'is-valid': isValid('log_db_host') }" type="text" v-model="form.log_db_host" placeholder="Datenbankhost" :disabled="submitted"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -12,7 +12,7 @@
             </b-form-group>
 
             <b-form-group label="Datenbankname *">
-                <b-form-input :class="{ 'is-invalid': errors.log_db_name }" type="text" v-model="form.log_db_name" placeholder="Datenbankname"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.log_db_name, 'is-valid': isValid('log_db_name') }" type="text" v-model="form.log_db_name" placeholder="Datenbankname" :disabled="submitted"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -22,7 +22,7 @@
             </b-form-group>
 
             <b-form-group label="Datenbankbenutzer">
-                <b-form-input :class="{ 'is-invalid': errors.log_db_user }" type="text" v-model="form.log_db_user" placeholder="Datenbankbenutzer"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.log_db_user, 'is-valid': isValid('log_db_user') }" type="text" v-model="form.log_db_user" placeholder="Datenbankbenutzer" :disabled="submitted"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -32,7 +32,7 @@
             </b-form-group>
 
             <b-form-group label="Datenbankpasswort">
-                <b-form-input :class="{ 'is-invalid': errors.log_db_password }" type="password" v-model="form.log_db_password" placeholder="Datenbankpasswort"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.log_db_password, 'is-valid': isValid('log_db_password') }" type="password" v-model="form.log_db_password" placeholder="Datenbankpasswort" :disabled="submitted"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -44,7 +44,7 @@
             </b-form-group>
 
             <b-form-group label="Datenbankport *">
-                <b-form-input :class="{ 'is-invalid': errors.log_db_port }" type="text" v-model="form.log_db_port" placeholder="Datenbankport"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.log_db_port, 'is-valid': isValid('log_db_port') }" type="text" v-model="form.log_db_port" placeholder="Datenbankport" :disabled="submitted"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -62,6 +62,59 @@
             return {
                 errors: {},
                 form: {},
+                submitted: false,
+            }
+        },
+        props: ['bus', 'server'],
+        created() {
+            this.bus.$on('server-wizard-submit-log', this.submit);
+        },
+        methods: {
+            submit(props) {
+                // Prevent second submit
+                if (this.submitted) {
+                    props.nextTab();
+
+                    return;
+                }
+
+                axios.post('/server-wizard/' + this.server.id + '/log', this.form).then((response) => {
+                    this.errors = {};
+                    this.$notify({
+                        title: response.data.message,
+                        type: 'success'
+                    });
+
+                    this.submitted = true;
+                    props.nextTab();
+                }).catch((error) => {
+                    if (error.response) {
+                        if (error.response.status === 422) {
+                            this.errors = error.response.data.errors;
+                        } else {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        }
+                    } else {
+                        this.$notify({
+                            title: 'Unbekannter Fehler',
+                            type: 'error'
+                        });
+                    }
+                });
+            },
+            isValid(index) {
+                if (this.submitted) {
+                    if (Object.keys(this.errors).length === 0) {
+                        return true;
+                    }
+
+                    return this.errors[index];
+                }
+
+                return false;
             }
         }
     }

@@ -1881,16 +1881,16 @@
         },
         {
             "name": "mrcrankhank/console-access",
-            "version": "2.1",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MrCrankHank/console-access.git",
-                "reference": "b0404f3dce737338500b975d68b3f02780b7d10c"
+                "reference": "849761a38670e8c5ae9c2b80ea4d9aaa494b89a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MrCrankHank/console-access/zipball/b0404f3dce737338500b975d68b3f02780b7d10c",
-                "reference": "b0404f3dce737338500b975d68b3f02780b7d10c",
+                "url": "https://api.github.com/repos/MrCrankHank/console-access/zipball/849761a38670e8c5ae9c2b80ea4d9aaa494b89a3",
+                "reference": "849761a38670e8c5ae9c2b80ea4d9aaa494b89a3",
                 "shasum": ""
             },
             "require": {
@@ -1904,7 +1904,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Apache License 2.0"
+                "Apache-2.0"
             ],
             "authors": [
                 {
@@ -1913,7 +1913,7 @@
                 }
             ],
             "description": "This library abstracts the access to a console through adapters.",
-            "time": "2019-09-25T15:06:40+00:00"
+            "time": "2019-10-01T14:50:26+00:00"
         },
         {
             "name": "mrcrankhank/laravel-update",
@@ -5877,16 +5877,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "4eff936d83eb809bde2c57a3cea0ee9643769031"
+                "reference": "b3453f75fd23d9fd41685f2148f4abeacabc6405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/4eff936d83eb809bde2c57a3cea0ee9643769031",
-                "reference": "4eff936d83eb809bde2c57a3cea0ee9643769031",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/b3453f75fd23d9fd41685f2148f4abeacabc6405",
+                "reference": "b3453f75fd23d9fd41685f2148f4abeacabc6405",
                 "shasum": ""
             },
             "require": {
@@ -5900,7 +5900,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -5938,7 +5938,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2019-08-07T15:01:07+00:00"
+            "time": "2019-09-30T08:30:27+00:00"
         },
         {
             "name": "myclabs/deep-copy",

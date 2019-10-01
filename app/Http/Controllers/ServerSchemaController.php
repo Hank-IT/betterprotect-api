@@ -3,22 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Server;
+use Illuminate\Http\Request;
 use App\Jobs\MigrateServerDatabase;
 use Illuminate\Support\Facades\Auth;
-use App\Services\ServerDatabase as ServerDatabaseService;
 use Symfony\Component\HttpFoundation\Response;
 
 class ServerSchemaController extends Controller
 {
-    /**
-     * Create the server's database.
-     *
-     * @param Server $server
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Server $server)
+    public function store(Server $server, Request $request)
     {
-        MigrateServerDatabase::dispatch($server, Auth::user())->onQueue('task');
+        $this->validate($request, [
+            'database' => 'required|string|in:postfix,amavis,log',
+        ]);
+
+        MigrateServerDatabase::dispatch($server, Auth::user(), $request->database)->onQueue('task');
 
         return response()->json([
             'status' => 'success',
@@ -27,35 +25,33 @@ class ServerSchemaController extends Controller
         ], Response::HTTP_ACCEPTED);
     }
 
-    /**
-     * Check the server's database.
-     *
-     * @param ServerDatabaseService $database
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(Server $server)
+    public function show(Server $server, Request $request)
     {
-        $database = app(ServerDatabaseService::class, ['server' => $server]);
+        $this->validate($request, [
+            'database' => 'required|string|in:postfix_db,amavis_db,log_db',
+        ]);
 
-        if ($database->available()) {
-            if ($database->needsMigrate()) {
-                return response()->json([
-                    'status' => 'warning',
-                    'message' => 'Datenbank ist verfügbar und muss aktualisiert werden.',
-                    'data' => [],
-                ]);
-            }
+        $database = app($request->database, ['server' => $server]);
 
+        if (! $database->available()) {
             return response()->json([
-                'status' => 'success',
-                'message' => 'Datenbank ist verfügbar und aktuell.',
+                'status' => 'error',
+                'message' => 'Datenbank ist nicht verfügbar.',
+                'data' => [],
+            ]);
+        }
+
+        if ($database->needsMigrate()) {
+            return response()->json([
+                'status' => 'warning',
+                'message' => 'Datenbank ist verfügbar und muss aktualisiert werden.',
                 'data' => [],
             ]);
         }
 
         return response()->json([
-            'status' => 'error',
-            'message' => 'Datenbank ist nicht verfügbar.',
+            'status' => 'success',
+            'message' => 'Datenbank ist verfügbar und aktuell.',
             'data' => [],
         ]);
     }

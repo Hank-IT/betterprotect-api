@@ -63,7 +63,7 @@
                 this.schemaSuccess = false;
                 this.message = '<i class="fas fa-spinner fa-spin fa-fw"></i> <i>Schema wird überprüft...</i>';
 
-                axios.get('/server/' + this.server.id + '/schema')
+                axios.get('/server/' + this.server.id + '/schema?database=postfix_db')
                     .then((response) => {
                         let data = response.data;
 

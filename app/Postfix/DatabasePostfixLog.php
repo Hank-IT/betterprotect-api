@@ -3,7 +3,6 @@
 namespace App\Postfix;
 
 use Carbon\Carbon;
-use App\Services\ServerDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -36,7 +35,7 @@ class DatabasePostfixLog
     public function get(string $status = null)
     {
        $data = $this->servers->flatMap(function($server) use($status) {
-            $logDB = (new ServerDatabase($server))->getLogConnection();
+           $logDB = $server->logDatabase()->getConnection();
 
            $query = $logDB->table('SystemEvents')
                ->select(['DeviceReportedTime', 'FromHost', 'Message', 'SysLogTag']);

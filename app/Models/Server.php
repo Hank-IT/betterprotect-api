@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Services\Database\AmavisDatabase;
+use App\Services\Database\LogDatabase;
+use App\Services\Database\PostfixDatabase;
+use App\Services\ServerConsole;
 use Illuminate\Database\Eloquent\Model;
 use MrCrankHank\ConsoleAccess\Adapters\SshAdapter;
 use MrCrankHank\ConsoleAccess\ConsoleAccess;
@@ -12,57 +16,113 @@ class Server extends Model
     protected $fillable = [
         'hostname',
         'description',
-        'db_host',
-        'db_name',
-        'db_user',
-        'db_password',
-        'db_port',
+
+        /**
+         * Postfix
+         */
+        'postfix_db_host',
+        'postfix_db_name',
+        'postfix_db_user',
+        'postfix_db_password',
+        'postfix_db_port',
+        'postfix_feature_enabled',
+
+        /**
+         * Logging
+         */
+        'log_db_host',
+        'log_db_name',
+        'log_db_user',
+        'log_db_password',
+        'log_db_port',
+        'log_feature_enabled',
+
+        /**
+         * SSH
+         */
+        'ssh_user',
+        'ssh_public_key',
+        'ssh_private_key',
+        'ssh_command_sudo',
+        'ssh_command_postqueue',
+        'ssh_command_postsuper',
+        'ssh_feature_enabled',
+
+        /**
+         * Amavis
+         */
+        'amavis_db_host',
+        'amavis_db_name',
+        'amavis_db_user',
+        'amavis_db_password',
+        'amavis_db_port',
+        'amavis_feature_enabled',
     ];
 
-    protected $casts = [
-        'binaries' => 'array'
-    ];
-
-    protected $hidden = ['db_password', 'private_key'];
-
-    public function getBinariesAttribute($value)
-    {
-        if (is_null($value)) {
-            $value = [];
-        }
-
-        return $value;
-    }
+    protected $hidden = ['postfix_db_password', 'logging_db_password', 'ssh_private_key', 'amavis_db_password'];
 
     /**
+     * @return ConsoleAccess
      * @throws PublicKeyMismatchException
+     * @throws \MrCrankHank\ConsoleAccess\Exceptions\ConnectionNotPossibleException
      */
     public function console()
     {
-        $adapter = new SshAdapter($this->hostname, $this->user, $this->public_key);
-
-        $adapter->loginKey($this->private_key);
-
-        return new ConsoleAccess($adapter);
+        return app(ServerConsole::class, ['server' => $this]);
     }
 
-    public function setDBPasswordAttribute($value)
+    public function postfixDatabase()
     {
-        $this->attributes['db_password'] = encrypt($value);
+        return app(PostfixDatabase::class, ['server' => $this]);
     }
 
-    public function getDBPasswordAttribute()
+    public function amavisDatabase()
     {
-        return decrypt($this->attributes['db_password']);
+        return app(AmavisDatabase::class, ['server' => $this]);
     }
 
-    public function setPrivateKeyAttribute($value)
+    public function logDatabase()
     {
-        $this->attributes['private_key'] = encrypt($value);
+        return app(LogDatabase::class, ['server' => $this]);
     }
 
-    public function getPrivateKeyAttribute()
+    public function setPostfixDBPasswordAttribute($value)
     {
-        return decrypt($this->attributes['private_key']);
+        $this->attributes['postfix_db_password'] = encrypt($value);
+    }
+
+    public function getPostfixDBPasswordAttribute()
+    {
+        return decrypt($this->attributes['postfix_db_password']);
+    }
+
+    public function setLoggingDBPasswordAttribute($value)
+    {
+        $this->attributes['logging_db_password'] = encrypt($value);
+    }
+
+    public function getLoggingDBPasswordAttribute()
+    {
+        return decrypt($this->attributes['logging_db_password']);
+    }
+
+    public function setAmavisDBPasswordAttribute($value)
+    {
+        $this->attributes['amavis_db_password'] = encrypt($value);
+    }
+
+    public function getAmavisDBPasswordAttribute()
+    {
+        return decrypt($this->attributes['amavis_db_password']);
+    }
+
+    public function setSshPrivateKeyAttribute($value)
+    {
+        $this->attributes['ssh_private_key'] = encrypt($value);
+    }
+
+    public function getSshPrivateKeyAttribute()
+    {
+        return decrypt($this->attributes['ssh_private_key']);
     }
 }

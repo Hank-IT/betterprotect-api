@@ -22,9 +22,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
      * Server
      */
     Route::get('/server', 'ServerController@index')->name('server.index');
-    Route::post('/server', 'ServerController@store')->name('server.store');
     Route::get('/server/{server}', 'ServerController@show')->name('server.show');
-    Route::patch('/server/{server}', 'ServerController@update')->name('server.update');
     Route::delete('/server/{server}', 'ServerController@destroy')->name('server.destroy');
 
     /**

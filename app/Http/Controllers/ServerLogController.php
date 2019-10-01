@@ -22,7 +22,7 @@ class ServerLogController extends Controller
         ]);
 
         $query = app(DatabasePostfixLog::class, [
-            'servers' => Server::all(),
+            'servers' => Server::where('log_feature_enabled', '=', true)->get(),
             'parameter' => ['startDate' => Carbon::parse($request->startDate), 'endDate' => Carbon::parse($request->endDate)]
         ]);
 

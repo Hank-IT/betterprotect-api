@@ -18,7 +18,7 @@ class ServerController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Eintrag wurde erfolgreich hinzugefügt.',
+            'message' => 'Server wurde erfolgreich hinzugefügt.',
             'data' => Server::create(['hostname' => $request->hostname, 'description' => $request->description]),
         ], Response::HTTP_CREATED);
     }

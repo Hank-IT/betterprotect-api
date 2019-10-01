@@ -3,32 +3,43 @@
         <b-row class="mb-2">
             <b-col md="1">
                 <b-button-group>
-                    <b-btn variant="primary" v-b-modal.server-wizard ><i class="fas fa-plus"></i></b-btn>
+                    <b-btn variant="primary" v-b-modal.server-wizard><i class="fas fa-plus"></i></b-btn>
                     <b-btn variant="secondary" @click="getAllServers"><i class="fas fa-sync"></i></b-btn>
                 </b-button-group>
             </b-col>
         </b-row>
 
         <div>
-            <b-modal id="server-wizard" size="xl" title="Server Wizard" >
+            <b-modal id="server-wizard" size="xl" title="Server Wizard" :hide-footer="true" @close="serverWizardModalClose" :no-close-on-backdrop="true">
                 <form-wizard color="#007bff">
                     <h2 slot="title"></h2>
 
-                    <tab-content title="Server" icon="fas fa-server">
-                        <server-wizard-server-form ref="serverWizardServerForm"></server-wizard-server-form>
+                    <tab-content title="Server" icon="fas fa-server" >
+                        <server-wizard-server-form :bus="bus" @server-wizard-submit-server-success="updateServerWizardId"></server-wizard-server-form>
                     </tab-content>
                     <tab-content title="Postfix" icon="fas fa-envelope">
-                        <server-wizard-postfix-form></server-wizard-postfix-form>
+                        <server-wizard-postfix-form :bus="bus" :server="server"></server-wizard-postfix-form>
                     </tab-content>
                     <tab-content title="Konsole" icon="fas fa-terminal">
-                        <server-wizard-console-form></server-wizard-console-form>
+                        <server-wizard-console-form :bus="bus" :server="server"></server-wizard-console-form>
                     </tab-content>
                     <tab-content title="Logging" icon="fas fa-tasks">
-                        <server-wizard-logging-form></server-wizard-logging-form>
+                        <server-wizard-logging-form :bus="bus" :server="server"></server-wizard-logging-form>
                     </tab-content>
                     <tab-content title="Amavis" icon="fas fa-trash">
-                        <server-wizard-amavis-form></server-wizard-amavis-form>
+                        <server-wizard-amavis-form :bus="bus" :server="server"></server-wizard-amavis-form>
                     </tab-content>
+
+                    <template slot="footer" slot-scope="props">
+                        <div class="wizard-footer-left">
+                            <wizard-button  v-if="props.activeTabIndex > 0" @click.native="props.prevTab()" :style="props.fillButtonStyle">Zurück</wizard-button>
+                        </div>
+                        <div class="wizard-footer-right">
+                            <wizard-button v-if="!props.isLastStep" @click.native="wizardButtonNext(props)" class="wizard-footer-right" :style="props.fillButtonStyle">Weiter</wizard-button>
+
+                            <wizard-button v-else @click.native="wizardButtonNext(props)" class="wizard-footer-right finish-button" :style="props.fillButtonStyle">  {{ props.isLastStep ? 'Fertig' : 'Weiter' }}</wizard-button>
+                        </div>
+                    </template>
                 </form-wizard>
             </b-modal>
         </div>
@@ -137,6 +148,7 @@
 </template>
 
 <script>
+    import Vue from 'vue';
     import axios from 'axios'
 
     export default {
@@ -146,6 +158,12 @@
                 serverForm: {},
                 serverFormUpdated: false,
                 errors: [],
+
+                /**
+                 * Wizard
+                 */
+                bus: new Vue(),
+                server: null,
 
                 /**
                  * Server Terminal Modal
@@ -167,6 +185,46 @@
             this.getAllServers();
         },
         methods: {
+            /**
+             * Wizard
+             */
+            wizardButtonNext(props) {
+                switch (props.activeTabIndex) {
+                    case 0:
+                        this.bus.$emit('server-wizard-submit-server', props);
+                        break;
+                    case 1:
+                        this.bus.$emit('server-wizard-submit-postfix', props);
+                        break;
+                    case 2:
+                        this.bus.$emit('server-wizard-submit-console', props);
+                        break;
+                    case 3:
+                        this.bus.$emit('server-wizard-submit-log', props);
+                        break;
+                    case 4:
+                        this.bus.$emit('server-wizard-submit-amavis', props);
+                        break;
+                }
+
+                if (props.isLastStep) {
+                    this.$bvModal.hide('server-wizard');
+
+                    this.$notify({
+                        title: 'Die Konfiguration ist abgeschlossen.',
+                        type: 'success'
+                    });
+
+                    this.getAllServers();
+                }
+            },
+            updateServerWizardId(data) {
+                this.server = data;
+            },
+            serverWizardModalClose(bvModalEvt) {
+                //bvModalEvt.preventDefault();
+            },
+
             handleOk(event) {
                 // Prevent modal from closing
                 event.preventDefault();
