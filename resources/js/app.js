@@ -36,6 +36,7 @@ import ServerLog from './pages/ServerLog';
 import moment from 'moment';
 import DateRangePicker from 'vue2-daterange-picker';
 import VueFormWizard from 'vue-form-wizard'
+import ServerSchemaCheck from "./components/ServerSchemaCheck";
 
 Vue.prototype.moment = moment;
 
@@ -235,6 +236,7 @@ Vue.component('ServerWizardPostfixForm', ServerWizardPostfixForm);
 Vue.component('ServerWizardConsoleForm', ServerWizardConsoleForm);
 Vue.component('ServerWizardLoggingForm', ServerWizardLoggingForm);
 Vue.component('ServerWizardAmavisForm', ServerWizardAmavisForm);
+Vue.component('ServerSchemaCheck', ServerSchemaCheck);
 
 App.router = Vue.router;
 
