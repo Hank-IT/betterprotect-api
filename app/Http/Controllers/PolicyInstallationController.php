@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\PolicyInstallation;
+use App\Jobs\PostfixPolicyInstallation;
 use App\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +16,7 @@ class PolicyInstallationController extends Controller
             'server_id' => 'required|integer|exists:servers,id'
         ]);
 
-        PolicyInstallation::dispatch(Server::findOrFail($request->server_id), Auth::user(), 'postfix_db')
+        PostfixPolicyInstallation::dispatch(Server::findOrFail($request->server_id), Auth::user(), 'postfix_db')
             ->onQueue('task');
 
         return response()->json([

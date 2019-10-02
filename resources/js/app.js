@@ -22,14 +22,12 @@ import RecipientIndex from './pages/RecipientIndex';
 import SettingsIndex from './pages/SettingsIndex';
 import RecipientStore from './components/RecipientStore';
 import Login from './components/auth/Login';
-import ServerTerminalModal from './components/ServerTerminalModal';
-import ServerQueueModal from './components/ServerQueueModal';
 import RelayDomainStoreModal from './components/RelayDomainStoreModal';
-import ServerWizardServerForm from "./components/ServerWizardServerForm";
-import ServerWizardPostfixForm from "./components/ServerWizardPostfixForm";
-import ServerWizardConsoleForm from "./components/ServerWizardConsoleForm";
-import ServerWizardLoggingForm from "./components/ServerWizardLoggingForm";
-import ServerWizardAmavisForm from "./components/ServerWizardAmavisForm";
+import ServerWizardServerForm from "./components/ServerWizard/ServerWizardServerForm";
+import ServerWizardPostfixForm from "./components/ServerWizard/ServerWizardPostfixForm";
+import ServerWizardConsoleForm from "./components/ServerWizard/ServerWizardConsoleForm";
+import ServerWizardLoggingForm from "./components/ServerWizard/ServerWizardLoggingForm";
+import ServerWizardAmavisForm from "./components/ServerWizard/ServerWizardAmavisForm";
 import AreYouSureModal from './components/AreYouSureModal';
 import RelayDomainIndex from "./pages/RelayDomainIndex";
 import ServerLog from './pages/ServerLog';
@@ -37,6 +35,8 @@ import moment from 'moment';
 import DateRangePicker from 'vue2-daterange-picker';
 import VueFormWizard from 'vue-form-wizard'
 import ServerSchemaCheck from "./components/ServerSchemaCheck";
+import ServerUpdateServerForm from "./components/ServerUpdate/ServerUpdateServerForm";
+import ServerUpdatePostfixForm from "./components/ServerUpdate/ServerUpdatePostfixForm";
 
 Vue.prototype.moment = moment;
 
@@ -222,10 +222,8 @@ Vue.component('QueryLdapRecipients', QueryLdapRecipients);
 Vue.component('RecipientStore', RecipientStore);
 Vue.component('Sidebar', Sidebar);
 Vue.component('Navbar', Navbar);
-Vue.component('ServerQueueModal', ServerQueueModal);
 Vue.component('ServerLog', ServerLog);
 Vue.component('DateRangePicker', DateRangePicker);
-Vue.component('ServerTerminalModal', ServerTerminalModal);
 Vue.component('UserStoreUpdateModal', UserStoreUpdateModal);
 Vue.component('LdapDirectoryStoreUpdateModal', LdapDirectoryStoreUpdateModal);
 Vue.component('TransportStoreModal', TransportStoreModal);
@@ -237,6 +235,8 @@ Vue.component('ServerWizardConsoleForm', ServerWizardConsoleForm);
 Vue.component('ServerWizardLoggingForm', ServerWizardLoggingForm);
 Vue.component('ServerWizardAmavisForm', ServerWizardAmavisForm);
 Vue.component('ServerSchemaCheck', ServerSchemaCheck);
+Vue.component('ServerUpdateServerForm', ServerUpdateServerForm);
+Vue.component('ServerUpdatePostfixForm', ServerUpdatePostfixForm);
 
 App.router = Vue.router;
 

@@ -34,7 +34,7 @@ class ConsoleController extends Controller
             'ssh_command_sudo' => $request->ssh_command_sudo,
             'ssh_command_postqueue' => $request->ssh_command_postqueue,
             'ssh_command_postsuper' => $request->ssh_command_postsuper,
-            'ssh_feature_enabled_' => true,
+            'ssh_feature_enabled' => true,
         ]);
 
         $this->server = $server;
@@ -53,7 +53,58 @@ class ConsoleController extends Controller
             'status' => 'success',
             'message' => 'Konsole erfolgreich aktiviert.',
             'data' => $server
-        ], Response::HTTP_OK);
+        ], Response::HTTP_CREATED);
+    }
+
+    public function update(Request $request, Server $server)
+    {
+        $this->validate($request, [
+            'ssh_user' => 'required|string',
+            'ssh_public_key' => 'required|string',
+            'ssh_private_key' => 'nullable|string',
+            'ssh_command_sudo' => 'required|string',
+            'ssh_command_postqueue' => 'required|string',
+            'ssh_command_postsuper' => 'required|string',
+        ]);
+
+        $server->fill([
+            'ssh_user' => $request->ssh_user,
+            'ssh_public_key' => $request->ssh_public_key,
+            'ssh_command_sudo' => $request->ssh_command_sudo,
+            'ssh_command_postqueue' => $request->ssh_command_postqueue,
+            'ssh_command_postsuper' => $request->ssh_command_postsuper,
+        ]);
+
+        if ($request->exists('ssh_private_key')) {
+            $server->ssh_private_key = $request->ssh_private_key;
+        }
+
+        $this->server = $server;
+
+        $this->console = $this->validateConsole();
+
+        $this->validateSudo();
+
+        $this->validatePostsuper();
+
+        $this->validatePostqueue();
+
+        $server->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Konsole erfolgreich aktualisiert.',
+            'data' => $server
+        ]);
+    }
+
+    public function show(Server $server)
+    {
+        return response()->json([
+            'status' => 'success',
+            'message' => null,
+            'data' => $server->only(['ssh_user', 'ssh_public_key', 'ssh_command_sudo', 'ssh_command_postqueue', 'ssh_command_postsuper']),
+        ]);
     }
 
     protected function validateConsole()

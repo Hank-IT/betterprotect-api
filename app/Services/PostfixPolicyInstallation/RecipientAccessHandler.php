@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Services\PolicyInstallation;
+namespace App\Services\PostfixPolicyInstallation;
 
 use App\Models\RelayRecipient;
 
 class RecipientAccessHandler extends AbstractHandler
 {
-    const CONNECTION = 'postfix_db';
-
     /**
      * @throws \Exception
      */

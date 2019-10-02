@@ -22,7 +22,6 @@ Route::group(['middleware' => 'jwt.auth'], function(){
      * Server
      */
     Route::get('/server', 'ServerController@index')->name('server.index');
-    Route::get('/server/{server}', 'ServerController@show')->name('server.show');
     Route::delete('/server/{server}', 'ServerController@destroy')->name('server.destroy');
 
     /**
@@ -35,23 +34,28 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::post('/server-wizard/{server}/amavis', 'Server\AmavisController@store')->name('server-wizard.amavis.store');
 
     /**
+     * Server Update
+     */
+    Route::patch('/server/{server}', 'Server\ServerController@update')->name('server-wizard.update');
+    Route::patch('/server/{server}/postfix', 'Server\PostfixController@update')->name('server-wizard.postfix.update');
+    Route::patch('/server/{server}/console', 'Server\ConsoleController@update')->name('server-wizard.console.update');
+    Route::patch('/server/{server}/log', 'Server\LogController@update')->name('server-wizard.log.update');
+    Route::patch('/server/{server}/amavis', 'Server\AmavisController@update')->name('server-wizard.amavis.update');
+
+    /**
+     * Server Show
+     */
+    Route::get('/server/{server}', 'Server\ServerController@show')->name('server-wizard.show');
+    Route::get('/server/{server}/postfix', 'Server\PostfixController@show')->name('server-wizard.postfix.show');
+    Route::get('/server/{server}/console', 'Server\ConsoleController@show')->name('server-wizard.console.show');
+    Route::get('/server/{server}/log', 'Server\LogController@show')->name('server-wizard.log.show');
+    Route::get('/server/{server}/amavis', 'Server\AmavisController@show')->name('server-wizard.amavis.show');
+
+    /**
      * Server Database Schema
      */
     Route::post('/server/{server}/schema', 'ServerSchemaController@store')->name('server.schema.store');
     Route::get('/server/{server}/schema', 'ServerSchemaController@show')->name('server.schema.show');
-
-    /**
-     * Server Terminal
-     */
-    Route::post('/server/{server}/terminal', 'ServerTerminalController@store')->name('server.terminal.store');
-    Route::get('/server/{server}/terminal', 'ServerTerminalController@show')->name('server.terminal.show');
-
-    /**
-     * Server Mail queue
-     */
-    Route::get('/server/{server}/queue', 'ServerQueueController@index')->name('server.queue.show');
-    Route::post('/server/{server}/queue', 'ServerQueueController@store')->name('server.queue.store');
-    Route::delete('/server/{server}/queue/{queueId}', 'ServerQueueController@destroy')->name('server.queue.destroy');
 
     /**
      * ClientSender Access

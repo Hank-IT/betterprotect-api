@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Services\PolicyInstallation;
+namespace App\Services\PostfixPolicyInstallation;
 
 use App\Models\RelayDomain;
 
 class RelayDomainHandler extends AbstractHandler
 {
-    const CONNECTION = 'postfix_db';
-
     /**
      * @throws \Exception
      */

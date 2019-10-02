@@ -4,15 +4,13 @@
         <div class="card-body">
             <p class="card-text mb-0">{{ server.description }}</p>
 
-            <server-schema-check :server="server" :database="'postfix_db'"></server-schema-check>
-            <server-schema-check :server="server" :database="'log_db'"></server-schema-check>
-            <server-schema-check :server="server" :database="'amavis_db'"></server-schema-check>
+            <server-schema-check :server="server" :database="'postfix_db'" v-if="server.postfix_feature_enabled"></server-schema-check>
+            <server-schema-check :server="server" :database="'log_db'" v-if="server.log_feature_enabled"></server-schema-check>
+            <server-schema-check :server="server" :database="'amavis_db'" v-if="server.amavis_feature_enabled"></server-schema-check>
 
             <div class="mt-1">
                 <button class="btn btn-secondary" @click="openModal"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-warning" @click="deleteRow"><i class="fas fa-trash-alt"></i></button>
-                <b-btn class="btn btn-secondary" @click="$emit('open-server-terminal-modal', server)" v-b-modal.server-terminal-modal><i class="fas fa-terminal"></i></b-btn>
-                <b-btn class="btn btn-secondary" @click="$emit('open-server-queue-modal', server)" v-b-modal.server-queue-modal><i class="fas fa-fw fa-envelope"></i> Queue</b-btn>
             </div>
         </div>
 

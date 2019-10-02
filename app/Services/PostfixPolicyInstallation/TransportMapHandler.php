@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Services\PolicyInstallation;
+namespace App\Services\PostfixPolicyInstallation;
 
 use App\Models\Transport;
 
 class TransportMapHandler extends AbstractHandler
 {
-    const CONNECTION = 'postfix_db';
-
     /**
      * @throws \Exception
      */

@@ -26,7 +26,7 @@ class LogController extends Controller
             'log_db_user' => $request->log_db_user,
             'log_db_password' => $request->log_db_password,
             'log_db_port' => $request->log_db_port,
-            'log_feature_enabled_' => true,
+            'log_feature_enabled' => true,
         ]);
 
         if (! $server->logDatabase()->available()) {

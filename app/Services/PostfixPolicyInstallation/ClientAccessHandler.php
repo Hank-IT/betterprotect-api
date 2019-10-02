@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Services\PolicyInstallation;
+namespace App\Services\PostfixPolicyInstallation;
 
 use App\Support\IPv4;
 use App\Models\ClientSenderAccess;
 
 class ClientAccessHandler extends AbstractHandler
 {
-    const CONNECTION = 'postfix_db';
-
     /**
      * @throws \Exception
      */

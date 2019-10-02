@@ -9,130 +9,67 @@
             </b-col>
         </b-row>
 
-        <div>
-            <b-modal id="server-wizard" size="xl" title="Server Wizard" :hide-footer="true" @close="serverWizardModalClose" :no-close-on-backdrop="true">
-                <form-wizard color="#007bff">
-                    <h2 slot="title"></h2>
+        <b-modal id="server-wizard" size="xl" title="Server Wizard" :hide-footer="true" @close="serverWizardModalClose" :no-close-on-backdrop="true">
+            <form-wizard color="#007bff" :key="serverWizardKey">
+                <h2 slot="title"></h2>
 
-                    <tab-content title="Server" icon="fas fa-server" >
-                        <server-wizard-server-form :bus="bus" @server-wizard-submit-server-success="updateServerWizardId"></server-wizard-server-form>
-                    </tab-content>
-                    <tab-content title="Postfix" icon="fas fa-envelope">
-                        <server-wizard-postfix-form :bus="bus" :server="server"></server-wizard-postfix-form>
-                    </tab-content>
-                    <tab-content title="Konsole" icon="fas fa-terminal">
-                        <server-wizard-console-form :bus="bus" :server="server"></server-wizard-console-form>
-                    </tab-content>
-                    <tab-content title="Logging" icon="fas fa-tasks">
-                        <server-wizard-logging-form :bus="bus" :server="server"></server-wizard-logging-form>
-                    </tab-content>
-                    <tab-content title="Amavis" icon="fas fa-trash">
-                        <server-wizard-amavis-form :bus="bus" :server="server"></server-wizard-amavis-form>
-                    </tab-content>
+                <tab-content title="Server" icon="fas fa-server" >
+                    <server-wizard-server-form :bus="bus" @server-wizard-submit-server-success="updateServerWizardId"></server-wizard-server-form>
+                </tab-content>
+                <tab-content title="Postfix" icon="fas fa-envelope">
+                    <server-wizard-postfix-form :bus="bus" :server="server"></server-wizard-postfix-form>
+                </tab-content>
+                <tab-content title="Konsole" icon="fas fa-terminal">
+                    <server-wizard-console-form :bus="bus" :server="server"></server-wizard-console-form>
+                </tab-content>
+                <tab-content title="Logging" icon="fas fa-tasks">
+                    <server-wizard-logging-form :bus="bus" :server="server"></server-wizard-logging-form>
+                </tab-content>
+                <tab-content title="Amavis" icon="fas fa-trash">
+                    <server-wizard-amavis-form :bus="bus" :server="server"></server-wizard-amavis-form>
+                </tab-content>
 
-                    <template slot="footer" slot-scope="props">
-                        <div class="wizard-footer-left">
-                            <wizard-button  v-if="props.activeTabIndex > 0" @click.native="props.prevTab()" :style="props.fillButtonStyle">Zurück</wizard-button>
-                        </div>
-                        <div class="wizard-footer-right">
-                            <wizard-button v-if="!props.isLastStep" @click.native="wizardButtonNext(props)" class="wizard-footer-right" :style="props.fillButtonStyle">Weiter</wizard-button>
+                <template slot="footer" slot-scope="props">
+                    <div class="wizard-footer-left">
+                        <wizard-button  v-if="props.activeTabIndex > 0" @click.native="props.prevTab()" :style="props.fillButtonStyle">Zurück</wizard-button>
+                    </div>
+                    <div class="wizard-footer-right">
+                        <wizard-button v-if="!props.isLastStep" @click.native="wizardButtonNext(props)" class="wizard-footer-right" :style="props.fillButtonStyle">Weiter</wizard-button>
 
-                            <wizard-button v-else @click.native="wizardButtonNext(props)" class="wizard-footer-right finish-button" :style="props.fillButtonStyle">  {{ props.isLastStep ? 'Fertig' : 'Weiter' }}</wizard-button>
-                        </div>
-                    </template>
-                </form-wizard>
-            </b-modal>
-        </div>
-
-        <!-- Modal Component -->
-        <b-modal id="server-store-modal" ref="serverStoreModal" size="lg" title="Server hinzufügen" @ok="handleOk" @shown="modalShown" @hidden="modalHidden">
-            <b-form>
-                <b-form-group label="Hostname *">
-                    <b-form-input :class="{ 'is-invalid': errors.hostname }" type="text" ref="hostname" v-model="serverForm.hostname" placeholder="Hostname"></b-form-input>
-
-                    <b-form-invalid-feedback>
-                        <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.hostname" v-text="error"></li>
-                        </ul>
-                    </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group label="Beschreibung">
-                    <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="serverForm.description" rows="4" placeholder="Beschreibung"></b-form-textarea>
-
-                    <b-form-invalid-feedback>
-                        <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.description" v-text="error"></li>
-                        </ul>
-                    </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group label="Datenbankhost *">
-                    <b-form-input :class="{ 'is-invalid': errors.db_host }" type="text" v-model="serverForm.db_host" placeholder="Datenbankhost"></b-form-input>
-
-                    <b-form-invalid-feedback>
-                        <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.db_host" v-text="error"></li>
-                        </ul>
-                    </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group label="Datenbankbenutzer *">
-                    <b-form-input :class="{ 'is-invalid': errors.db_user }" type="text" v-model="serverForm.db_user" placeholder="Datenbankbenutzer"></b-form-input>
-
-                    <b-form-invalid-feedback>
-                        <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.db_user" v-text="error"></li>
-                        </ul>
-                    </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group label="Datenbankname *">
-                    <b-form-input :class="{ 'is-invalid': errors.db_name }" type="text" v-model="serverForm.db_name" placeholder="Datenbankname"></b-form-input>
-
-                    <b-form-invalid-feedback>
-                        <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.db_name" v-text="error"></li>
-                        </ul>
-                    </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group label="Datenbankpasswort *">
-                    <b-form-input :class="{ 'is-invalid': errors.db_password }" type="password" v-model="serverForm.db_password" placeholder="Datenbankpasswort"></b-form-input>
-
-                    <b-form-invalid-feedback>
-                        <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.db_password" v-text="error"></li>
-                        </ul>
-                    </b-form-invalid-feedback>
-
-                    <p class="text-muted mb-0">Das Passwort wird aus Sicherheitsgründen nicht angezeigt!</p>
-                </b-form-group>
-
-                <b-form-group label="Datenbankport *">
-                    <b-form-input :class="{ 'is-invalid': errors.db_port }" type="text" v-model="serverForm.db_port" placeholder="Datenbankport"></b-form-input>
-
-                    <b-form-invalid-feedback>
-                        <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.db_port" v-text="error"></li>
-                        </ul>
-                    </b-form-invalid-feedback>
-                </b-form-group>
-            </b-form>
+                        <wizard-button v-else @click.native="wizardButtonNext(props)" class="wizard-footer-right finish-button" :style="props.fillButtonStyle">  {{ props.isLastStep ? 'Fertig' : 'Weiter' }}</wizard-button>
+                    </div>
+                </template>
+            </form-wizard>
         </b-modal>
 
-        <server-terminal-modal v-bind:server="serverTerminalModalServer"></server-terminal-modal>
-        <server-queue-modal v-bind:server="serverQueueModalServer"></server-queue-modal>
+        <b-modal id="server-edit" size="xl" title="Server bearbeiten" :hide-footer="true" :no-close-on-backdrop="true">
+            <b-card>
+                <b-tabs content-class="mt-3" fill>
+                    <b-tab title="Server" active>
+                        <server-update-server-form :server="server" @edit-server-finished="hideEditModal"></server-update-server-form>
+                    </b-tab>
+                    <b-tab title="Postfix">
+                        <server-update-postfix-form :server="server" @edit-server-finished="hideEditModal"></server-update-postfix-form>
+                    </b-tab>
+                    <b-tab title="Konsole">
+
+                    </b-tab>
+                    <b-tab title="Logging">
+
+                    </b-tab>
+                    <b-tab title="Amavis">
+
+                    </b-tab>
+                </b-tabs>
+            </b-card>
+        </b-modal>
 
         <server
                 v-if="!loading"
-                v-for="server in servers"
-                v-bind:key="server.id"
-                v-bind:server="server"
+                v-for="item in servers"
+                v-bind:server="item"
                 v-on:server-deleted="getAllServers"
-                v-on:edit-server="editServer"
-                v-on:open-server-terminal-modal="openServerTerminalModal"
-                v-on:open-server-queue-modal="openServerQueueModal"
+                v-on:edit-server="openEditModal"
         ></server>
 
         <b-alert show variant="warning" v-if="!servers.length && !loading">
@@ -155,25 +92,13 @@
         data() {
             return {
                 servers: [],
-                serverForm: {},
-                serverFormUpdated: false,
-                errors: [],
 
                 /**
                  * Wizard
                  */
                 bus: new Vue(),
                 server: null,
-
-                /**
-                 * Server Terminal Modal
-                 */
-                serverTerminalModalServer: null,
-
-                /**
-                 * Server Queue Modal
-                 */
-                serverQueueModalServer: null,
+                serverWizardKey: 0,
 
                 /**
                  * Loader
@@ -183,6 +108,13 @@
         },
         created() {
             this.getAllServers();
+
+            /*
+             * Rerender wizard due to a bug which reorders the items.
+             */
+            this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
+                this.serverWizardKey += 1;
+            });
         },
         methods: {
             /**
@@ -224,87 +156,6 @@
             serverWizardModalClose(bvModalEvt) {
                 //bvModalEvt.preventDefault();
             },
-
-            handleOk(event) {
-                // Prevent modal from closing
-                event.preventDefault();
-
-                if (this.serverFormUpdated) {
-                    this.updateServer()
-                } else {
-                    this.storeServer();
-                }
-            },
-            modalShown() {
-                this.$refs.hostname.focus();
-                this.errors = [];
-            },
-            modalHidden() {
-                this.serverForm = {};
-                this.errors = [];
-            },
-            storeServer() {
-                axios.post('/server', this.serverForm).then((response) => {
-                    this.errors = [];
-
-                    this.servers.push(response.data.data);
-
-                    this.$notify({
-                        title: response.data.message,
-                        type: 'success'
-                    });
-
-                    this.$refs.serverStoreModal.hide();
-                }).catch((error) => {
-                    if (error.response) {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors;
-                        } else {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
-                            });
-                        }
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
-                });
-            },
-            updateServer() {
-                axios.patch('/server/' + this.serverForm.id, this.serverForm).then((response) => {
-                    this.$notify({
-                        title: response.data.message,
-                        type: 'success'
-                    });
-
-                    let serverIndex = this.servers.findIndex(x => x.id === this.serverForm.id);
-
-                    this.$set(this.servers, serverIndex, this.serverForm);
-
-                    this.$refs.serverStoreModal.hide();
-
-                    this.serverFormUpdated = false;
-                }).catch((error) => {
-                    if (error.response) {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors;
-                        } else {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
-                            });
-                        }
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
-                });
-            },
             getAllServers() {
                 this.loading = true;
                 axios.get('/server').then((response) => {
@@ -327,32 +178,13 @@
                     this.loading = false;
                 });
             },
-            editServer(id) {
-                this.serverFormUpdated = true;
+            openEditModal(server) {
+                this.server = server;
 
-                axios.get('/server/' + id).then((response) => {
-                    this.serverForm = response.data;
-
-                    this.$refs.serverStoreModal.show();
-                }).catch((error) => {
-                    if (error.response) {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: 'error'
-                        });
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
-                });
+                this.$bvModal.show('server-edit')
             },
-            openServerTerminalModal(server) {
-                this.serverTerminalModalServer = server;
-            },
-            openServerQueueModal(server) {
-                this.serverQueueModalServer = server;
+            hideEditModal() {
+                this.$bvModal.hide('server-edit')
             }
         }
     }

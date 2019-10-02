@@ -13,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use App\Services\ServerDatabase as ServerDatabaseService;
 
-class PolicyInstallation implements ShouldQueue
+class PostfixPolicyInstallation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,11 +28,11 @@ class PolicyInstallation implements ShouldQueue
     protected $user;
 
     protected $handler = [
-        \App\Services\PolicyInstallation\ClientAccessHandler::class,
-        \App\Services\PolicyInstallation\SenderAccessHandler::class,
-        \App\Services\PolicyInstallation\RecipientAccessHandler::class,
-        \App\Services\PolicyInstallation\TransportMapHandler::class,
-        \App\Services\PolicyInstallation\RelayDomainHandler::class,
+        \App\Services\PostfixPolicyInstallation\ClientAccessHandler::class,
+        \App\Services\PostfixPolicyInstallation\SenderAccessHandler::class,
+        \App\Services\PostfixPolicyInstallation\RecipientAccessHandler::class,
+        \App\Services\PostfixPolicyInstallation\TransportMapHandler::class,
+        \App\Services\PostfixPolicyInstallation\RelayDomainHandler::class,
     ];
 
     public function __construct(Server $server, Authenticatable $user)
@@ -48,7 +48,7 @@ class PolicyInstallation implements ShouldQueue
             $this->delete();
         }
 
-        $serverDatabase = app($this->database, ['server' => $this->server]);
+        $serverDatabase = app('postfix_db', ['server' => $this->server]);
 
         $task = Task::create([
             'message' => 'Policy wird auf Server ' . $this->server->hostname . ' installiert...',

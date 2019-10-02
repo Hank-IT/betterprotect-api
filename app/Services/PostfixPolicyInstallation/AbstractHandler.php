@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\PolicyInstallation;
+namespace App\Services\PostfixPolicyInstallation;
 
 use App\Models\Task;
 use Illuminate\Database\ConnectionInterface;
