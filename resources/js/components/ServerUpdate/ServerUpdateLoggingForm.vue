@@ -1,41 +1,41 @@
 <template>
     <b-form>
-        <b-form-checkbox v-model="form.postfix_feature_enabled" :value="1" :unchecked-value="0">Postfix Funktionen aktivieren</b-form-checkbox>
+        <b-form-checkbox v-model="form.log_feature_enabled" :value="1" :unchecked-value="0">Log Viewer aktivieren</b-form-checkbox>
 
-        <template v-if="form.postfix_feature_enabled">
+        <template v-if="form.log_feature_enabled">
             <b-form-group label="Datenbankhost *">
-                <b-form-input :class="{ 'is-invalid': errors.postfix_db_host }" type="text" v-model="form.postfix_db_host" placeholder="Datenbankhost"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.log_db_host }" type="text" v-model="form.log_db_host" placeholder="Datenbankhost"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_host" v-text="error"></li>
+                        <li v-for="error in errors.log_db_host" v-text="error"></li>
                     </ul>
                 </b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group label="Datenbankname *">
-                <b-form-input :class="{ 'is-invalid': errors.postfix_db_name }" type="text" v-model="form.postfix_db_name" placeholder="Datenbankname"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.log_db_name }" type="text" v-model="form.log_db_name" placeholder="Datenbankname"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_name" v-text="error"></li>
+                        <li v-for="error in errors.log_db_name" v-text="error"></li>
                     </ul>
                 </b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group label="Datenbankbenutzer">
-                <b-form-input :class="{ 'is-invalid': errors.postfix_db_user }" type="text" v-model="form.postfix_db_user" placeholder="Datenbankbenutzer"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.log_db_user }" type="text" v-model="form.log_db_user" placeholder="Datenbankbenutzer"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_user" v-text="error"></li>
+                        <li v-for="error in errors.log_db_user" v-text="error"></li>
                     </ul>
                 </b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group label="Datenbankpasswort">
                 <b-input-group>
-                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_password }" type="password" v-model="form.postfix_db_password" placeholder="Datenbankpasswort"></b-form-input>
+                    <b-form-input :class="{ 'is-invalid': errors.log_db_password }" type="password" v-model="form.log_db_password" placeholder="Datenbankpasswort"></b-form-input>
 
                     <b-input-group-append>
                         <b-button variant="outline-secondary" @click="setPasswordEmpty">Leeren</b-button>
@@ -44,7 +44,7 @@
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_password" v-text="error"></li>
+                        <li v-for="error in errors.log_db_password" v-text="error"></li>
                     </ul>
                 </b-form-invalid-feedback>
 
@@ -57,11 +57,11 @@
             </b-form-group>
 
             <b-form-group label="Datenbankport *">
-                <b-form-input :class="{ 'is-invalid': errors.postfix_db_port }" type="text" v-model="form.postfix_db_port" placeholder="Datenbankport"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.log_db_port }" type="text" v-model="form.log_db_port" placeholder="Datenbankport"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_port" v-text="error"></li>
+                        <li v-for="error in errors.log_db_port" v-text="error"></li>
                     </ul>
                 </b-form-invalid-feedback>
             </b-form-group>
@@ -81,7 +81,7 @@
             }
         },
         created() {
-            axios.get('/server/' + this.server + '/postfix').then((response) => {
+            axios.get('/server/' + this.server + '/log').then((response) => {
                 this.form = response.data.data;
             }).catch((error) => {
                 if (error.response) {
@@ -103,7 +103,7 @@
         },
         methods: {
             submit() {
-                axios.patch('/server/' + this.server + '/postfix', this.form).then((response) => {
+                axios.patch('/server/' + this.server + '/log', this.form).then((response) => {
                     this.errors = {};
                     this.$notify({
                         title: response.data.message,
@@ -130,7 +130,7 @@
                 });
             },
             setPasswordEmpty() {
-                this.form.postfix_db_password = null;
+                this.form.log_db_password = null;
             }
         }
     }

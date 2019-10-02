@@ -65,6 +65,7 @@ class ConsoleController extends Controller
             'ssh_command_sudo' => 'required|string',
             'ssh_command_postqueue' => 'required|string',
             'ssh_command_postsuper' => 'required|string',
+            'ssh_feature_enabled' => 'required|boolean',
         ]);
 
         $server->fill([
@@ -73,6 +74,7 @@ class ConsoleController extends Controller
             'ssh_command_sudo' => $request->ssh_command_sudo,
             'ssh_command_postqueue' => $request->ssh_command_postqueue,
             'ssh_command_postsuper' => $request->ssh_command_postsuper,
+            'ssh_feature_enabled' => $request->ssh_feature_enabled,
         ]);
 
         if ($request->exists('ssh_private_key')) {
@@ -103,7 +105,7 @@ class ConsoleController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => null,
-            'data' => $server->only(['ssh_user', 'ssh_public_key', 'ssh_command_sudo', 'ssh_command_postqueue', 'ssh_command_postsuper']),
+            'data' => $server->only(['ssh_user', 'ssh_public_key', 'ssh_command_sudo', 'ssh_command_postqueue', 'ssh_command_postsuper', 'ssh_feature_enabled']),
         ]);
     }
 

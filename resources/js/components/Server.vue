@@ -4,9 +4,12 @@
         <div class="card-body">
             <p class="card-text mb-0">{{ server.description }}</p>
 
-            <server-schema-check :server="server" :database="'postfix_db'" v-if="server.postfix_feature_enabled"></server-schema-check>
-            <server-schema-check :server="server" :database="'log_db'" v-if="server.log_feature_enabled"></server-schema-check>
-            <server-schema-check :server="server" :database="'amavis_db'" v-if="server.amavis_feature_enabled"></server-schema-check>
+            <template v-if="server.active">
+                <server-schema-check :server="server" :database="'postfix_db'" v-if="server.postfix_feature_enabled"></server-schema-check>
+                <server-schema-check :server="server" :database="'log_db'" v-if="server.log_feature_enabled"></server-schema-check>
+                <server-schema-check :server="server" :database="'amavis_db'" v-if="server.amavis_feature_enabled"></server-schema-check>
+            </template>
+            <p v-else>Server ist deaktiviert</p>
 
             <div class="mt-1">
                 <button class="btn btn-secondary" @click="openModal"><i class="fas fa-edit"></i></button>

@@ -37,6 +37,9 @@ import VueFormWizard from 'vue-form-wizard'
 import ServerSchemaCheck from "./components/ServerSchemaCheck";
 import ServerUpdateServerForm from "./components/ServerUpdate/ServerUpdateServerForm";
 import ServerUpdatePostfixForm from "./components/ServerUpdate/ServerUpdatePostfixForm";
+import ServerUpdateConsoleForm from "./components/ServerUpdate/ServerUpdateConsoleForm";
+import ServerUpdateLoggingForm from "./components/ServerUpdate/ServerUpdateLoggingForm";
+import ServerUpdateAmavisForm from "./components/ServerUpdate/ServerUpdateAmavisForm";
 
 Vue.prototype.moment = moment;
 
@@ -237,6 +240,9 @@ Vue.component('ServerWizardAmavisForm', ServerWizardAmavisForm);
 Vue.component('ServerSchemaCheck', ServerSchemaCheck);
 Vue.component('ServerUpdateServerForm', ServerUpdateServerForm);
 Vue.component('ServerUpdatePostfixForm', ServerUpdatePostfixForm);
+Vue.component('ServerUpdateConsoleForm', ServerUpdateConsoleForm);
+Vue.component('ServerUpdateLoggingForm', ServerUpdateLoggingForm);
+Vue.component('ServerUpdateAmavisForm', ServerUpdateAmavisForm);
 
 App.router = Vue.router;
 

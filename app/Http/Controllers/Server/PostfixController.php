@@ -50,6 +50,7 @@ class PostfixController extends Controller
             'postfix_db_user' => 'nullable|string',
             'postfix_db_password' => 'nullable|string',
             'postfix_db_port' => 'required|int',
+            'postfix_feature_enabled' => 'required|boolean',
         ]);
 
         $server->fill([
@@ -57,6 +58,7 @@ class PostfixController extends Controller
             'postfix_db_name' => $request->postfix_db_name,
             'postfix_db_user' => $request->postfix_db_user,
             'postfix_db_port' => $request->postfix_db_port,
+            'postfix_feature_enabled' => $request->postfix_feature_enabled,
         ]);
 
         if ($request->exists('postfix_db_password')) {
@@ -81,7 +83,7 @@ class PostfixController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => null,
-            'data' => $server->only(['postfix_db_host', 'postfix_db_name', 'postfix_db_user', 'postfix_db_port']),
+            'data' => $server->only(['postfix_db_host', 'postfix_db_name', 'postfix_db_user', 'postfix_db_port', 'postfix_feature_enabled']),
         ]);
     }
 }

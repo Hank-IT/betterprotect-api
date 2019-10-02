@@ -14,6 +14,8 @@ class UpdateServersTable extends Migration
     public function up()
     {
         Schema::table('servers', function (Blueprint $table) {
+            $table->boolean('active')->default('1');
+
             /**
              * Postfix Feature
              */
@@ -65,6 +67,7 @@ class UpdateServersTable extends Migration
 
             $table->boolean('amavis_feature_enabled')->default('0');
         });
+
 
         \App\Models\Server::all()->each(function($server) {
             $server->logging_db_host = $server->postfix_db_host;

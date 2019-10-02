@@ -1,41 +1,31 @@
 <template>
     <b-form>
-        <b-form-checkbox v-model="form.postfix_feature_enabled" :value="1" :unchecked-value="0">Postfix Funktionen aktivieren</b-form-checkbox>
+        <b-form-checkbox v-model="form.ssh_feature_enabled" :value="1" :unchecked-value="0">SSH Funktionen aktivieren</b-form-checkbox>
 
-        <template v-if="form.postfix_feature_enabled">
-            <b-form-group label="Datenbankhost *">
-                <b-form-input :class="{ 'is-invalid': errors.postfix_db_host }" type="text" v-model="form.postfix_db_host" placeholder="Datenbankhost"></b-form-input>
+        <template v-if="form.ssh_feature_enabled">
+            <b-form-group label="Benutzer *">
+                <b-form-input :class="{ 'is-invalid': errors.ssh_user }" type="text" ref="user" v-model="form.ssh_user" placeholder="Benutzer"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_host" v-text="error"></li>
+                        <li v-for="error in errors.ssh_user" v-text="error"></li>
                     </ul>
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Datenbankname *">
-                <b-form-input :class="{ 'is-invalid': errors.postfix_db_name }" type="text" v-model="form.postfix_db_name" placeholder="Datenbankname"></b-form-input>
+            <b-form-group label="Public Key *">
+                <b-form-textarea :class="{ 'is-invalid': errors.ssh_public_key }" type="text" v-model="form.ssh_public_key" rows="4" placeholder="Public Key"></b-form-textarea>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_name" v-text="error"></li>
+                        <li v-for="error in errors.ssh_public_key" v-text="error"></li>
                     </ul>
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Datenbankbenutzer">
-                <b-form-input :class="{ 'is-invalid': errors.postfix_db_user }" type="text" v-model="form.postfix_db_user" placeholder="Datenbankbenutzer"></b-form-input>
-
-                <b-form-invalid-feedback>
-                    <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_user" v-text="error"></li>
-                    </ul>
-                </b-form-invalid-feedback>
-            </b-form-group>
-
-            <b-form-group label="Datenbankpasswort">
+            <b-form-group label="Private Key *">
                 <b-input-group>
-                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_password }" type="password" v-model="form.postfix_db_password" placeholder="Datenbankpasswort"></b-form-input>
+                    <b-form-textarea :class="{ 'is-invalid': errors.ssh_private_key }" type="text" v-model="form.ssh_private_key" rows="4" placeholder="Private Key"></b-form-textarea>
 
                     <b-input-group-append>
                         <b-button variant="outline-secondary" @click="setPasswordEmpty">Leeren</b-button>
@@ -44,7 +34,7 @@
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_password" v-text="error"></li>
+                        <li v-for="error in errors.ssh_private_key" v-text="error"></li>
                     </ul>
                 </b-form-invalid-feedback>
 
@@ -56,12 +46,32 @@
                 </ul>
             </b-form-group>
 
-            <b-form-group label="Datenbankport *">
-                <b-form-input :class="{ 'is-invalid': errors.postfix_db_port }" type="text" v-model="form.postfix_db_port" placeholder="Datenbankport"></b-form-input>
+            <b-form-group label="Sudo Pfad *">
+                <b-form-input :class="{ 'is-invalid': errors.ssh_command_sudo }" type="text" v-model="form.ssh_command_sudo" placeholder="Sudo Pfad"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
-                        <li v-for="error in errors.postfix_db_port" v-text="error"></li>
+                        <li v-for="error in errors.ssh_command_sudo" v-text="error"></li>
+                    </ul>
+                </b-form-invalid-feedback>
+            </b-form-group>
+
+            <b-form-group label="Postqueue Pfad *">
+                <b-form-input :class="{ 'is-invalid': errors.ssh_command_postqueue }" type="text" v-model="form.ssh_command_postqueue" placeholder="Postqueue Pfad"></b-form-input>
+
+                <b-form-invalid-feedback>
+                    <ul class="form-group-validation-message-list">
+                        <li v-for="error in errors.ssh_command_postqueue" v-text="error"></li>
+                    </ul>
+                </b-form-invalid-feedback>
+            </b-form-group>
+
+            <b-form-group label="Postsuper Pfad *">
+                <b-form-input :class="{ 'is-invalid': errors.ssh_command_postsuper }" type="text" v-model="form.ssh_command_postsuper" placeholder="Postsuper Pfad"></b-form-input>
+
+                <b-form-invalid-feedback>
+                    <ul class="form-group-validation-message-list">
+                        <li v-for="error in errors.ssh_command_postsuper" v-text="error"></li>
                     </ul>
                 </b-form-invalid-feedback>
             </b-form-group>
@@ -81,7 +91,7 @@
             }
         },
         created() {
-            axios.get('/server/' + this.server + '/postfix').then((response) => {
+            axios.get('/server/' + this.server + '/console').then((response) => {
                 this.form = response.data.data;
             }).catch((error) => {
                 if (error.response) {
@@ -103,7 +113,7 @@
         },
         methods: {
             submit() {
-                axios.patch('/server/' + this.server + '/postfix', this.form).then((response) => {
+                axios.patch('/server/' + this.server + '/console', this.form).then((response) => {
                     this.errors = {};
                     this.$notify({
                         title: response.data.message,
@@ -130,7 +140,7 @@
                 });
             },
             setPasswordEmpty() {
-                this.form.postfix_db_password = null;
+                this.form.ssh_private_key = null;
             }
         }
     }

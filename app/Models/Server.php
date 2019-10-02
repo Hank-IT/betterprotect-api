@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\ServerActiveScope;
 use App\Services\Database\AmavisDatabase;
 use App\Services\Database\LogDatabase;
 use App\Services\Database\PostfixDatabase;
@@ -60,6 +61,13 @@ class Server extends Model
     ];
 
     protected $hidden = ['postfix_db_password', 'logging_db_password', 'ssh_private_key', 'amavis_db_password'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new ServerActiveScope);
+    }
 
     /**
      * @return ConsoleAccess

@@ -52,13 +52,13 @@
                         <server-update-postfix-form :server="server" @edit-server-finished="hideEditModal"></server-update-postfix-form>
                     </b-tab>
                     <b-tab title="Konsole">
-
+                        <server-update-console-form :server="server" @edit-server-finished="hideEditModal"></server-update-console-form>
                     </b-tab>
                     <b-tab title="Logging">
-
+                        <server-update-logging-form :server="server" @edit-server-finished="hideEditModal"></server-update-logging-form>
                     </b-tab>
                     <b-tab title="Amavis">
-
+                        <server-update-amavis-form :server="server" @edit-server-finished="hideEditModal"></server-update-amavis-form>
                     </b-tab>
                 </b-tabs>
             </b-card>
@@ -68,6 +68,7 @@
                 v-if="!loading"
                 v-for="item in servers"
                 v-bind:server="item"
+                v-bind:key="item.id"
                 v-on:server-deleted="getAllServers"
                 v-on:edit-server="openEditModal"
         ></server>
@@ -181,10 +182,12 @@
             openEditModal(server) {
                 this.server = server;
 
-                this.$bvModal.show('server-edit')
+                this.$bvModal.show('server-edit');
             },
             hideEditModal() {
-                this.$bvModal.hide('server-edit')
+                this.$bvModal.hide('server-edit');
+
+                this.getAllServers();
             }
         }
     }
