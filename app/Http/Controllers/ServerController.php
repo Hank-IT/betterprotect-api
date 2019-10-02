@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Server;
-use App\Scopes\ServerActiveScope;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,7 +10,7 @@ class ServerController extends Controller
 {
     public function index()
     {
-        return Server::withoutGlobalScope(ServerActiveScope::class)->get();
+        return Server::all();
     }
 
     public function store(Request $request)

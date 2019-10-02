@@ -62,13 +62,6 @@ class Server extends Model
 
     protected $hidden = ['postfix_db_password', 'logging_db_password', 'ssh_private_key', 'amavis_db_password'];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(new ServerActiveScope);
-    }
-
     /**
      * @return ConsoleAccess
      * @throws PublicKeyMismatchException

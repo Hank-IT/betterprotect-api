@@ -3,8 +3,7 @@
         <!-- Modal Component -->
         <b-modal id="policy-store-modal" ref="policy-store-modal" size="lg" title="Policy Installation" @shown="modalShown" @ok="handleOk">
             <b-form @submit.stop.prevent="installPolicy">
-                <b-form-select v-model="selectedServer" :options="servers" class="mb-3">
-                </b-form-select>
+                <b-form-select v-model="selectedServer" :options="servers" class="mb-3"></b-form-select>
             </b-form>
         </b-modal>
     </div>
@@ -41,7 +40,8 @@
                     for (const key of Object.keys(response.data)) {
                         data[key] = {
                             value: response.data[key].id,
-                            text: response.data[key].hostname
+                            text: response.data[key].hostname,
+                            disabled: ! response.data[key].active,
                         }
                     }
 
