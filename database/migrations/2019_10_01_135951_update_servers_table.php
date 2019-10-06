@@ -14,8 +14,6 @@ class UpdateServersTable extends Migration
     public function up()
     {
         Schema::table('servers', function (Blueprint $table) {
-            $table->boolean('active')->default('1');
-
             /**
              * Postfix Feature
              */
@@ -24,14 +22,11 @@ class UpdateServersTable extends Migration
             $table->string('db_user')->nullable()->change();
             $table->text('db_password')->nullable()->change();
             $table->string('db_port')->nullable()->change();
-
-            $table->renameColumn('db_host', 'postfix_db_host');
-            $table->renameColumn('db_name', 'postfix_db_name');
-            $table->renameColumn('db_user', 'postfix_db_user');
-            $table->renameColumn('db_password', 'postfix_db_password');
-            $table->renameColumn('db_port', 'postfix_db_port');
-
             $table->boolean('postfix_feature_enabled')->default('0');
+        });
+
+        Schema::table('servers', function (Blueprint $table) {
+            $table->boolean('active')->default('1');
 
             /**
              * Postfix log viewer
@@ -43,6 +38,15 @@ class UpdateServersTable extends Migration
             $table->string('log_db_port')->nullable();
 
             $table->boolean('log_feature_enabled')->default('0');
+
+            /**
+             * Postfix Feature
+             */
+            $table->renameColumn('db_host', 'postfix_db_host');
+            $table->renameColumn('db_name', 'postfix_db_name');
+            $table->renameColumn('db_user', 'postfix_db_user');
+            $table->renameColumn('db_password', 'postfix_db_password');
+            $table->renameColumn('db_port', 'postfix_db_port');
 
             /**
              * SSH Feature
