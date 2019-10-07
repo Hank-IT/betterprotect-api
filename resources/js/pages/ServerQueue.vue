@@ -1,0 +1,190 @@
+<template>
+    <div class="server.queue">
+        <div class="toolbar">
+            <b-row class="mb-2">
+                <b-col md="2">
+                    <b-button-group>
+                        <b-btn variant="secondary" @click="getQueue"><i class="fas fa-sync"></i></b-btn>
+                        <b-btn variant="primary" @click="flushQueue"><i class="fas fa-paper-plane"></i> Flush</b-btn>
+                    </b-button-group>
+                </b-col>
+            </b-row>
+        </div>
+
+        <template v-if="!loading">
+            <b-table hover
+                     :items="queue"
+                     :fields="fields"
+                     :sort-by.sync="sortBy"
+                     :sort-desc.sync="sortDesc"
+                     v-if="queue.length"
+            >
+                <template v-slot:cell(arrival_time)="data">
+                    {{ moment.unix(data.item.arrival_time).format("YYYY-MM-DD HH:mm:ss") }}
+                </template>
+
+                <template v-slot:cell(sender)="data">
+                    <span v-b-popover.hover="data.item.sender">
+                        {{ data.item.sender.trunc(40) }}
+                    </span>
+                </template>
+
+                <template v-slot:cell(app_actions)="data">
+                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
+                </template>
+            </b-table>
+
+            <b-alert show variant="warning" v-else>
+                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+            </b-alert>
+        </template>
+
+        <are-you-sure-modal v-on:answered-yes="deleteMail" v-on:answered-no="row = null"></are-you-sure-modal>
+
+        <div class="text-center" v-if="loading">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Lade...</span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        created() {
+            this.getQueue();
+        },
+        data() {
+            return {
+                queue: [],
+                loading: false,
+
+                /**
+                 * Table
+                 */
+                sortBy: 'arrival_time',
+                sortDesc: true,
+                fields: [
+                    {
+                        key: 'server',
+                        label: 'Server',
+                    },
+                    {
+                        key: 'arrival_time',
+                        label: 'Empfangen',
+                        sortable: true,
+                    },
+                    {
+                        key: 'sender',
+                        label: 'Absender',
+                    },
+                    {
+                        key: 'message_size',
+                        label: 'Größe',
+                    },
+                    {
+                        key: 'queue_name',
+                        label: 'Queue',
+                        sortable: true,
+                    },
+                    {
+                        key: 'queue_id',
+                        label: 'Queue ID',
+                    },
+                    {
+                        key: 'app_actions',
+                        label: ''
+                    }
+                ],
+                /**
+                 * Are you sure modal
+                 */
+                row: null,
+            }
+        },
+        methods: {
+            deleteRow(data) {
+                this.row = data.item;
+                this.$bvModal.show('are-you-sure-modal');
+            },
+            getQueue() {
+                this.loading = true;
+
+                axios.get('/server/queue')
+                    .then((response) => {
+                        this.queue = response.data.data;
+                        this.loading = false;
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            if (error.response.status === 422) {
+                                this.$notify({
+                                    title: error.response.data.errors.payload[0],
+                                    type: 'error'
+                                });
+                            } else {
+                                this.$notify({
+                                    title: error.response.data.message,
+                                    type: 'error'
+                                });
+                            }
+                        }
+
+                        this.loading = false;
+                    });
+            },
+            flushQueue() {
+                axios.post('/server/queue')
+                    .then((response) => {
+                        this.$notify({
+                            title: response.data.message,
+                            type: 'success'
+                        });
+
+                        this.getQueue();
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            if (error.response.status === 422) {
+                                this.$notify({
+                                    title: error.response.data.errors.payload[0],
+                                    type: 'error'
+                                });
+                            } else {
+                                this.$notify({
+                                    title: error.response.data.message,
+                                    type: 'error'
+                                });
+                            }
+                        }
+                    });
+            },
+            deleteMail() {
+                axios.delete('/server/' + this.row.server_id + '/queue?queue_id=' + this.row.queue_id)
+                    .then((response) => {
+                        this.$notify({
+                            title: response.data.message,
+                            type: 'success'
+                        });
+
+                        this.getQueue();
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            if (error.response.status === 422) {
+                                this.$notify({
+                                    title: error.response.data.errors.payload[0],
+                                    type: 'error'
+                                });
+                            } else {
+                                this.$notify({
+                                    title: error.response.data.message,
+                                    type: 'error'
+                                });
+                            }
+                        }
+                    });
+            }
+        }
+    }
+</script>

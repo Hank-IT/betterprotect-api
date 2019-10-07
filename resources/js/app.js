@@ -30,6 +30,7 @@ import ServerWizardLoggingForm from "./components/ServerWizard/ServerWizardLoggi
 import ServerWizardAmavisForm from "./components/ServerWizard/ServerWizardAmavisForm";
 import AreYouSureModal from './components/AreYouSureModal';
 import RelayDomainIndex from "./pages/RelayDomainIndex";
+import ServerQueue from "./pages/ServerQueue";
 import ServerLog from './pages/ServerLog';
 import moment from 'moment';
 import DateRangePicker from 'vue2-daterange-picker';
@@ -146,6 +147,14 @@ Vue.router = new Router({
             path: '/server-log',
             name:'server.log',
             component: ServerLog,
+            meta: {
+                auth: true
+            }
+        },
+        {
+            path: '/server-queue',
+            name:'server.queue',
+            component: ServerQueue,
             meta: {
                 auth: true
             }

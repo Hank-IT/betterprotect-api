@@ -19,6 +19,13 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::get('/server/log', 'ServerLogController@index')->name('server.log.show');
 
     /**
+     * Server Queue
+     */
+    Route::get('/server/queue', 'ServerQueueController@index')->name('server.queue.show');
+    Route::post('/server/queue', 'ServerQueueController@store')->name('server.queue.store');
+    Route::delete('/server/{server}/queue', 'ServerQueueController@destroy')->name('server.queue.destroy');
+
+    /**
      * Server
      */
     Route::get('/server', 'ServerController@index')->name('server.index');

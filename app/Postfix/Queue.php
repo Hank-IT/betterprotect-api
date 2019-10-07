@@ -11,31 +11,22 @@ class Queue
 
     public function __construct(Server $server)
     {
-        if (empty($server->sudo)) {
-            throw new ErrorException('Terminalzugriff ist nicht konfiguriert.');
-        }
-
         $this->server = $server;
     }
 
-    /**
-     * @return array
-     * @throws ErrorException
-     * @throws \MrCrankHank\ConsoleAccess\Exceptions\MissingCommandException
-     * @throws \MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException
-     */
     public function get()
     {
-        $console = $this->server->console();
+        $console = $this->server->console()->access();
 
-        $console->sudo($this->server->sudo)
-            ->bin($this->server->postqueue)
+        $console->sudo($this->server->ssh_command_sudo)
+            ->bin($this->server->ssh_command_postqueue)
             ->param('-j')
             ->exec();
 
         if ($console->getExitStatus() !== 0) {
             throw new ErrorException;
         }
+
 
         $output = $console->getOutput();
 
@@ -48,7 +39,10 @@ class Queue
         $mails = [];
 
         foreach($output as $mail) {
-            $mails[] = json_decode($mail, true);
+            $mail = json_decode($mail, true);
+            $mail['server'] = $this->server->hostname;
+            $mail['server_id'] = $this->server->id;
+            $mails[] = $mail;
         }
 
         return $mails;
@@ -56,10 +50,10 @@ class Queue
 
     public function flush()
     {
-        $console = $this->server->console();
+        $console = $this->server->console()->access();
 
-        $console->sudo($this->server->sudo)
-            ->bin($this->server->postqueue)
+        $console->sudo($this->server->ssh_command_sudo)
+            ->bin($this->server->ssh_command_postqueue)
             ->param('-f')
             ->exec();
 
@@ -79,10 +73,10 @@ class Queue
      */
     public function deleteMail($queueId)
     {
-        $console = $this->server->console();
+        $console = $this->server->console()->access();
 
-        $console->sudo($this->server->sudo)
-            ->bin($this->server->postsuper)
+        $console->sudo($this->server->ssh_command_sudo)
+            ->bin($this->server->ssh_command_postsuper)
             ->param('-d')
             ->param($queueId)
             ->exec();

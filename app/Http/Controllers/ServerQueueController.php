@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Server;
 use App\Exceptions\ErrorException;
 use App\Postfix\Queue;
+use Illuminate\Http\Request;
 use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
 
 class ServerQueueController extends Controller
@@ -16,9 +17,16 @@ class ServerQueueController extends Controller
      * @throws \MrCrankHank\ConsoleAccess\Exceptions\MissingCommandException
      * @throws PublicKeyMismatchException
      */
-    public function index(Server $server)
+    public function index()
     {
-        $mails = (new Queue($server))->get();
+        $mails = [];
+        Server::where('ssh_feature_enabled', '=', true)->get()->each(function($server) use(&$mails) {
+            $mails[] = (new Queue($server))->get();
+        });
+
+        if (! empty($mails)) {
+            $mails = array_merge(...$mails);
+        }
 
         return response()->json([
             'status' => 'success',
@@ -32,14 +40,16 @@ class ServerQueueController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws ErrorException
      */
-    public function store(Server $server)
+    public function store()
     {
-        $output = (new Queue($server))->flush();
+        Server::where('ssh_feature_enabled')->get()->each(function($server) {
+            (new Queue($server))->flush();
+        });
 
         return response()->json([
             'status' => 'success',
             'message' => 'Mail Queue erfolgreich geflushed.',
-            'data' =>$output,
+            'data' => null,
         ]);
     }
 
@@ -51,9 +61,13 @@ class ServerQueueController extends Controller
      * @throws PublicKeyMismatchException
      * @throws \MrCrankHank\ConsoleAccess\Exceptions\MissingCommandException
      */
-    public function destroy(Server $server, $queueId)
+    public function destroy(Request $request, Server $server)
     {
-       $output = (new Queue($server))->deleteMail($queueId);
+        $this->validate($request, [
+            'queue_id' => 'required|string'
+        ]);
+
+        $output = (new Queue($server))->deleteMail($request->queue_id);
 
         return response()->json([
             'status' => 'success',
