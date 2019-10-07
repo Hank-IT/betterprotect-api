@@ -48,6 +48,13 @@ class Queue
         return $mails;
     }
 
+    public function search(string $pattern)
+    {
+        return collect($this->get())->filter(function($a) use($pattern)  {
+            return preg_grep('/' . $pattern . '/i', $a);
+        });
+    }
+
     public function flush()
     {
         $console = $this->server->console()->access();
