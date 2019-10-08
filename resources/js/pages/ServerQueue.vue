@@ -9,6 +9,7 @@
                     </b-button-group>
                 </b-col>
 
+                <!--
                 <b-col md="4" offset="6">
                     <b-form-group >
                         <b-input-group>
@@ -16,6 +17,7 @@
                         </b-input-group>
                     </b-form-group>
                 </b-col>
+                -->
             </b-row>
         </div>
 
