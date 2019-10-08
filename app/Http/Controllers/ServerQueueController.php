@@ -6,6 +6,7 @@ use App\Models\Server;
 use App\Exceptions\ErrorException;
 use App\Postfix\Queue;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
 
 class ServerQueueController extends Controller
@@ -17,16 +18,28 @@ class ServerQueueController extends Controller
      * @throws \MrCrankHank\ConsoleAccess\Exceptions\MissingCommandException
      * @throws PublicKeyMismatchException
      */
-    public function index()
+    public function index(Request $request)
     {
+        $this->validate($request, [
+            'search' => 'nullable|string',
+            'currentPage' => 'required|int',
+            'perPage' => 'required|int',
+        ]);
+
         $mails = [];
         Server::where('ssh_feature_enabled', '=', true)->get()->each(function($server) use(&$mails) {
-            $mails[] = (new Queue($server))->get();
+            $mails[] = app(Queue::class, ['server' => $server])->get();
         });
 
         if (! empty($mails)) {
-            $mails = array_merge(...$mails);
+            $mails = collect(array_merge(...$mails));
         }
+
+        // Paginate
+        $count = $mails->count();
+        $offset = ($request->currentPage-1) * $request->perPage;
+        $mails = array_slice($mails->toArray(), $offset, $request->perPage);
+        $mails = new LengthAwarePaginator($mails, $count, $request->perPage, $request->currentPage);
 
         return response()->json([
             'status' => 'success',
@@ -43,7 +56,7 @@ class ServerQueueController extends Controller
     public function store()
     {
         Server::where('ssh_feature_enabled')->get()->each(function($server) {
-            (new Queue($server))->flush();
+            app(Queue::class, ['server' => $server])->flush();
         });
 
         return response()->json([
@@ -67,7 +80,7 @@ class ServerQueueController extends Controller
             'queue_id' => 'required|string'
         ]);
 
-        $output = (new Queue($server))->deleteMail($request->queue_id);
+        $output = app(Queue::class, ['server' => $server])->deleteMail($request->queue_id);
 
         return response()->json([
             'status' => 'success',

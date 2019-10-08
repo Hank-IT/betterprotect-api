@@ -339,8 +339,6 @@
                         endDate: this.currentEnd.format('YYYY/MM/DD HH:mm'),
                         currentPage: this.currentPage,
                         perPage: this.perPage,
-                        sortBy: this.sortBy,
-                        sortDesc: this.sortDesc,
                         search: this.search,
                         status: this.mailStatusSelected,
                     }
