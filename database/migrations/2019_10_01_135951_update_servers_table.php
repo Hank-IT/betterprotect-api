@@ -72,16 +72,15 @@ class UpdateServersTable extends Migration
             $table->boolean('amavis_feature_enabled')->default('0');
         });
 
-
         \App\Models\Server::all()->each(function($server) {
-            $server->logging_db_host = $server->postfix_db_host;
-            $server->logging_db_name = 'Syslog';
-            $server->logging_db_user = $server->postfix_db_user;
-            $server->logging_db_password = $server->postfix_db_password;
-            $server->logging_db_port = $server->postfix_db_port;
+            $server->log_db_host = $server->postfix_db_host;
+            $server->log_db_name = 'Syslog';
+            $server->log_db_user = $server->postfix_db_user;
+            $server->log_db_password = $server->postfix_db_password;
+            $server->log_db_port = $server->postfix_db_port;
 
             $server->postfix_feature_enabled = true;
-            $server->logging_feature_enabled = true;
+            $server->log_feature_enabled = true;
             $server->ssh_feature_enabled = true;
 
             $server->save();
