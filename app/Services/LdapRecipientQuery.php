@@ -2,19 +2,19 @@
 
 namespace App\Services;
 
+use App\Models\Task;
 use App\Models\LdapDirectory;
 use App\Jobs\QueryLdapRecipients;
-use App\Models\Task;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class LdapRecipientQuery
 {
-    public static function run(LdapDirectory $ldapDirectory)
+    public static function run(LdapDirectory $ldapDirectory, Authenticatable $user)
     {
         $task = Task::create([
             'message' => 'LDAP ' . $ldapDirectory->connection . ': Abfrage wird durchgeführt.',
             'task' => 'query-ldap-recipients',
-            'username' => Auth::user()->username,
+            'username' => $user->username,
         ]);
 
         // Pull all recipients from active directory

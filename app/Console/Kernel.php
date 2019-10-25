@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\InstallPolicy::class,
         \App\Console\Commands\StoreTransportRule::class,
         \App\Console\Commands\CleanTransportRulesByMeta::class,
+        \App\Console\Commands\QueryLdapDirectory::class,
     ];
 
     /**
