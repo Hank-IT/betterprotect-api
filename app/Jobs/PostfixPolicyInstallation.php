@@ -11,7 +11,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Auth\Authenticatable;
-use App\Services\ServerDatabase as ServerDatabaseService;
 
 class PostfixPolicyInstallation implements ShouldQueue
 {

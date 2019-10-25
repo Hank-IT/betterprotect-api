@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\TaskCleanCommand::class,
         \App\Console\Commands\CreateUser::class,
         \App\Console\Commands\MigrateCheckCommand::class,
+        \App\Console\Commands\InstallPolicy::class,
+        \App\Console\Commands\StoreTransportRule::class,
+        \App\Console\Commands\CleanTransportRulesByMeta::class,
     ];
 
     /**
