@@ -13,7 +13,7 @@ class StoreTransportRule extends Command
      *
      * @var string
      */
-    protected $signature = 'transport:store {domain} {--transport=} {--nexthop=} {--nexthop_type=} {--nexthop_mx=} {--nexthop_port=} {--meta=}';
+    protected $signature = 'transport:store {domain} {--transport=} {--nexthop=} {--nexthop_type=} {--nexthop_mx=} {--nexthop_port=} {--data_source=}';
 
     /**
      * The console command description.
@@ -36,7 +36,7 @@ class StoreTransportRule extends Command
             'nexthop_type' => $this->option('nexthop_type'),
             'nexthop_mx' => $this->option('nexthop_mx'),
             'nexthop_port' => $this->option('nexthop_port'),
-            'meta' => $this->option('meta'),
+            'data_source' => $this->option('data_source'),
         ];
 
         $validator = Validator::make($data, [
@@ -46,7 +46,7 @@ class StoreTransportRule extends Command
             'nexthop' => 'nullable|string',
             'nexthop_port' => 'nullable|integer|max:65535|required_unless:nexthop_type,null',
             'nexthop_mx' => 'nullable|boolean',
-            'meta' => 'nullable|string',
+            'data_source' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
