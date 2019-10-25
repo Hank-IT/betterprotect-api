@@ -60,7 +60,7 @@ class Server extends Model
         'amavis_feature_enabled',
     ];
 
-    protected $hidden = ['postfix_db_password', 'logging_db_password', 'ssh_private_key', 'amavis_db_password'];
+    protected $hidden = ['postfix_db_password', 'log_db_password', 'ssh_private_key', 'amavis_db_password'];
 
     /**
      * @throws PublicKeyMismatchException
@@ -96,14 +96,14 @@ class Server extends Model
         return decrypt($this->attributes['postfix_db_password']);
     }
 
-    public function setLoggingDBPasswordAttribute($value)
+    public function setLogDBPasswordAttribute($value)
     {
-        $this->attributes['logging_db_password'] = encrypt($value);
+        $this->attributes['log_db_password'] = encrypt($value);
     }
 
-    public function getLoggingDBPasswordAttribute()
+    public function getLogDBPasswordAttribute()
     {
-        return decrypt($this->attributes['logging_db_password']);
+        return decrypt($this->attributes['log_db_password']);
     }
 
     public function setAmavisDBPasswordAttribute($value)
