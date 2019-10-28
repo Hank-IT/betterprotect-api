@@ -18,7 +18,7 @@ class PostfixDatabase extends Database
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ];
     }
 

@@ -11,6 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Config;
 
 class MigrateServerDatabase implements ShouldQueue
 {
@@ -43,6 +44,8 @@ class MigrateServerDatabase implements ShouldQueue
      */
     public function handle()
     {
+        Config::set('database.default', 'mysql');
+
         $task = Task::create([
             'message' => 'Datenbank ' . $this->database . ' auf Server ' . $this->server->hostname . ' wird aktualisiert...',
             'task' => 'migrate-server-db',

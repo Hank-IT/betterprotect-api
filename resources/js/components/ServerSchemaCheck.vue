@@ -64,8 +64,9 @@
                 });
             },
             updateSchema() {
-                axios.post('/server/' + this.server.id + '/schema')
-                    .then((response) => {
+                axios.post('/server/' + this.server.id + '/schema', {
+                    database: this.database
+                }).then((response) => {
                         this.$notify({
                             title: response.data.message,
                             type: 'success'
