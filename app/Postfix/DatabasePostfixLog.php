@@ -25,7 +25,7 @@ class DatabasePostfixLog
             return preg_grep('/' . $pattern . '/i', $a);
         });
 
-        if (!is_null($status)) {
+        if (! is_null($status)) {
             return $data->where('status', $status);
         }
 
@@ -65,10 +65,10 @@ class DatabasePostfixLog
            return $data;
        });
 
-        if (!is_null($status)) {
-            return $data->where('status', $status);
-        }
+       if (!is_null($status)) {
+           return $data->where('status', $status);
+       }
 
-        return $data;
+       return $data;
     }
 }

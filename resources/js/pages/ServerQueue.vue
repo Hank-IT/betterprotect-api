@@ -185,10 +185,15 @@
                     }
                 })
                     .then((response) => {
-                        this.queue = response.data.data.data;
-                        this.totalRows = response.data.data.total;
-                        this.from = response.data.data.from;
-                        this.to = response.data.data.to;
+                        if (response.data.data.length !== 0) {
+                            this.queue = response.data.data.data;
+                            this.totalRows = response.data.data.total;
+                            this.from = response.data.data.from;
+                            this.to = response.data.data.to;
+                        } else {
+                            this.queue = [];
+                        }
+
                         this.loading = false;
                     })
                     .catch((error) => {

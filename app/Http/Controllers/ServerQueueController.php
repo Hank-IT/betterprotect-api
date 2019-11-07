@@ -30,15 +30,17 @@ class ServerQueueController extends Controller
             $mails[] = app(Queue::class, ['server' => $server])->get();
         });
 
-        if (! empty($mails)) {
+        if (empty($mails)) {
+            $mails = [];
+        } else {
             $mails = collect(array_merge(...$mails));
-        }
 
-        // Paginate
-        $count = $mails->count();
-        $offset = ($request->currentPage-1) * $request->perPage;
-        $mails = array_slice($mails->toArray(), $offset, $request->perPage);
-        $mails = new LengthAwarePaginator($mails, $count, $request->perPage, $request->currentPage);
+            // Paginate
+            $count = $mails->count();
+            $offset = ($request->currentPage-1) * $request->perPage;
+            $mails = array_slice($mails->toArray(), $offset, $request->perPage);
+            $mails = new LengthAwarePaginator($mails, $count, $request->perPage, $request->currentPage);
+        }
 
         return response()->json([
             'status' => 'success',

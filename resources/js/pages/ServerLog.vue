@@ -83,17 +83,17 @@
                 <div class="stepwizard-row">
                     <div class="stepwizard-step">
                         <p>{{ detailedRow.client }}&nbsp;</p>
-                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' || detailedRow.status === 'milter-reject' }">Client</button>
+                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' }">Client</button>
                         <p class="stepwizard-step-subtitle">{{ detailedRow.from }}</p>
                     </div>
                     <div class="stepwizard-step">
                         <p>&nbsp;</p>
-                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' || detailedRow.status === 'milter-reject' }">Server</button>
+                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' }">Server</button>
                         <p class="stepwizard-step-subtitle">{{ detailedRow.host }}</p>
                     </div>
                     <div class="stepwizard-step">
                         <p>{{ detailedRow.relay }}&nbsp;</p>
-                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' || detailedRow.status === 'milter-reject'  }">Relay</button>
+                        <button type="button" class="btn btn-circle btn-secondary" :class="{ 'btn-success': detailedRow.status === 'sent', 'btn-warning': detailedRow.status === 'deferred', 'btn-danger': detailedRow.status === 'reject' }">Relay</button>
                         <p class="stepwizard-step-subtitle">{{ detailedRow.to }}</p>
                     </div>
                 </div>
@@ -106,6 +106,10 @@
                         <b-btn size="sm" variant="primary" @click="whitelist(detailedRow)" v-if="detailedRow.status === 'reject' || detailedRow.status === 'bounced'">Whitelist</b-btn>
                         <b-btn size="sm" variant="primary" @click="blacklist(detailedRow)" v-if="detailedRow.status === 'sent'">Blacklist</b-btn>
                     </td>
+                </tr>
+                <tr>
+                    <th>Betreff</th>
+                    <td>{{ detailedRow.subject }}</td>
                 </tr>
                 <tr>
                     <th>Erhalten am</th>
@@ -139,10 +143,10 @@
                     <th>Empfänger (Anzahl)</th>
                     <td>{{ detailedRow.nrcpt }}</td>
                 </tr>
-                <tr v-if="detailedRow.encryption">
+                <tr v-if="Object.keys(detailedRow).includes('enc_type')">
                     <th>Verschlüsselung</th>
-                    <td v-if="detailedRow.encryption.length">Keine</td>
-                    <td v-else>{{ detailedRow.encryption.cipher }} ({{ detailedRow.encryption.type }})</td>
+                    <td v-if="detailedRow.enc_type === ''">Keine</td>
+                    <td v-else>{{ detailedRow.enc_cipher }} ({{ detailedRow.enc_type }})</td>
                 </tr>
                 <tr v-else>
                     <th>Verschlüsselung</th>
