@@ -27,7 +27,6 @@ class Queue
             throw new ErrorException;
         }
 
-
         $output = $console->getOutput();
 
         // each mail is its own json object
@@ -46,6 +45,13 @@ class Queue
         }
 
         return $mails;
+    }
+
+    public function exists(string $queueId)
+    {
+        $this->get();
+
+
     }
 
     public function flush()

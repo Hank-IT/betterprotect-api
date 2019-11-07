@@ -31,7 +31,7 @@ class Parser
             if (isset($daemon['daemon'])) {
                 switch ($daemon['daemon']) {
                     case 'qmgr':
-                        preg_match('/^(?<queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): ?from=<?(?<from>[^>,]*)>?, size=(?<size>[0-9]+, nrcpt=(?<nrcpt>[0-9]+))/', $message, $result);
+                        preg_match('/^(?<queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): ?from=<?(?<from>[^>,]*)>?, size=(?<size>[0-9]+), nrcpt=(?<nrcpt>[0-9]+)/', $message, $result);
 
                         if (! empty($result)) {
                             if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];

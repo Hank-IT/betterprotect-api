@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use App\Scopes\ServerActiveScope;
-use App\Services\Database\AmavisDatabase;
-use App\Services\Database\LogDatabase;
-use App\Services\Database\PostfixDatabase;
+use App\Services\Filesystem;
 use App\Services\ServerConsole;
+use App\Services\Database\LogDatabase;
 use Illuminate\Database\Eloquent\Model;
-use MrCrankHank\ConsoleAccess\Adapters\SshAdapter;
-use MrCrankHank\ConsoleAccess\ConsoleAccess;
+use App\Services\Database\AmavisDatabase;
+use App\Services\Database\PostfixDatabase;
 use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
+use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 
 class Server extends Model
 {
@@ -84,6 +83,11 @@ class Server extends Model
     public function logDatabase()
     {
         return app(LogDatabase::class, ['server' => $this]);
+    }
+
+    public function filesystem(): FilesystemContract
+    {
+        return app(Filesystem::class)->getFilesystem();
     }
 
     public function setPostfixDBPasswordAttribute($value)

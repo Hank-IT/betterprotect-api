@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Server;
 
+use ErrorException;
 use App\Models\Server;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -112,12 +113,13 @@ class ConsoleController extends Controller
     protected function validateConsole()
     {
         try {
-            return tap($this->server->console(), function($console) {
+            return tap($console = $this->server->console(), function($console) {
                 $console->available();
             })->access();
-        } catch(\ErrorException $exception) {
+        } catch(ErrorException $exception) {
             throw ValidationException::withMessages(['ssh_user' => 'Verbindung fehlgeschlagen.']);
         } catch(PublicKeyMismatchException $exception) {
+            Log::debug($this->server->hostname . ' public key: ' . $console->getPublicKey());
             throw ValidationException::withMessages(['ssh_public_key' => 'Public Key stimmt nicht überein.']);
         }
     }
