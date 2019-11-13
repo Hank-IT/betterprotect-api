@@ -2,6 +2,8 @@
 
 namespace App\Postfix;
 
+use Illuminate\Support\Str;
+
 class Parser
 {
     protected $encryptionIndex = [];
@@ -109,7 +111,13 @@ class Parser
                             preg_match('/^(?<queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): warning: header subject: (?<subject>.*) from (?<client>.*); (?<from>.*) (?<to>.*) (?<proto>.*)$/i', $message, $result);
 
                             if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
-                            if (isset($result['subject'])) $messages[$result['queue_id']]['subject'] = $result['subject'];
+                            if (isset($result['subject'])) {
+                                $messages[$result['queue_id']]['subject'] = $result['subject'];
+
+                                if (Str::startsWith(Str::lower($messages[$result['queue_id']]['subject']), '=?utf-8?')) {
+                                    $messages[$result['queue_id']]['subject'] = mb_decode_mimeheader($messages[$result['queue_id']]['subject']);
+                                }
+                            }
                         } else {
                             if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
                             if (isset($result['client'])) $messages[$result['queue_id']]['client'] = $result['client'];
