@@ -114,7 +114,8 @@ class Parser
                             if (isset($result['subject'])) {
                                 $messages[$result['queue_id']]['subject'] = $result['subject'];
 
-                                if (Str::startsWith(Str::lower($messages[$result['queue_id']]['subject']), ['=?utf-8?', '=?iso-'])) {
+                                // ToDo|
+                                if (Str::startsWith(Str::lower($messages[$result['queue_id']]['subject']), ['=?utf-8?', '=?iso-', '=?Windows'])) {
                                     $messages[$result['queue_id']]['subject'] = mb_decode_mimeheader($messages[$result['queue_id']]['subject']);
                                 }
                             }
