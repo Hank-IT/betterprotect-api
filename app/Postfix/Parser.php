@@ -2,6 +2,7 @@
 
 namespace App\Postfix;
 
+use phpWhois\Whois;
 use Illuminate\Support\Str;
 
 class Parser
@@ -135,12 +136,9 @@ class Parser
                 }
             }
 
-            // Geo IP
             if (isset($result['client_ip'])) {
+                // Geo IP
                 $location = geoip()->getLocation($result['client_ip'])->toArray();
-
-                \Log::debug($location);
-
                 $messages[$result['queue_id']]['client_ip_country'] = $location['country'];
                 $messages[$result['queue_id']]['client_ip_country_iso_code'] = Str::lower($location['iso_code']);
             }

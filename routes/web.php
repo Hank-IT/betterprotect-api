@@ -129,6 +129,11 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::get('/ldap/{ldapDirectory}', 'LdapDirectoryController@show')->name('ldap.show');
     Route::patch('/ldap/{ldapDirectory}', 'LdapDirectoryController@update')->name('ldap.update');
     Route::delete('/ldap/{ldapDirectory}', 'LdapDirectoryController@destroy')->name('ldap.destroy');
+
+    /**
+     * Whois
+     */
+    Route::post('/whois', 'WhoisController')->name('whois.show');
 });
 
 /**

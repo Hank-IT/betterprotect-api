@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "832a372a4dc30075751229ef1a84129e",
+    "content-hash": "ef4b46f0db4e594c6d2808c1e40bc4dc",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -1303,6 +1303,74 @@
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
+            "name": "jsmitty12/phpwhois",
+            "version": "v5.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jsmitty12/phpWhois.git",
+                "reference": "52d222a098e2e5bbc0a25dcc753e2275eeaf5108"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jsmitty12/phpWhois/zipball/52d222a098e2e5bbc0a25dcc753e2275eeaf5108",
+                "reference": "52d222a098e2e5bbc0a25dcc753e2275eeaf5108",
+                "shasum": ""
+            },
+            "require": {
+                "mso/idna-convert": "^1.1",
+                "php": "^7.0,<7.4 || 7.3.0-dev || 7.4.0-dev"
+            },
+            "replace": {
+                "phpwhois/phpwhois": "4.2.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0"
+            },
+            "suggest": {
+                "lib-openssl": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "phpWhois\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Jeftovic",
+                    "email": "markjr@easydns.com"
+                },
+                {
+                    "name": "David Saez Padros",
+                    "email": "david@ols.es"
+                },
+                {
+                    "name": "Ross Golder",
+                    "email": "ross@golder.org"
+                },
+                {
+                    "name": "Dmitry Lukashin",
+                    "email": "dmitry@lukashin.ru"
+                },
+                {
+                    "name": "Joshua Smith",
+                    "email": "jsmith@jssm.com"
+                }
+            ],
+            "description": "phpWhois - library for querying whois services and parsing results.",
+            "homepage": "http://phpwhois.pw",
+            "keywords": [
+                "php",
+                "phpwhois",
+                "whois"
+            ],
+            "time": "2018-11-26T15:02:19+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v6.0.0",
             "source": {
@@ -2256,6 +2324,56 @@
                 }
             ],
             "time": "2019-09-12T10:40:40+00:00"
+        },
+        {
+            "name": "mso/idna-convert",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/algo26-matthias/idna-convert.git",
+                "reference": "a6dfb6f87611e3a89d2eec4924a0f51db755c573"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/algo26-matthias/idna-convert/zipball/a6dfb6f87611e3a89d2eec4924a0f51db755c573",
+                "reference": "a6dfb6f87611e3a89d2eec4924a0f51db755c573",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mso\\IdnaConvert\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1+"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Sommerfeld",
+                    "email": "mso@phlylabs.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A library for encoding and decoding internationalized domain names",
+            "homepage": "http://idnaconv.net/",
+            "keywords": [
+                "idn",
+                "idna",
+                "php"
+            ],
+            "abandoned": "algo26-matthias/idna-convert",
+            "time": "2016-06-19T18:08:43+00:00"
         },
         {
             "name": "namshi/jose",

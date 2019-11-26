@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <b-modal id="mail-log-modal" ref="mailLogModal" size="xl" title="Mail Log">
+        <b-modal id="mail-log-modal" ref="mailLogModal" size="xl" title="Mail Log" @shown="loadWhoisData">
             <div class="stepwizard col-md-offset-3">
                 <div class="stepwizard-row">
                     <div class="stepwizard-step">
@@ -115,6 +115,29 @@
                 <tr v-if="detailedRow.client_ip_country_iso_code">
                     <th>Client IP Herkunft</th>
                     <td><span class="flag-icon" :class="['flag-icon-' + detailedRow.client_ip_country_iso_code]"></span> {{ detailedRow.client_ip_country }}</td>
+                </tr>
+                <tr>
+                    <th>Organisation</th>
+                    <td v-if="whoisLoading">
+                        <div class="spinner-border" style="width: 1rem; height: 1rem;" role="status">
+                            <span class="sr-only">Lade...</span>
+                        </div>
+                    </td>
+                    <td v-else>
+                        {{ whoisOrganisation }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Abuse Kontakt</th>
+                    <td v-if="whoisLoading">
+                        <div class="spinner-border" style="width: 1rem; height: 1rem;" role="status">
+                            <span class="sr-only">Lade...</span>
+                        </div>
+                    </td>
+                    <td v-else>
+                        <template v-if="whoisAbuseContact == 'N/A'">{{ whoisAbuseContact}}</template>
+                        <a v-else :href="['mailto:' + whoisAbuseContact]">{{ whoisAbuseContact }}</a>
+                    </td>
                 </tr>
                 <tr>
                     <th>Erhalten am</th>
@@ -207,6 +230,13 @@
                 ],
 
                 /**
+                 * Whois
+                 */
+                whoisOrganisation: 'N/A',
+                whoisAbuseContact: 'N/A',
+                whoisLoading: false,
+
+                /**
                  * Search
                  */
                 search: null,
@@ -275,6 +305,36 @@
             }
         },
         methods: {
+            loadWhoisData() {
+                if (this.detailedRow.client_ip) {
+                    this.whoisLoading = true;
+
+                    axios.post('/whois', {
+                        'client_ip': this.detailedRow.client_ip,
+                    }).then((response) => {
+                        this.whoisOrganisation = response.data.data.organization;
+                        this.whoisAbuseContact = response.data.data.abuse;
+
+                        this.whoisLoading = false;
+                    }).catch((error) => {
+                        if (error.response) {
+                            if (error.response.status === 422) {
+                                this.$notify({
+                                    title: error.response.data.errors.payload[0],
+                                    type: 'error'
+                                });
+                            } else {
+                                this.$notify({
+                                    title: error.response.data.message,
+                                    type: 'error'
+                                });
+                            }
+                        }
+
+                        this.whoisLoading = false;
+                    });
+                }
+            },
             blacklist(row) {
                 axios.post('/access', {
                     payload: row.client_ip,
