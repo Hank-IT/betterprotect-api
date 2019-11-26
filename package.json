@@ -16,6 +16,7 @@
         "axios": "^0.18.1",
         "bootstrap": "^4.3.1",
         "bootstrap-vue": "^2.0.4",
+        "flag-icon-css": "^3.4.5",
         "izitoast": "^1.4.0",
         "laravel-echo": "^1.6.1",
         "moment": "^2.24.0",

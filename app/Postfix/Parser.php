@@ -55,7 +55,7 @@ class Parser
                             if (isset($result['delay'])) $messages[$result['queue_id']]['delay'] = $result['delay'];
                             if (isset($result['delays'])) $messages[$result['queue_id']]['delays'] = $result['delays'];
                             if (isset($result['dsn'])) $messages[$result['queue_id']]['dsn'] = $result['dsn'];
-                            if (isset($result['status'])) $messages[$result['queue_id']]['status'] = $result['status'];
+                            if (isset($result['status'])) $messages[$result['queue_id']]['status'] = Str::lower($result['status']);
                             if (isset($result['response'])) $messages[$result['queue_id']]['response'] = $result['response'];
                             $messages[$result['queue_id']]['host'] = $log->FromHost;
                             $messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
@@ -87,7 +87,7 @@ class Parser
                             $queueId = optional($result)['queue_id'] == 'NOQUEUE' ? strtoupper(uniqid()): $result['queue_id'];
 
                             if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
-                            if (isset($result['status'])) $messages[$queueId]['status'] = $result['status'];
+                            if (isset($result['status'])) $messages[$queueId]['status'] = Str::lower($result['status']);
                             if (isset($result['client'])) $messages[$queueId]['client'] = $result['client'];
                             if (isset($result['client_ip'])) $messages[$queueId]['client_ip'] = $result['client_ip'];
                             if (isset($result['response'])) $messages[$queueId]['response'] = $result['response'];
@@ -123,7 +123,7 @@ class Parser
                             if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
                             if (isset($result['client'])) $messages[$result['queue_id']]['client'] = $result['client'];
                             if (isset($result['response'])) $messages[$result['queue_id']]['response'] = $result['response'];
-                            if (isset($result['status'])) $messages[$result['queue_id']]['status'] = $result['status'];
+                            if (isset($result['status'])) $messages[$result['queue_id']]['status'] = Str::lower($result['status']);
                             if (isset($result['from'])) $messages[$result['queue_id']]['from'] = $result['from'];
                             if (isset($result['to'])) $messages[$result['queue_id']]['to'] = $result['to'];
                             if (isset($result['proto'])) $messages[$result['queue_id']]['proto'] = $result['proto'];
@@ -133,6 +133,16 @@ class Parser
                         break;
                     }
                 }
+            }
+
+            // Geo IP
+            if (isset($result['client_ip'])) {
+                $location = geoip()->getLocation($result['client_ip'])->toArray();
+
+                \Log::debug($location);
+
+                $messages[$result['queue_id']]['client_ip_country'] = $location['country'];
+                $messages[$result['queue_id']]['client_ip_country_iso_code'] = Str::lower($location['iso_code']);
             }
         }
 

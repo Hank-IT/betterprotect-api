@@ -46,8 +46,9 @@
                     </span>
                 </template>
                 <template v-slot:cell(client)="data">
-                    <span v-b-popover.hover="data.item.client" v-if="data.item.client">
-                        {{ data.item.client.trunc(40) }}
+                    <span  v-if="data.item.client">
+                        <span v-b-popover.hover="data.item.client_ip_country" v-if="data.item.client_ip_country_iso_code" class="flag-icon" :class="['flag-icon-' + data.item.client_ip_country_iso_code]"></span>
+                        <span v-b-popover.hover="data.item.client">{{ data.item.client.trunc(40) }}</span>
                     </span>
                 </template>
                 <template v-slot:cell(status)="data">
@@ -107,9 +108,13 @@
                         <b-btn size="sm" variant="primary" @click="blacklist(detailedRow)" v-if="detailedRow.status === 'sent'">Blacklist</b-btn>
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="detailedRow.subject">
                     <th>Betreff</th>
                     <td>{{ detailedRow.subject }}</td>
+                </tr>
+                <tr v-if="detailedRow.client_ip_country_iso_code">
+                    <th>Client IP Herkunft</th>
+                    <td><span class="flag-icon" :class="['flag-icon-' + detailedRow.client_ip_country_iso_code]"></span> {{ detailedRow.client_ip_country }}</td>
                 </tr>
                 <tr>
                     <th>Erhalten am</th>

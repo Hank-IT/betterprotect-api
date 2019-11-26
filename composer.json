@@ -15,6 +15,7 @@
         "beyondcode/laravel-websockets": "^1.0",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
+        "geoip2/geoip2": "^2.9",
         "laravel/framework": "6.0",
         "laravel/helpers": "^1.1",
         "laravel/tinker": "^1.0",
@@ -26,6 +27,7 @@
         "mrcrankhank/laravel-update": "^2.0",
         "mrcrankhank/laravel-version": "^1.2",
         "pusher/pusher-php-server": "~3.0",
+        "torann/geoip": "^1.0",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
