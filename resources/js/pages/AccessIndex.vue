@@ -18,13 +18,14 @@
         </b-row>
 
         <template v-if="!loading">
-            <b-table hover :items="rules" :fields="fields" @row-clicked="showModal" v-if="rules.length">
+            <b-table hover :items="rules" :fields="fields" @row-clicked="showModal" v-if="rules.length" :tbody-tr-class="rowClass">
                 <template slot="action" slot-scope="data">
                     <p :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</p>
                 </template>
 
                 <template v-slot:cell(app_actions)="data">
-                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-warning btn-sm" @click="activation(data)"><i class="fas" :class="{ 'fa-lock': data.item.active === 1, 'fa-unlock': data.item.active === 0 }"></i></button>
+                    <button class="btn btn-danger btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 
@@ -135,6 +136,66 @@
             }
         },
         methods: {
+            rowClass(item, type) {
+                if (!item) {
+                    return;
+                }
+
+                if (item.active === 0) {
+                    return 'table-secondary'
+                }
+            },
+            activation(data) {
+                if (data.item.active === 0) {
+                    axios.post('/activation/' + data.item.id, {
+                        model: 'ClientSenderAccess',
+                    }).then((response) => {
+                        this.$notify({
+                            title: response.data.message,
+                            type: 'success'
+                        });
+
+                        this.getAccessRules();
+                    }).catch((error) => {
+                        if (error.response) {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        } else {
+                            this.$notify({
+                                title: 'Unbekannter Fehler',
+                                type: 'error'
+                            });
+                        }
+                        this.loading = false;
+                    });
+                } else {
+                    axios.patch('/activation/' + data.item.id, {
+                        model: 'ClientSenderAccess',
+                    }).then((response) => {
+                        this.$notify({
+                            title: response.data.message,
+                            type: 'success'
+                        });
+
+                        this.getAccessRules();
+                    }).catch((error) => {
+                        if (error.response) {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        } else {
+                            this.$notify({
+                                title: 'Unbekannter Fehler',
+                                type: 'error'
+                            });
+                        }
+                        this.loading = false;
+                    });
+                }
+            },
             deleteRow(data) {
                 this.row = data.item;
                 this.$bvModal.show('are-you-sure-modal');

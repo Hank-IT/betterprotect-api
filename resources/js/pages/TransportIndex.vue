@@ -18,9 +18,10 @@
         </b-row>
 
         <template v-if="!loading">
-            <b-table hover :items="transports" :fields="fields" v-if="transports.length">
+            <b-table hover :items="transports" :fields="fields" v-if="transports.length" :tbody-tr-class="rowClass">
                 <template v-slot:cell(app_actions)="data">
-                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-warning btn-sm" @click="activation(data)"><i class="fas" :class="{ 'fa-lock': data.item.active === 1, 'fa-unlock': data.item.active === 0 }"></i></button>
+                    <button class="btn btn-danger btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 
@@ -133,6 +134,66 @@
             }
         },
         methods: {
+            rowClass(item, type) {
+                if (!item) {
+                    return;
+                }
+
+                if (item.active === 0) {
+                    return 'table-secondary'
+                }
+            },
+            activation(data) {
+                if (data.item.active === 0) {
+                    axios.post('/activation/' + data.item.id, {
+                        model: 'Transport',
+                    }).then((response) => {
+                        this.$notify({
+                            title: response.data.message,
+                            type: 'success'
+                        });
+
+                        this.getTransports();
+                    }).catch((error) => {
+                        if (error.response) {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        } else {
+                            this.$notify({
+                                title: 'Unbekannter Fehler',
+                                type: 'error'
+                            });
+                        }
+                        this.loading = false;
+                    });
+                } else {
+                    axios.patch('/activation/' + data.item.id, {
+                        model: 'Transport',
+                    }).then((response) => {
+                        this.$notify({
+                            title: response.data.message,
+                            type: 'success'
+                        });
+
+                        this.getTransports();
+                    }).catch((error) => {
+                        if (error.response) {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
+                            });
+                        } else {
+                            this.$notify({
+                                title: 'Unbekannter Fehler',
+                                type: 'error'
+                            });
+                        }
+                        this.loading = false;
+                    });
+                }
+            },
             deleteRow(data) {
                 this.row = data.item;
                 this.$bvModal.show('are-you-sure-modal');

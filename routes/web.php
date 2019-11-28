@@ -134,6 +134,12 @@ Route::group(['middleware' => 'jwt.auth'], function(){
      * Whois
      */
     Route::post('/whois', 'WhoisController')->name('whois.show');
+
+    /**
+     * Activation
+     */
+    Route::post('/activation/{id}', 'ActivationController@store')->name('activation.store');
+    Route::patch('/activation/{id}', 'ActivationController@update')->name('activation.update');
 });
 
 /**

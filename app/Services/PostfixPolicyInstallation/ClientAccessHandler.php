@@ -29,7 +29,7 @@ class ClientAccessHandler extends AbstractHandler
     protected function getClientAccessIPs()
     {
         // Generate client access ip network range
-        $clientAccessNets = ClientSenderAccess::where('type', '=', 'client_ipv4_net')->get();
+        $clientAccessNets = ClientSenderAccess::where('active', '=', 1)->where('type', '=', 'client_ipv4_net')->get();
 
         return $this->calculateClientAccessIPsForNetworks($clientAccessNets);
     }

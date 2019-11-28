@@ -4,20 +4,10 @@
             <b-row class="mb-2">
                 <b-col md="2">
                     <b-button-group>
-                        <b-btn variant="secondary" @click="getQueue"><i class="fas fa-sync"></i></b-btn>
                         <b-btn variant="primary" @click="flushQueue"><i class="fas fa-paper-plane"></i> Flush</b-btn>
+                        <b-btn variant="secondary" @click="getQueue"><i class="fas fa-sync"></i></b-btn>
                     </b-button-group>
                 </b-col>
-
-                <!--
-                <b-col md="4" offset="6">
-                    <b-form-group >
-                        <b-input-group>
-                            <b-form-input v-model="search" placeholder="Suche" @change="getQueue"/>
-                        </b-input-group>
-                    </b-form-group>
-                </b-col>
-                -->
             </b-row>
         </div>
 
@@ -41,7 +31,7 @@
                 </template>
 
                 <template v-slot:cell(app_actions)="data">
-                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-danger btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 

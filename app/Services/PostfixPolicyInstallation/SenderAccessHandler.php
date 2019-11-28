@@ -23,7 +23,7 @@ class SenderAccessHandler extends AbstractHandler
 
     protected function getSenderAccessRows()
     {
-        $senderAccess = ClientSenderAccess::whereIn('type', ['mail_from_address', 'mail_from_domain', 'mail_from_localpart'])->get();
+        $senderAccess = ClientSenderAccess::where('active', '=', 1)->whereIn('type', ['mail_from_address', 'mail_from_domain', 'mail_from_localpart'])->get();
 
         return $senderAccess->map(function ($row) {
             return collect($row->toArray())

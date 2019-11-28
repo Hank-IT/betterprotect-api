@@ -23,6 +23,6 @@ class RelayDomainHandler extends AbstractHandler
 
     protected function getRelayDomainRows()
     {
-        return RelayDomain::all('domain')->toArray();
+        return RelayDomain::where('active', '=', 1)->get('domain')->toArray();
     }
 }

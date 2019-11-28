@@ -13,7 +13,7 @@
 
             <div class="mt-1">
                 <button class="btn btn-secondary" @click="openModal"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-warning" @click="deleteRow"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn btn-danger" @click="deleteRow"><i class="fas fa-trash-alt"></i></button>
             </div>
         </div>
 

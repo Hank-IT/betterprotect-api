@@ -69,10 +69,11 @@ import faEnvelope from '@fortawesome/fontawesome-free-solid/faEnvelope';
 import faKey from '@fortawesome/fontawesome-free-solid/faKey';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 import faArrowsAltV from '@fortawesome/fontawesome-free-solid/faArrowsAltV';
-//import faMailBulk from '@fortawesome/fontawesome-free-solid/faMailBulk';
 import faPaperPlane from '@fortawesome/fontawesome-free-solid/faPaperPlane';
 import faExclamation from '@fortawesome/fontawesome-free-solid/faExclamation';
 import faTrash from '@fortawesome/fontawesome-free-solid/faTrash';
+import faLock from '@fortawesome/fontawesome-free-solid/faLock';
+import faUnlock from '@fortawesome/fontawesome-free-solid/faUnlock';
 
 fontawesome.library.add(faUser);
 fontawesome.library.add(faSignOutAlt);
@@ -88,10 +89,10 @@ fontawesome.library.add(faEnvelope);
 fontawesome.library.add(faKey);
 fontawesome.library.add(faUpload);
 fontawesome.library.add(faArrowsAltV);
-//fontawesome.library.add(faMailBulk);
 fontawesome.library.add(faPaperPlane);
 fontawesome.library.add(faExclamation);
-fontawesome.library.add(faTrash);
+fontawesome.library.add(faLock);
+fontawesome.library.add(faUnlock);
 
 /*
  * Axios

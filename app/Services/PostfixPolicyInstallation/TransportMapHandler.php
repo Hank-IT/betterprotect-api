@@ -23,7 +23,7 @@ class TransportMapHandler extends AbstractHandler
 
     protected function getTransportRows()
     {
-        $transportMaps = Transport::all();
+        $transportMaps = Transport::where('active', '=', 1)->get();
 
         // ToDo: Empty nexthop
 

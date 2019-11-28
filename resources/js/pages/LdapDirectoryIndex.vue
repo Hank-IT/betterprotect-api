@@ -21,7 +21,7 @@
             <b-table hover :items="ldapDirectories" :fields="fields" v-if="ldapDirectories.length">
                 <template v-slot:cell(app_actions)="data">
                     <button class="btn btn-secondary btn-sm" @click="openUpdateModal(data)"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-warning btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-danger btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 

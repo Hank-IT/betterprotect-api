@@ -23,7 +23,7 @@ class RecipientAccessHandler extends AbstractHandler
 
     protected function getRecipientAccessRows()
     {
-        $recipientAccess = RelayRecipient::all();
+        $recipientAccess = RelayRecipient::where('active', '=', 1)->get();
 
         return $recipientAccess->map(function ($row) {
             return collect($row->toArray())
