@@ -39,7 +39,7 @@ class ClientAccessHandler extends AbstractHandler
      */
     protected function getClientAccessRows()
     {
-        $clientAccess = ClientSenderAccess::whereIn('type', ['client_hostname', 'client_ipv4'])->get();
+        $clientAccess = ClientSenderAccess::where('active', '=', 1)->whereIn('type', ['client_hostname', 'client_ipv4'])->get();
 
         return $clientAccess->map(function ($row) {
             return collect($row->toArray())
