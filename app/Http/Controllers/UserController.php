@@ -38,6 +38,7 @@ class UserController extends Controller
             'username' => 'required|string|unique:users,username',
             'password' => 'required|string|confirmed',
             'email' => 'nullable|email|string',
+            'role' => 'required|in:readonly,editor,administrator',
         ]);
 
         $user = User::create($request->all());
@@ -60,6 +61,7 @@ class UserController extends Controller
             'username' => 'required|string|unique:users,username,' . $user->id,
             'password' => 'nullable|string|confirmed',
             'email' => 'nullable|email|string',
+            'role' => 'required|in:readonly,editor,administrator',
         ]);
 
         // Prevent password change for ldap users
