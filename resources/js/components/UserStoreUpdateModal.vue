@@ -21,6 +21,10 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
+            <b-form-group label="Rolle">
+                <b-form-select v-model="form.role" :options="roles"></b-form-select>
+            </b-form-group>
+
             <b-form-group label="Passwort *" v-if="user == null || (user && user.objectguid === null)">
                 <b-form-input :class="{ 'is-invalid': errors.password }" type="password" ref="email" v-model="form.password" placeholder="Passwort"></b-form-input>
 
@@ -53,6 +57,13 @@
             return {
                 form: {},
                 errors: [],
+                selectedRole: null,
+                roles: [
+                    { value: 'readonly', 'text': 'Read Only' },
+                    { value: 'authorizer', text: 'Autorisierer' },
+                    { value: 'editor', text: 'Bearbeiter' },
+                    { value: 'administrator', text: 'Administrator' },
+                ]
             }
         },
         methods: {
@@ -68,7 +79,9 @@
             },
             modalShown() {
                 if (this.user == null) {
-                    this.form = {};
+                    this.form = {
+                        role: 'readonly',
+                    };
                 } else {
                     axios.get('/user/' + this.user.id).then((response) => {
                         this.form = response.data;

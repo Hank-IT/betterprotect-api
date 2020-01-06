@@ -3,9 +3,9 @@
         <b-row>
             <b-col md="3" >
                 <b-button-group>
-                    <button type="button" class="btn btn-primary" v-b-modal.recipient-store-modal><i class="fas fa-plus"></i></button>
+                    <button :disabled="! $auth.check(['editor', 'administrator'])" type="button" class="btn btn-primary" v-b-modal.recipient-store-modal><i class="fas fa-plus"></i></button>
                     <b-btn variant="secondary" @click="getRecipients"><i class="fas fa-sync"></i></b-btn>
-                    <button type="button" class="btn btn-secondary" v-b-modal.ldap-query-modal>LDAP</button>
+                    <button :disabled="! $auth.check(['editor', 'administrator'])" type="button" class="btn btn-secondary" v-b-modal.ldap-query-modal>LDAP</button>
                 </b-button-group>
             </b-col>
 
@@ -25,8 +25,8 @@
                 </template>
 
                 <template v-slot:cell(app_actions)="data">
-                    <button class="btn btn-warning btn-sm" @click="activation(data)"><i class="fas" :class="{ 'fa-lock': data.item.active === 1, 'fa-unlock': data.item.active === 0 }"></i></button>
-                    <button class="btn btn-danger btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
+                    <button :disabled="! $auth.check(['editor', 'administrator'])" class="btn btn-warning btn-sm" @click="activation(data)"><i class="fas" :class="{ 'fa-lock': data.item.active === 1, 'fa-unlock': data.item.active === 0 }"></i></button>
+                    <button :disabled="! $auth.check(['editor', 'administrator'])" class="btn btn-danger btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
             </b-table>
 

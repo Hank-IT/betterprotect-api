@@ -14,24 +14,27 @@
         "@fortawesome/fontawesome-free-solid": "^5.0.13",
         "@websanova/vue-auth": "^2.21.14-beta",
         "axios": "^0.18.1",
-        "bootstrap": "^4.3.1",
-        "bootstrap-vue": "^2.0.4",
+        "bootstrap": "^4.4.1",
+        "bootstrap-vue": "^2.1.0",
         "flag-icon-css": "^3.4.5",
         "izitoast": "^1.4.0",
         "laravel-echo": "^1.6.1",
         "moment": "^2.24.0",
         "popper.js": "^1.16.0",
         "pusher-js": "^4.4.0",
-        "vue": "^2.6.10",
+        "vue": "^2.6.11",
         "vue-axios": "^2.1.5",
         "vue-form-wizard": "^0.8.4",
         "vue-notification": "^1.3.20",
         "vue-router": "^3.1.3",
-        "vue-template-compiler": "^2.6.10",
+        "vue-template-compiler": "^2.6.11",
         "vue2-daterange-picker": "^0.3.1"
     },
     "devDependencies": {
         "cross-env": "^5.2.1",
-        "laravel-mix": "^2.0"
+        "laravel-mix": "^5.0.1",
+        "resolve-url-loader": "^3.1.0",
+        "sass": "^1.24.2",
+        "sass-loader": "^8.0.0"
     }
 }

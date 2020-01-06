@@ -3,7 +3,7 @@
         <b-row class="mb-2">
             <b-col md="1">
                 <b-button-group>
-                    <b-btn variant="primary" v-b-modal.server-wizard><i class="fas fa-plus"></i></b-btn>
+                    <b-btn :disabled="! $auth.check(['editor', 'administrator'])" variant="primary" v-b-modal.server-wizard><i class="fas fa-plus"></i></b-btn>
                     <b-btn variant="secondary" @click="getAllServers"><i class="fas fa-sync"></i></b-btn>
                 </b-button-group>
             </b-col>

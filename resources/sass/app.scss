@@ -14,3 +14,8 @@
   padding-left: 14px;
   margin-bottom: 0;
 }
+
+button:disabled {
+  cursor: not-allowed;
+  pointer-events: all !important;
+}

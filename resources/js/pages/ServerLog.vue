@@ -104,8 +104,8 @@
                 <tr v-if="detailedRow.client_ip">
                     <th>Aktionen</th>
                     <td>
-                        <b-btn size="sm" variant="primary" @click="whitelist(detailedRow)" v-if="detailedRow.status === 'reject' || detailedRow.status === 'bounced'">Whitelist</b-btn>
-                        <b-btn size="sm" variant="primary" @click="blacklist(detailedRow)" v-if="detailedRow.status === 'sent'">Blacklist</b-btn>
+                        <b-btn :disabled="! $auth.check(['authorizer', 'editor', 'administrator'])" size="sm" variant="primary" @click="whitelist(detailedRow)" v-if="detailedRow.status === 'reject' || detailedRow.status === 'bounced'">Whitelist</b-btn>
+                        <b-btn :disabled="! $auth.check(['authorizer', 'editor', 'administrator'])" size="sm" variant="primary" @click="blacklist(detailedRow)" v-if="detailedRow.status === 'sent'">Blacklist</b-btn>
                     </td>
                 </tr>
                 <tr v-if="detailedRow.subject">

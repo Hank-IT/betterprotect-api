@@ -3,7 +3,7 @@
         <b-row class="mb-2">
             <b-col md="1">
                 <b-button-group>
-                    <button type="button" class="btn btn-primary" v-b-modal.access-store-modal><i class="fas fa-plus"></i></button>
+                    <button type="button" :disabled="! $auth.check(['authorizer', 'editor', 'administrator'])" class="btn btn-primary" v-b-modal.access-store-modal><i class="fas fa-plus"></i></button>
                     <b-btn variant="secondary" @click="$emit('reload-table')"><i class="fas fa-sync"></i></b-btn>
                 </b-button-group>
             </b-col>

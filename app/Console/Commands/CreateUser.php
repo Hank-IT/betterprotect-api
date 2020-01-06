@@ -35,6 +35,7 @@ class CreateUser extends Command
         User::create([
             'username' => $username,
             'password' => $password,
+            'role' => 'administrator',
         ]);
 
         $this->info('User ' . $username . ' was created successfully.');

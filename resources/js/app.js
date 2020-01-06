@@ -141,7 +141,7 @@ Vue.router = new Router({
             name:'server.index',
             component: ServerIndex,
             meta: {
-                auth: true
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }
         },
         {
@@ -149,7 +149,7 @@ Vue.router = new Router({
             name:'server.log',
             component: ServerLog,
             meta: {
-                auth: true
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }
         },
         {
@@ -157,7 +157,7 @@ Vue.router = new Router({
             name:'server.queue',
             component: ServerQueue,
             meta: {
-                auth: true
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }
         },
         {
@@ -165,7 +165,7 @@ Vue.router = new Router({
             name: 'access.index',
             component: AccessIndex,
             meta: {
-                auth: true
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }
         },
         {
@@ -173,7 +173,7 @@ Vue.router = new Router({
             name: 'recipient.index',
             component: RecipientIndex,
             meta: {
-                auth: true
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }
         },
         {
@@ -181,7 +181,7 @@ Vue.router = new Router({
             name: 'transport.index',
             component: TransportIndex,
             meta: {
-                auth: true
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }
         },
         {
@@ -189,7 +189,7 @@ Vue.router = new Router({
             name: 'relay-domain.index',
             component: RelayDomainIndex,
             meta: {
-                auth: true
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }
         },
         {
@@ -197,7 +197,7 @@ Vue.router = new Router({
             name: 'user.index',
             component: UserIndex,
             meta: {
-                auth: true
+                auth: ['administrator'],
             }
         },
         {
@@ -205,7 +205,7 @@ Vue.router = new Router({
             name: 'ldap.index',
             component: LdapDirectoryIndex,
             meta: {
-                auth: true
+                auth: ['administrator'],
             }
         },
         {
@@ -213,7 +213,7 @@ Vue.router = new Router({
             name: 'settings.index',
             component: SettingsIndex,
             meta: {
-                auth: true
+                auth: ['administrator'],
             }
         }
 
@@ -224,6 +224,7 @@ Vue.use(require('@websanova/vue-auth'), {
     auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
     http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
     router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
+    rolesVar: 'role'
 });
 
 Vue.component('Server', Server);

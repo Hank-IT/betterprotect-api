@@ -11,7 +11,7 @@
             <b-col md="4" offset="5" >
                 <b-form-group >
                     <b-input-group>
-                        <b-form-input v-model="filter" placeholder="Suche Benutzername" @change="getUsers"/>
+                        <b-form-input v-model="search" placeholder="Suche Benutzername" @change="getUsers"/>
                     </b-input-group>
                 </b-form-group>
             </b-col>
@@ -110,6 +110,10 @@
                         key: 'email',
                         label: 'E-Mail',
                         sortable: true
+                    },
+                    {
+                        key: 'role',
+                        label: 'Rolle',
                     },
                     {
                         key: 'created_at',
