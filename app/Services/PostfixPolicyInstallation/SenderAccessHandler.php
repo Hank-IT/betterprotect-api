@@ -23,10 +23,19 @@ class SenderAccessHandler extends AbstractHandler
 
     protected function getSenderAccessRows()
     {
-        $senderAccess = ClientSenderAccess::where('active', '=', 1)->whereIn('type', ['mail_from_address', 'mail_from_domain', 'mail_from_localpart'])->get();
+        $senderAccess = ClientSenderAccess::where('active', '=', 1)->whereNotNull('sender')->get();
 
         return $senderAccess->map(function ($row) {
-            return collect($row->toArray())
+            $row = $row->toArray();
+
+            // Combination Rule
+            if (! empty($row['sender'])) {
+                // Define this rule as combination rule, so that only
+                // combined checks of client and sender may match.
+                $row['client_access_combination'] = 1;
+            }
+
+            return collect($row)
                 ->only(['payload', 'action'])
                 ->all();
         })->toArray();

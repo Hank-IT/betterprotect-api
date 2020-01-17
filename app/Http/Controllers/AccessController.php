@@ -20,7 +20,7 @@ class AccessController extends Controller
         ]);
 
         if ($request->filled('search')) {
-            $clientSenderAccess = ClientSenderAccess::where('payload', 'LIKE', '%' . $request->search . '%');
+            $clientSenderAccess = ClientSenderAccess::where('client', 'LIKE', '%' . $request->search . '%')->orwhere('sender', 'LIKE', '%' . $request->search . '%');
         } else {
             $clientSenderAccess = ClientSenderAccess::query();
         }
@@ -35,14 +35,19 @@ class AccessController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'payload' => 'required|string|unique:client_sender_access',
-            'type' => 'required|in:client_hostname,client_ipv4,client_ipv4_net,mail_from_address,mail_from_domain,mail_from_localpart',
+            'client' => 'string|required_unless,sender',
+            'sender' => 'email|required_unless,client',
+            'client_type' => 'required|string|hostname,ipv4,ipv4_net',
             'description' => 'string|nullable',
-            'action' => 'required|string|in:ok,reject'
+            'action' => 'required|string|in:ok,reject',
         ]);
 
-        switch ($request->type) {
-            case 'client_ipv4': {
+        switch ($request->client_type) {
+            case 'hostname': {
+                //
+                break;
+            }
+            case 'ipv4': {
                 if (filter_var($request->payload, FILTER_VALIDATE_IP) === false) {
                     throw ValidationException::withMessages([
                         'payload' => 'Muss eine gültige IPv4 Adresse sein.'
@@ -50,7 +55,7 @@ class AccessController extends Controller
                 }
                 break;
             }
-            case 'client_ipv4_net': {
+            case 'ipv4_net': {
                 if (! IPv4::isValidIPv4Net($request->payload)) {
                     throw ValidationException::withMessages([
                         'payload' => 'Muss ein gültiges IPv4 Netz sein.'
@@ -61,14 +66,6 @@ class AccessController extends Controller
                 if ($bits[1] < 24) {
                     throw ValidationException::withMessages([
                         'payload' => 'Das IPv4 Netz muss kleiner /24 sein.'
-                    ]);
-                }
-                break;
-            }
-            case 'mail_from_address': {
-                if (filter_var($request->payload, FILTER_VALIDATE_EMAIL) === false) {
-                    throw ValidationException::withMessages([
-                        'payload' => 'Muss eine gültige E-Mail Adresse sein.'
                     ]);
                 }
                 break;

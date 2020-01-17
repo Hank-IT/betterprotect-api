@@ -97,13 +97,13 @@
                 filter: null,
                 fields: [
                     {
-                        key: 'payload',
-                        label: 'Eintrag',
+                        key: 'client',
+                        label: 'Client',
                         sortable: true,
                     },
                     {
-                        key: 'type',
-                        label: 'Type',
+                        key: 'sender',
+                        label: 'Sender',
                         sortable: true
                     },
                     {
@@ -112,17 +112,8 @@
                         sortable: false,
                     },
                     {
-                        key: 'payload',
-                        label: 'Eintrag',
-                        sortable: true,
-                    },
-                    {
                         key: 'created_at',
                         label: 'Erstellt am',
-                    },
-                    {
-                        key: 'updated_at',
-                        label: 'Aktualisiert am',
                     },
                     {
                         key: 'app_actions',

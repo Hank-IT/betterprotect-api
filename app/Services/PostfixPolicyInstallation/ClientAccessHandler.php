@@ -26,10 +26,13 @@ class ClientAccessHandler extends AbstractHandler
         return 'client_access';
     }
 
+    /**
+     * ToDo
+     */
     protected function getClientAccessIPs()
     {
         // Generate client access ip network range
-        $clientAccessNets = ClientSenderAccess::where('active', '=', 1)->where('type', '=', 'client_ipv4_net')->get();
+        $clientAccessNets = ClientSenderAccess::where('active', '=', 1)->whereNotNull('client')->where('type', '=', 'client_ipv4_net')->get();
 
         return $this->calculateClientAccessIPsForNetworks($clientAccessNets);
     }
@@ -39,11 +42,22 @@ class ClientAccessHandler extends AbstractHandler
      */
     protected function getClientAccessRows()
     {
-        $clientAccess = ClientSenderAccess::where('active', '=', 1)->whereIn('type', ['client_hostname', 'client_ipv4'])->get();
+        $clientAccess = ClientSenderAccess::where('active', '=', 1)->whereNotNull('client')->get();
 
         return $clientAccess->map(function ($row) {
-            return collect($row->toArray())
-                ->only(['payload', 'action'])
+            $row = $row->toArray();
+
+            // Combination Rule
+            if (! empty($row['sender'])) {
+                // Add configured restriction class as action.
+                $row['action'] = config('postfix.client_sender_combination_restriction_class');
+            }
+
+            // Change payload to client for consistent naming.
+            $row['payload'] = $row['client'];
+
+            return collect($row)
+                ->only(['payload', 'action', 'client_access_combination'])
                 ->all();
         })->toArray();
     }
