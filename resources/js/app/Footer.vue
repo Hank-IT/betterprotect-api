@@ -14,11 +14,11 @@
                             <table class="table table-hover mb-0" id="tasks-table">
                                 <thead>
                                 <tr>
-                                    <th class="col-1">Startzeit</th>
-                                    <th class="col-1">Endzeit</th>
-                                    <th class="col-1">Benutzer</th>
-                                    <th class="col-2">Aufgabe</th>
-                                    <th class="col">Status</th>
+                                    <th>Startzeit</th>
+                                    <th>Endzeit</th>
+                                    <th>Benutzer</th>
+                                    <th>Aufgabe</th>
+                                    <th>Status</th>
                                 </tr>
                                 </thead>
                                 <tbody>
