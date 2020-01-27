@@ -16,8 +16,6 @@ class ServerSchemaController extends Controller
             'database' => 'required|string|in:postfix_db,amavis_db,log_db',
         ]);
 
-        \Log::debug(\Config::get('database.default'));
-
         MigrateServerDatabase::dispatch($server, Auth::user(), $request->database)->onQueue('task');
 
         return response()->json([

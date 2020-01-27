@@ -62,7 +62,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
      * Server Database Schema
      */
     Route::post('/server/{server}/schema', 'ServerSchemaController@store')->middleware('role:editor')->name('server.schema.store');
-    Route::get('/server/{server}/schema', 'ServerSchemaController@show')->middleware('role:editor')->name('server.schema.show');
+    Route::get('/server/{server}/schema', 'ServerSchemaController@show')->middleware('role:readonly')->name('server.schema.show');
 
     /**
      * ClientSender Access
