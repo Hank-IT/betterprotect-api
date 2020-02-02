@@ -29,7 +29,7 @@ class PostfixPolicyInstallation implements ShouldQueue
     protected $handler = [
         //\App\Services\PostfixPolicyInstallation\ClientAccessHandler::class,
         //\App\Services\PostfixPolicyInstallation\SenderAccessHandler::class,
-        \App\Services\PostfixPolicyInstallation\ClientSenderAccesshandler::class,
+        \App\Services\PostfixPolicyInstallation\ClientSenderAccessHandler::class,
         \App\Services\PostfixPolicyInstallation\RecipientAccessHandler::class,
         \App\Services\PostfixPolicyInstallation\TransportMapHandler::class,
         \App\Services\PostfixPolicyInstallation\RelayDomainHandler::class,

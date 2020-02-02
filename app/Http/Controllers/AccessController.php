@@ -37,9 +37,9 @@ class AccessController extends Controller
     {
         $this->validate($request, [
             'client_type' => 'required|string|in:*,client_reverse_hostname,client_hostname,client_ipv4,client_ipv6,client_ipv4_net',
-            'client_payload' => 'required|string|unique:client_sender_access',
+            'client_payload' => 'required|string',
             'sender_type' => 'required|in:*,mail_from_address,mail_from_domain,mail_from_localpart',
-            'sender_payload' => 'required|string|unique:client_sender_access',
+            'sender_payload' => 'required|string',
             'description' => 'string|nullable',
             'action' => 'required|string|in:ok,reject'
         ]);

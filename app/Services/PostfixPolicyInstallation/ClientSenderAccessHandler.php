@@ -2,7 +2,7 @@
 
 namespace App\Services\PostfixPolicyInstallation;
 
-use  App\Models\ClientSenderAccess as ClientSenderAccessModel;
+use App\Models\ClientSenderAccess as ClientSenderAccessModel;
 
 class ClientSenderAccessHandler extends AbstractHandler
 {
