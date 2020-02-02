@@ -27,7 +27,7 @@ class Filesystem
             'username' => $this->server->ssh_user,
             'privateKey' => $this->server->ssh_private_key,
             'hostFingerprint' => $this->server->ssh_public_key,
-            'timeout' => 5,
+            'timeout' => 10,
         ];
     }
 

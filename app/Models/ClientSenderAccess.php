@@ -12,8 +12,10 @@ class ClientSenderAccess extends Model
     protected $table = 'client_sender_access';
 
     protected $fillable = [
-        'payload',
-        'type',
+        'client_payload',
+        'client_type',
+        'sender_payload',
+        'sender_type',
         'description',
         'action',
     ];

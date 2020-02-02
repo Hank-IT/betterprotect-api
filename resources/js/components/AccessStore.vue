@@ -12,25 +12,57 @@
         <!-- Modal Component -->
         <b-modal id="access-store-modal" ref="accessStoreModal" size="lg" title="Blacklist/Whitelist Eintrag" @ok="handleOk" @shown="modalShown">
             <b-form @submit.stop.prevent="storeAccess">
-                <b-form-group label="Eintrag *">
-                    <b-form-input :class="{ 'is-invalid': errors.payload }" ref="payload" type="text" v-model="form.payload" placeholder="Eintrag"></b-form-input>
+                <b-form-group label="Beliebiger Client">
+                    <b-form-checkbox type="checkbox" placeholder="Beliebiger Client" v-model="clientVisible" value="false" unchecked-value="true" @change="allClientsCheckboxChanged"></b-form-checkbox>
+                </b-form-group>
+
+                <b-form-group label="Client Typ *" v-if="clientVisible === 'true'">
+                    <b-form-select :class="{ 'is-invalid': errors.client_type }" v-model="form.client_type" :options="clientTypeOptions"></b-form-select>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.payload" v-text="error"></li>
+                            <li v-for="error in errors.client_type" v-text="error"></li>
                         </ul>
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Typ *">
-                    <b-form-select :class="{ 'is-invalid': errors.type }" v-model="form.type" :options="typeOptions"></b-form-select>
+                <b-form-group label="Client *" v-if="clientVisible === 'true'">
+                    <b-form-input :class="{ 'is-invalid': errors.client_payload }" ref="payload" type="text" v-model="form.client_payload" placeholder="Eintrag"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.type" v-text="error"></li>
+                            <li v-for="error in errors.client_payload" v-text="error"></li>
                         </ul>
                     </b-form-invalid-feedback>
                 </b-form-group>
+
+                <hr>
+
+                <b-form-group label="Beliebiger Sender">
+                    <b-form-checkbox type="checkbox" placeholder="Beliebiger Sender" v-model="senderVisible" value="false" unchecked-value="true" @change="allSendersCheckboxChanged"></b-form-checkbox>
+                </b-form-group>
+
+                <b-form-group label="Sender Typ *" v-if="senderVisible === 'true'">
+                    <b-form-select :class="{ 'is-invalid': errors.sender_type }" v-model="form.sender_type" :options="senderTypeOptions"></b-form-select>
+
+                    <b-form-invalid-feedback>
+                        <ul class="form-group-validation-message-list">
+                            <li v-for="error in errors.sender_type" v-text="error"></li>
+                        </ul>
+                    </b-form-invalid-feedback>
+                </b-form-group>
+
+                <b-form-group label="Sender *" v-if="senderVisible === 'true'">
+                    <b-form-input :class="{ 'is-invalid': errors.sender_payload }" ref="payload" type="text" v-model="form.sender_payload" placeholder="Eintrag"></b-form-input>
+
+                    <b-form-invalid-feedback>
+                        <ul class="form-group-validation-message-list">
+                            <li v-for="error in errors.sender_payload" v-text="error"></li>
+                        </ul>
+                    </b-form-invalid-feedback>
+                </b-form-group>
+
+                <hr>
 
                 <b-form-group label="Aktion *">
                     <b-form-select :class="{ 'is-invalid': errors.action }" v-model="form.action" :options="actionOptions"></b-form-select>
@@ -41,6 +73,8 @@
                         </ul>
                     </b-form-invalid-feedback>
                 </b-form-group>
+
+                <hr>
 
                 <b-form-group label="Beschreibung">
                     <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="form.description" rows="4" placeholder="Beschreibung"></b-form-textarea>
@@ -60,11 +94,16 @@
     export default {
         data() {
             return {
-                typeOptions: [
+                clientTypeOptions: [
                     { value: null, text: 'Bitte Typ auswählen' },
                     { value: 'client_hostname', text: 'Client Hostname' },
+                    { value: 'client_reverse_hostname', text: 'Client Reverse Hostname' },
                     { value: 'client_ipv4', text: 'Client IPv4' },
+                    { value: 'client_ipv6', text: 'Client IPv6' },
                     { value: 'client_ipv4_net', text: 'Client IPv4 Netzwerk' },
+                ],
+                senderTypeOptions: [
+                    { value: null, text: 'Bitte Typ auswählen' },
                     { value: 'mail_from_address', text: 'Mail From Adresse' },
                     { value: 'mail_from_domain', text: 'Mail From Domäne' },
                     { value: 'mail_from_localpart', text: 'Mail From Localpart' },
@@ -75,10 +114,15 @@
                     { value: 'reject', text: 'Ablehnen' },
                 ],
                 form: {
-                    type: null,
-                    action: null,
+                    client_type: null,
+                    client_payload: null,
+                    sender_type: null,
+                    sender_payload: null,
+                    action: null
                 },
                 errors: [],
+                clientVisible: 'true',
+                senderVisible: 'true',
             }
         },
         methods: {
@@ -90,8 +134,11 @@
             },
             modalShown() {
                 this.form = {
-                    type: null,
-                    action: null,
+                    client_type: null,
+                    client_payload: null,
+                    sender_type: null,
+                    sender_payload: null,
+                    action: null
                 };
 
                 this.$refs.payload.focus();
@@ -121,6 +168,24 @@
                             }
                         }
                     });
+            },
+            allClientsCheckboxChanged() {
+                if (this.clientVisible === 'true') {
+                    this.form.client_type = '*';
+                    this.form.client_payload = '*';
+                } else {
+                    this.form.client_type = null;
+                    this.form.client_payload  = null;
+                }
+            },
+            allSendersCheckboxChanged() {
+                if (this.senderVisible === 'true') {
+                    this.form.sender_type = '*';
+                    this.form.sender_payload = '*';
+                } else {
+                    this.form.sender_type = null;
+                    this.form.sender_payload  = null;
+                }
             }
         }
     }

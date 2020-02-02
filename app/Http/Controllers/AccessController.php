@@ -20,7 +20,8 @@ class AccessController extends Controller
         ]);
 
         if ($request->filled('search')) {
-            $clientSenderAccess = ClientSenderAccess::where('payload', 'LIKE', '%' . $request->search . '%');
+            $clientSenderAccess = ClientSenderAccess::where('client_payload', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('sender_payload', 'LIKE', '%' . $request->search . '%');
         } else {
             $clientSenderAccess = ClientSenderAccess::query();
         }
@@ -35,17 +36,27 @@ class AccessController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'payload' => 'required|string|unique:client_sender_access',
-            'type' => 'required|in:client_hostname,client_ipv4,client_ipv4_net,mail_from_address,mail_from_domain,mail_from_localpart',
+            'client_type' => 'required|string|in:*,client_reverse_hostname,client_hostname,client_ipv4,client_ipv6,client_ipv4_net',
+            'client_payload' => 'required|string|unique:client_sender_access',
+            'sender_type' => 'required|in:*,mail_from_address,mail_from_domain,mail_from_localpart',
+            'sender_payload' => 'required|string|unique:client_sender_access',
             'description' => 'string|nullable',
             'action' => 'required|string|in:ok,reject'
         ]);
 
-        switch ($request->type) {
+        switch ($request->client_type) {
             case 'client_ipv4': {
-                if (filter_var($request->payload, FILTER_VALIDATE_IP) === false) {
+                if (filter_var($request->payload, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
                     throw ValidationException::withMessages([
                         'payload' => 'Muss eine gültige IPv4 Adresse sein.'
+                    ]);
+                }
+                break;
+            }
+            case 'client_ipv6': {
+                if (filter_var($request->payload, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
+                    throw ValidationException::withMessages([
+                        'payload' => 'Muss eine gültige IPv6 Adresse sein.'
                     ]);
                 }
                 break;
@@ -65,6 +76,9 @@ class AccessController extends Controller
                 }
                 break;
             }
+        }
+
+        switch ($request->client_type) {
             case 'mail_from_address': {
                 if (filter_var($request->payload, FILTER_VALIDATE_EMAIL) === false) {
                     throw ValidationException::withMessages([
@@ -73,7 +87,7 @@ class AccessController extends Controller
                 }
                 break;
             }
-        }
+        };
 
         return response()->json([
             'status' => 'success',

@@ -97,13 +97,23 @@
                 filter: null,
                 fields: [
                     {
-                        key: 'payload',
-                        label: 'Eintrag',
+                        key: 'client_payload',
+                        label: 'Client',
                         sortable: true,
                     },
                     {
-                        key: 'type',
-                        label: 'Type',
+                        key: 'client_type',
+                        label: 'Client Type',
+                        sortable: true
+                    },
+                    {
+                        key: 'sender_payload',
+                        label: 'Sender',
+                        sortable: true,
+                    },
+                    {
+                        key: 'sender_type',
+                        label: 'Sender Type',
                         sortable: true
                     },
                     {
