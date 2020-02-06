@@ -24,6 +24,8 @@
                 </template>
 
                 <template v-slot:cell(app_actions)="data">
+                    <button class="btn btn-secondary btn-sm" :disabled="! $auth.check(['editor', 'administrator'])" @click="moveUp(data)"><i class="fas fa-chevron-up"></i></button>
+                    <button class="btn btn-secondary btn-sm" :disabled="! $auth.check(['editor', 'administrator'])" @click="moveDown(data)"><i class="fas fa-chevron-down"></i></button>
                     <button class="btn btn-warning btn-sm" :disabled="! $auth.check(['editor', 'administrator'])" @click="activation(data)"><i class="fas" :class="{ 'fa-lock': data.item.active === 1, 'fa-unlock': data.item.active === 0 }"></i></button>
                     <button class="btn btn-danger btn-sm" :disabled="! $auth.check(['authorizer', 'editor', 'administrator'])" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
@@ -99,40 +101,26 @@
                     {
                         key: 'client_payload',
                         label: 'Client',
-                        sortable: true,
                     },
                     {
                         key: 'client_type',
                         label: 'Client Type',
-                        sortable: true
                     },
                     {
                         key: 'sender_payload',
                         label: 'Sender',
-                        sortable: true,
                     },
                     {
                         key: 'sender_type',
                         label: 'Sender Type',
-                        sortable: true
                     },
                     {
                         key: 'action',
                         label: 'Aktion',
-                        sortable: false,
-                    },
-                    {
-                        key: 'payload',
-                        label: 'Eintrag',
-                        sortable: true,
                     },
                     {
                         key: 'created_at',
                         label: 'Erstellt am',
-                    },
-                    {
-                        key: 'updated_at',
-                        label: 'Aktualisiert am',
                     },
                     {
                         key: 'app_actions',
@@ -250,6 +238,40 @@
             },
             deleteAccess() {
                 axios.delete('/access/' + this.row.id).then((response) => {
+                    this.getAccessRules();
+
+                    this.$notify({
+                        title: response.data.message,
+                        type: 'success'
+                    });
+                }).catch((error) => {
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    }
+                });
+            },
+            moveUp(data) {
+                axios.post('/access/' + data.item.id + '/move-up').then((response) => {
+                    this.getAccessRules();
+
+                    this.$notify({
+                        title: response.data.message,
+                        type: 'success'
+                    });
+                }).catch((error) => {
+                    if (error.response) {
+                        this.$notify({
+                            title: error.response.data.message,
+                            type: 'error'
+                        });
+                    }
+                });
+            },
+            moveDown(data) {
+                axios.post('/access/' + data.item.id + '/move-down').then((response) => {
                     this.getAccessRules();
 
                     this.$notify({

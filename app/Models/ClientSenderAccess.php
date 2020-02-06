@@ -18,5 +18,6 @@ class ClientSenderAccess extends Model
         'sender_type',
         'description',
         'action',
+        'priority',
     ];
 }

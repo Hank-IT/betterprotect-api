@@ -69,6 +69,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
      */
     Route::get('/access', 'AccessController@index')->middleware('role:readonly')->name('access.index');
     Route::post('/access', 'AccessController@store')->middleware('role:authorizer')->name('access.store');
+    Route::post('/access/{clientSenderAccess}/move-up', 'AccessPriorityController@moveUp')->middleware('role:authorizer')->name('access.moveUp');
+    Route::post('/access/{clientSenderAccess}/move-down', 'AccessPriorityController@moveDown')->middleware('role:authorizer')->name('access.moveDown');
     Route::delete('/access/{access}', 'AccessController@destroy')->middleware('role:authorizer')->name('access.destroy');
 
     /**

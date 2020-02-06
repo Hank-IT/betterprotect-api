@@ -26,6 +26,8 @@ class AccessController extends Controller
             $clientSenderAccess = ClientSenderAccess::query();
         }
 
+        $clientSenderAccess->orderBy('priority');
+
         return response()->json([
             'status' => 'success',
             'message' => null,

@@ -20,6 +20,7 @@ class CreateClientSenderAccessTable extends Migration
             $table->string('sender_type');
             $table->string('sender_payload', 1024)->nullable();
             $table->string('action');
+            $table->unsignedBigInteger('priority')->default(0);
         });
     }
 

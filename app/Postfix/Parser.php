@@ -2,9 +2,8 @@
 
 namespace App\Postfix;
 
-use App\Services\PostfixPolicyInstallation\ClientSenderAccessHandler;
-use phpWhois\Whois;
 use Illuminate\Support\Str;
+use App\Services\PostfixPolicyInstallation\ClientSenderAccessHandler;
 
 class Parser
 {
@@ -163,7 +162,7 @@ class Parser
                             if (isset($result['subject'])) {
                                 $messages[$result['queue_id']]['subject'] = $result['subject'];
 
-                                // ToDo|
+                                // ToDo
                                 if (Str::startsWith(Str::lower($messages[$result['queue_id']]['subject']), ['=?utf-8?', '=?iso-', '=?Windows'])) {
                                     $messages[$result['queue_id']]['subject'] = mb_decode_mimeheader($messages[$result['queue_id']]['subject']);
                                 }
