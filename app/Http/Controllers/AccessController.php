@@ -46,7 +46,7 @@ class AccessController extends Controller
 
         switch ($request->client_type) {
             case 'client_ipv4': {
-                if (filter_var($request->payload, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
+                if (filter_var($request->client_payload, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
                     throw ValidationException::withMessages([
                         'payload' => 'Muss eine gültige IPv4 Adresse sein.'
                     ]);
@@ -54,7 +54,7 @@ class AccessController extends Controller
                 break;
             }
             case 'client_ipv6': {
-                if (filter_var($request->payload, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
+                if (filter_var($request->client_payload, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
                     throw ValidationException::withMessages([
                         'payload' => 'Muss eine gültige IPv6 Adresse sein.'
                     ]);
@@ -62,13 +62,13 @@ class AccessController extends Controller
                 break;
             }
             case 'client_ipv4_net': {
-                if (! IPv4::isValidIPv4Net($request->payload)) {
+                if (! IPv4::isValidIPv4Net($request->client_payload)) {
                     throw ValidationException::withMessages([
                         'payload' => 'Muss ein gültiges IPv4 Netz sein.'
                     ]);
                 }
 
-                $bits = explode('/', $request->payload);
+                $bits = explode('/', $request->client_payload);
                 if ($bits[1] < 24) {
                     throw ValidationException::withMessages([
                         'payload' => 'Das IPv4 Netz muss kleiner /24 sein.'
@@ -78,9 +78,9 @@ class AccessController extends Controller
             }
         }
 
-        switch ($request->client_type) {
+        switch ($request->sender_type) {
             case 'mail_from_address': {
-                if (filter_var($request->payload, FILTER_VALIDATE_EMAIL) === false) {
+                if (filter_var($request->sender_payload, FILTER_VALIDATE_EMAIL) === false) {
                     throw ValidationException::withMessages([
                         'payload' => 'Muss eine gültige E-Mail Adresse sein.'
                     ]);

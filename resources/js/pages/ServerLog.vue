@@ -52,7 +52,7 @@
                     </span>
                 </template>
                 <template v-slot:cell(status)="data">
-                    <p v-bind:class="getStatusClass(data)">{{ data.item.status }}</p>
+                    <span v-bind:class="getStatusClass(data)">{{ data.item.status }}</span>
                 </template>
             </b-table>
 
@@ -100,8 +100,13 @@
                 </div>
             </div>
 
+            <template v-if="detailedRow.bp_policy_decision">
+                <b-alert v-if="detailedRow.bp_policy_decision === 'reject'" show variant="danger">Diese E-Mail wurde aufgrund der Betterprotect Policy abgelehnt!</b-alert>
+                <b-alert v-if="detailedRow.bp_policy_decision === 'ok'" show variant="success">Diese E-Mail wurde aufgrund der Betterprotect Policy angenommen!</b-alert>
+            </template>
+
             <table class="table">
-                <tr v-if="detailedRow.client_ip">
+                <tr v-if="detailedRow.client_ip && (detailedRow.status === 'reject' || detailedRow === 'ok') && ! detailedRow.bp_policy_decision">
                     <th>Aktionen</th>
                     <td>
                         <b-btn :disabled="! $auth.check(['authorizer', 'editor', 'administrator'])" size="sm" variant="primary" @click="whitelist(detailedRow)" v-if="detailedRow.status === 'reject' || detailedRow.status === 'bounced'">Whitelist</b-btn>
@@ -146,6 +151,10 @@
                 <tr>
                     <th>Queue ID</th>
                     <td>{{ detailedRow.queue_id }}</td>
+                </tr>
+                <tr v-if="detailedRow.ndn_queue_id">
+                    <th>Unzustellbarkeitsbenachrichtigung (Queue ID)</th>
+                    <td>{{ detailedRow.ndn_queue_id }}</td>
                 </tr>
                 <tr>
                     <th>Code</th>

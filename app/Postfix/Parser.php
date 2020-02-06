@@ -2,6 +2,7 @@
 
 namespace App\Postfix;
 
+use App\Services\PostfixPolicyInstallation\ClientSenderAccessHandler;
 use phpWhois\Whois;
 use Illuminate\Support\Str;
 
@@ -45,10 +46,32 @@ class Parser
                             $messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
                         }
                         break;
-                    case 'smtp':{
-                        preg_match('/^(?<queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): ?to=<?(?<to>[^>,]*)>?, (?:orig_to=<?([^>,]*)>?, )?relay=(?<relay>[^,]*\[(?<relay_ip>.*)\]:[0-9]+), (?:conn_use=([0-9]+), )?delay=(?<delay>[^,]+), delays=(?<delays>[^,]+), dsn=(?<dsn>[^,]+), status=(?<status>.*?) \((?<response>.*)\)$/', $message, $result);
+                    case 'bounce':
+                        preg_match('/^(?<queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): (?:sender non-delivery notification): (?<ndn_queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11})/', $message, $result);
 
                         if (! empty($result)) {
+                            if (isset($result['ndn_queue_id'])) $messages[$result['queue_id']]['ndn_queue_id'] = $result['ndn_queue_id'];
+                        }
+                        break;
+                    case 'smtp':
+                        preg_match('/^(?<queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): ?to=<?(?<to>[^>,]*)>?, (?:orig_to=<?([^>,]*)>?, )?relay=(?<relay>[^,]*\[(?<relay_ip>.*)\]:[0-9]+), (?:conn_use=([0-9]+), )?delay=(?<delay>[^,]+), delays=(?<delays>[^,]+), dsn=(?<dsn>[^,]+), status=(?<status>.*?) \((?<response>.*)\)$/', $message, $result);
+
+                        if (empty($result)) {
+                            preg_match('/^(?<queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): ?to=<?(?<to>[^>,]*)>?, ?relay=(?<relay>[^,]*), ?delay=(?<delay>[^,]+), delays=(?<delays>[^,]+), dsn=(?<dsn>[^,]+), status=(?<status>.*?) \((?<response>.*)\)$/', $message, $result);
+
+                            if (! empty($result)) {
+                                if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
+                                if (isset($result['to'])) $messages[$result['queue_id']]['to'] = $result['to'];
+                                if (isset($result['relay'])) $messages[$result['queue_id']]['relay'] = $result['relay'];
+                                if (isset($result['delay'])) $messages[$result['queue_id']]['delay'] = $result['delay'];
+                                if (isset($result['delays'])) $messages[$result['queue_id']]['delays'] = $result['delays'];
+                                if (isset($result['dsn'])) $messages[$result['queue_id']]['dsn'] = $result['dsn'];
+                                if (isset($result['status'])) $messages[$result['queue_id']]['status'] = Str::lower($result['status']);
+                                if (isset($result['response'])) $messages[$result['queue_id']]['response'] = $result['response'];
+                                $messages[$result['queue_id']]['host'] = $log->FromHost;
+                                $messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
+                            }
+                        } else {
                             if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
                             if (isset($result['to'])) $messages[$result['queue_id']]['to'] = $result['to'];
                             if (isset($result['relay'])) $messages[$result['queue_id']]['relay'] = $result['relay'];
@@ -66,8 +89,23 @@ class Parser
                             }
                         }
                         break;
-                    }
-                    case 'smtpd': {
+                    case 'relay':
+                        preg_match('/^(?<queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): ?to=<?(?<to>[^>,]*)>?, ?relay=(?<relay>[^,]*), ?delay=(?<delay>[^,]+), delays=(?<delays>[^,]+), dsn=(?<dsn>[^,]+), status=(?<status>.*?) \((?<response>.*)\)$/', $message, $result);
+
+                        if (! empty($result)) {
+                            if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
+                            if (isset($result['to'])) $messages[$result['queue_id']]['to'] = $result['to'];
+                            if (isset($result['relay'])) $messages[$result['queue_id']]['relay'] = $result['relay'];
+                            if (isset($result['delay'])) $messages[$result['queue_id']]['delay'] = $result['delay'];
+                            if (isset($result['delays'])) $messages[$result['queue_id']]['delays'] = $result['delays'];
+                            if (isset($result['dsn'])) $messages[$result['queue_id']]['dsn'] = $result['dsn'];
+                            if (isset($result['status'])) $messages[$result['queue_id']]['status'] = Str::lower($result['status']);
+                            if (isset($result['response'])) $messages[$result['queue_id']]['response'] = $result['response'];
+                            $messages[$result['queue_id']]['host'] = $log->FromHost;
+                            $messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
+                        }
+                        break;
+                    case 'smtpd':
                         preg_match('/^(?<queue_id>NOQUEUE|[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): (?:milter-)?(?<status>.*): (?:RCPT|END-OF-MESSAGE) from (?<client>[^,]*\[(?<client_ip>.*)\]): (?<response>.*?); from=<?(?<from>[^>,]*)>? to=<?(?<to>[^>,]*)>? proto=(?<proto>.*?) helo=<?(?<helo>[^>,]*)>$/', $message, $result);
 
                         if (empty($result)) {
@@ -88,10 +126,9 @@ class Parser
                             $queueId = optional($result)['queue_id'] == 'NOQUEUE' ? strtoupper(uniqid()): $result['queue_id'];
 
                             if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
-                            if (isset($result['status'])) $messages[$queueId]['status'] = Str::lower($result['status']);
                             if (isset($result['client'])) $messages[$queueId]['client'] = $result['client'];
                             if (isset($result['client_ip'])) $messages[$queueId]['client_ip'] = $result['client_ip'];
-                            if (isset($result['response'])) $messages[$queueId]['response'] = $result['response'];
+                            if (isset($result['status'])) $messages[$queueId]['status'] = Str::lower($result['status']);
                             if (isset($result['from'])) $messages[$queueId]['from'] = $result['from'];
                             if (isset($result['to'])) $messages[$queueId]['to'] = $result['to'];
                             if (isset($result['proto'])) $messages[$queueId]['proto'] = $result['proto'];
@@ -99,13 +136,24 @@ class Parser
                             $messages[$queueId]['host'] = $log->FromHost;
                             $messages[$queueId]['reported_at'] = $log->DeviceReportedTime;
 
+                            if (isset($result['response'])) {
+                                $messages[$queueId]['response'] = $result['response'];
+
+                                if (Str::contains($messages[$queueId]['response'], ClientSenderAccessHandler::POLICY_DENIED)) {
+                                    $messages[$queueId]['bp_policy_decision'] = 'reject';
+                                }
+
+                                if (Str::contains($messages[$queueId]['response'], ClientSenderAccessHandler::POLICY_GRANTED)) {
+                                    $messages[$queueId]['bp_policy_decision'] = 'ok';
+                                }
+                            }
+
                             if (! empty($encryption = optional($this->matchEncryptionIndex($messages[$queueId]['client_ip'], $log->SysLogTag))[0])) {
-                                $messages[$result['queue_id']] = array_merge($messages[$queueId], $encryption);
+                                $messages[$queueId] = array_merge($messages[$queueId], $encryption);
                             }
                         }
                         break;
-                    }
-                    case 'cleanup': {
+                    case 'cleanup':
                         preg_match('/^(?<queue_id>[0-9A-Za-z]{14,16}|[0-9A-F]{10,11}): .*: END-OF-MESSAGE from (?<client>.*): (?<response>[0-9]\.[0-9]\.[0-9] (?<status>.*?), .*) from=<?(?<from>[^>,]*)>? to=<?(?<to>[^>,]*)>? proto=(?<proto>.*?) helo=<?(?<helo>[^>,]*)/', $message, $result);
 
                         if (empty($result)) {
@@ -121,6 +169,10 @@ class Parser
                                 }
                             }
                         } else {
+                            if (count($result) <= 1) {
+                                break;
+                            }
+
                             if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
                             if (isset($result['client'])) $messages[$result['queue_id']]['client'] = $result['client'];
                             if (isset($result['response'])) $messages[$result['queue_id']]['response'] = $result['response'];
@@ -132,7 +184,6 @@ class Parser
                             $messages[$result['queue_id']]['host'] = $log->FromHost;
                         }
                         break;
-                    }
                 }
             }
 
