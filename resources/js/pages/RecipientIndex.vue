@@ -21,7 +21,7 @@
         <div v-if="!recipientsLoading">
             <b-table hover :items="recipients" :fields="fields" v-if="recipients.length" :tbody-tr-class="rowClass">
                 <template v-slot:cell(action)="data">
-                    <p :class="{ 'text-success': data.value.toString().toLowerCase() === 'ok', 'text-danger': data.value.toString().toLowerCase() === 'reject' }">{{ data.value }}</p>
+                    <span :class="{ 'text-success': data.value.toString().toLowerCase() === 'ok', 'text-danger': data.value.toString().toLowerCase() === 'reject' }">{{ data.value }}</span>
                 </template>
 
                 <template v-slot:cell(app_actions)="data">

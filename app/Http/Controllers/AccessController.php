@@ -15,8 +15,6 @@ class AccessController extends Controller
     {
         $this->validate($request, [
             'search' => 'nullable|string',
-            'currentPage' => 'required|int',
-            'perPage' => 'required|int',
         ]);
 
         if ($request->filled('search')) {
@@ -31,7 +29,7 @@ class AccessController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => null,
-            'data' => $clientSenderAccess->paginate($request->perPage, ['*'], 'page', $request->currentPage),
+            'data' => $clientSenderAccess->get(),
         ]);
     }
 

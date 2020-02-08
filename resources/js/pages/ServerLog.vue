@@ -346,8 +346,10 @@
             },
             blacklist(row) {
                 axios.post('/access', {
-                    payload: row.client_ip,
-                    type: 'client_ipv4',
+                    client_type: 'client_ipv4',
+                    client_payload: row.client_ip,
+                    sender_type: 'mail_from_address',
+                    sender_payload: row.from,
                     action: 'reject',
                     description: 'Über Mail Log hinzugefügt.',
                 }).then((response) => {
@@ -373,8 +375,10 @@
             },
             whitelist(row) {
                 axios.post('/access', {
-                    payload: row.client_ip,
-                    type: 'client_ipv4',
+                    client_type: 'client_ipv4',
+                    client_payload: row.client_ip,
+                    sender_type: 'mail_from_address',
+                    sender_payload: row.from,
                     action: 'ok',
                     description: 'Über Mail Log hinzugefügt.',
                 }).then((response) => {

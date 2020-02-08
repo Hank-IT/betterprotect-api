@@ -47,13 +47,6 @@ class Queue
         return $mails;
     }
 
-    public function exists(string $queueId)
-    {
-        $this->get();
-
-
-    }
-
     public function flush()
     {
         $console = $this->server->console()->access();

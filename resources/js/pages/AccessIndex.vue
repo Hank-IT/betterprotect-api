@@ -20,7 +20,7 @@
         <template v-if="!loading">
             <b-table hover :items="rules" :fields="fields" @row-clicked="showModal" v-if="rules.length" :tbody-tr-class="rowClass">
                 <template slot="action" slot-scope="data">
-                    <p :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</p>
+                    <span :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</span>
                 </template>
 
                 <template v-slot:cell(app_actions)="data">
@@ -34,18 +34,6 @@
             <b-alert show variant="warning" v-else>
                 <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
             </b-alert>
-
-            <b-row v-if="totalRows > 10">
-                <b-col cols="2">
-                    <b-form-select v-model="perPage" :options="displayedRowsOptions" @change="getAccessRules"></b-form-select>
-                </b-col>
-                <b-col cols="2" offset="3">
-                    <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
-                </b-col>
-                <b-col cols="2" offset="3" v-if="rules.length">
-                    <p class="mt-1">Zeige Zeile {{ from }} bis {{ to }} von {{ totalRows }} Zeilen.</p>
-                </b-col>
-            </b-row>
         </template>
 
         <b-modal title="Beschreibung" ok-only id="access-description-modal">
@@ -73,21 +61,6 @@
                  * Loader
                  */
                 loading: false,
-
-                /**
-                 * Pagination
-                 */
-                currentPage: 1,
-                perPage: 10,
-                totalRows: 0,
-                from: 0,
-                to: 0,
-                displayedRowsOptions: [
-                    { value: 10, text: 10 },
-                    { value: 25, text: 25 },
-                    { value: 50, text: 50 },
-                    { value: 100, text: 100 },
-                ],
 
                 /**
                  * Search
@@ -203,23 +176,14 @@
 
                 this.$bvModal.show('access-description-modal');
             },
-            changePage(data) {
-                this.currentPage = data;
-                this.getAccessRules();
-            },
             getAccessRules() {
                 this.loading = true;
                 axios.get('/access', {
                     params: {
-                        currentPage: this.currentPage,
-                        perPage: this.perPage,
                         search: this.search,
                     }
                 }).then((response) => {
-                    this.rules = response.data.data.data;
-                    this.totalRows = response.data.data.total;
-                    this.from = response.data.data.from;
-                    this.to = response.data.data.to;
+                    this.rules = response.data.data;
                     this.loading = false;
                 }).catch((error) => {
                     if (error.response) {
