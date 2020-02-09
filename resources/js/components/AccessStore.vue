@@ -27,7 +27,7 @@
                 </b-form-group>
 
                 <b-form-group label="Client *" v-if="clientVisible === 'true'">
-                    <b-form-input :class="{ 'is-invalid': errors.client_payload }" ref="payload" type="text" v-model="form.client_payload" placeholder="Eintrag"></b-form-input>
+                    <b-form-input :class="{ 'is-invalid': errors.client_payload }" ref="client_payload" type="text" v-model="form.client_payload" placeholder="Eintrag"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -53,7 +53,7 @@
                 </b-form-group>
 
                 <b-form-group label="Sender *" v-if="senderVisible === 'true'">
-                    <b-form-input :class="{ 'is-invalid': errors.sender_payload }" ref="payload" type="text" v-model="form.sender_payload" placeholder="Eintrag"></b-form-input>
+                    <b-form-input :class="{ 'is-invalid': errors.sender_payload }" type="text" v-model="form.sender_payload" placeholder="Eintrag"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -138,10 +138,13 @@
                     client_payload: null,
                     sender_type: null,
                     sender_payload: null,
-                    action: null
+                    action: null,
                 };
 
-                this.$refs.payload.focus();
+                this.clientVisible = 'true';
+                this.senderVisible = 'true';
+
+                this.$refs.client_payload.focus();
 
                 this.errors = [];
             },

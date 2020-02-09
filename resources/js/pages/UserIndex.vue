@@ -45,7 +45,7 @@
         <are-you-sure-modal v-on:answered-yes="deleteUser" v-on:answered-no="row = null"></are-you-sure-modal>
 
         <div class="text-center" v-if="loading">
-            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+            <div class="spinner-border spinner-3x3" role="status">
                 <span class="sr-only">Lade...</span>
             </div>
         </div>

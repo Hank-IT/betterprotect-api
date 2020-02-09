@@ -49,7 +49,7 @@
         </div>
 
         <div class="text-center" v-if="recipientsLoading">
-            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+            <div class="spinner-border spinner-3x3" role="status">
                 <span class="sr-only">Lade...</span>
             </div>
         </div>

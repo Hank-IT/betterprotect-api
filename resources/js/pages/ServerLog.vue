@@ -76,7 +76,7 @@
         </template>
 
         <div class="text-center" v-if="logsLoading">
-            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+            <div class="spinner-border spinner-3x3" role="status">
                 <span class="sr-only">Lade...</span>
             </div>
         </div>
@@ -126,7 +126,7 @@
                 <tr>
                     <th>Organisation</th>
                     <td v-if="whoisLoading">
-                        <div class="spinner-border" style="width: 1rem; height: 1rem;" role="status">
+                        <div class="spinner-border spinner-1x1" role="status">
                             <span class="sr-only">Lade...</span>
                         </div>
                     </td>
@@ -137,12 +137,12 @@
                 <tr>
                     <th>Abuse Kontakt</th>
                     <td v-if="whoisLoading">
-                        <div class="spinner-border" style="width: 1rem; height: 1rem;" role="status">
+                        <div class="spinner-border spinner-1x1" role="status">
                             <span class="sr-only">Lade...</span>
                         </div>
                     </td>
                     <td v-else>
-                        <template v-if="whoisAbuseContact == 'N/A'">{{ whoisAbuseContact}}</template>
+                        <template v-if="whoisAbuseContact === 'N/A'">{{ whoisAbuseContact}}</template>
                         <a v-else :href="['mailto:' + whoisAbuseContact]">{{ whoisAbuseContact }}</a>
                     </td>
                 </tr>

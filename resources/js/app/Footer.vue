@@ -2,7 +2,7 @@
     <div class="footer navbar-fixed-bottom">
         <div class="tasks" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
-                <div class="panel-heading" role="tab" v-b-toggle.task-collapse variant="primary" style="cursor: pointer;" aria-expanded="true" aria-controls="collapseOne">
+                <div class="panel-heading c-pointer" role="tab" v-b-toggle.task-collapse variant="primary" aria-expanded="true" aria-controls="collapseOne">
                     <h5 class="panel-title mb-1">
                         <i class="fas fa-tasks fa-fw"></i>Aufgaben
                     </h5>
@@ -93,5 +93,9 @@
         height: 250px;
         position: relative;
         overflow: auto;
+    }
+
+    .c-pointer {
+        cursor: pointer;
     }
 </style>

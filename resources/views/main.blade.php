@@ -7,11 +7,7 @@
 
 <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
 
-@if(\Illuminate\Support\Facades\App::environment('production'))
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; manifest-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'">
-@endif
-
-<title>Betterprotect</title>
+<title>{{ config('app.name') }}</title>
 
 <div id="app"></div>
 

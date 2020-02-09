@@ -1,7 +1,7 @@
 <template>
     <div class="container login">
         <div class="bubbles-container">
-            <svg class="bubbles" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 701 1024" style="overflow: visible;">
+            <svg class="bubbles overflow-visible" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 701 1024">
 
                 <g class="bubbles-large" stroke-width="7">
                     <g>
@@ -87,7 +87,7 @@
             </svg>
         </div>
 
-        <div class="row justify-content-center align-items-center" style="height:70vh">
+        <div class="row justify-content-center align-items-center login-form">
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
@@ -157,6 +157,14 @@
         color: white;
         padding: 5rem 0;
         text-shadow: 0 4px 48px rgba(255, 255, 255, 0.2);
+    }
+
+    .login-form {
+        height: 70vh
+    }
+
+    .overflow-visible {
+        overflow: visible;
     }
 
     .bubbles-container {

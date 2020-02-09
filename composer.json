@@ -28,6 +28,7 @@
         "mrcrankhank/laravel-update": "^2.0",
         "mrcrankhank/laravel-version": "^1.2",
         "pusher/pusher-php-server": "~3.0",
+        "spatie/laravel-csp": "^2.4",
         "torann/geoip": "^1.0",
         "tymon/jwt-auth": "dev-develop"
     },

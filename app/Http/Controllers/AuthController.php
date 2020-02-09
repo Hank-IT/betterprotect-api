@@ -27,12 +27,10 @@ class AuthController extends Controller
 
     public function user()
     {
-        $user = User::find(Auth::user()->id);
-
         return response([
             'status' => 'success',
             'message' => null,
-            'data' => $user
+            'data' => Auth::user()
         ]);
     }
 

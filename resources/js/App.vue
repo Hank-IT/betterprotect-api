@@ -75,4 +75,16 @@
     body {
         background-color: white;
     }
+
+    .spinner-3x3 {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .spinner-1x1 {
+        width: 1rem;
+        height: 1rem;
+    }
+
+
 </style>
