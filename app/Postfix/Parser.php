@@ -42,7 +42,7 @@ class Parser
                             if (isset($result['size'])) $messages[$result['queue_id']]['size'] = $result['size'];
                             if (isset($result['nrcpt'])) $messages[$result['queue_id']]['nrcpt'] = $result['nrcpt'];
                             if (isset($result['host'])) $messages[$result['queue_id']]['host'] = $result['host'];
-                            //$messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
+                            $messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
                         }
                         break;
                     case 'bounce':

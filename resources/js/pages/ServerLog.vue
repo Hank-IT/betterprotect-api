@@ -46,13 +46,15 @@
                     </span>
                 </template>
                 <template v-slot:cell(client)="data">
-                    <span  v-if="data.item.client">
+                    <span v-if="data.item.client">
                         <span v-b-popover.hover="data.item.client_ip_country" v-if="data.item.client_ip_country_iso_code" class="flag-icon" :class="['flag-icon-' + data.item.client_ip_country_iso_code]"></span>
                         <span v-b-popover.hover="data.item.client">{{ data.item.client.trunc(40) }}</span>
                     </span>
                 </template>
                 <template v-slot:cell(status)="data">
-                    <span v-bind:class="getStatusClass(data)">{{ data.item.status.toUpperCase() }}</span>
+                    <span v-if="data.item.status">
+                        <span v-bind:class="getStatusClass(data)">{{ data.item.status.toUpperCase() }}</span>
+                    </span>
                 </template>
             </b-table>
 
