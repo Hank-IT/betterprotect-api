@@ -50,12 +50,6 @@ class LdapEmailSanitizer
                 }
             }
 
-            if ($this->isIgnoredAddresses($address)) {
-                Log::debug('LdapEmailSanitizer: Address is ignored.');
-
-                return null;
-            }
-
             Log::debug('LdapEmailSanitizer: Address is valid.');
 
             return $address;
@@ -95,20 +89,7 @@ class LdapEmailSanitizer
     {
         return filter_var($address, FILTER_VALIDATE_EMAIL) !== false;
     }
-
-    /**
-     * Verify if the address is ignored.
-     *
-     * ToDo
-     *
-     * @param $address
-     * @return bool
-     */
-    protected function isIgnoredAddresses($address)
-    {
-        return false;
-    }
-
+    
     /**
      * Loop through all ignored domains
      * and remove matching addresses.
