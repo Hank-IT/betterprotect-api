@@ -69,6 +69,6 @@ class DatabasePostfixLog
            return $data->where('status', $status);
        }
 
-       return $data;
+       return $data->sortByDesc('reported_at');
     }
 }

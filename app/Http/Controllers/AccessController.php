@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Support\IPv4;
 use Illuminate\Http\Request;
+use App\Services\AccessOrder;
 use App\Models\ClientSenderAccess;
 use App\Services\Access as AccessService;
 use Illuminate\Validation\ValidationException;
@@ -104,6 +105,8 @@ class AccessController extends Controller
     public function destroy(ClientSenderAccess $access)
     {
         $access->delete();
+
+        AccessOrder::reOrder();
 
         return response()->json([
             'status' => 'success',

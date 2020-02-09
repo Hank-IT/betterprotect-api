@@ -23,6 +23,33 @@
                     <span :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</span>
                 </template>
 
+                <template v-slot:cell(client_full)="data">
+                    <span v-if="data.item.client_payload === '*'">
+                        <span class="text-danger font-italic">Alles</span>
+                    </span>
+                    <span v-else>
+                        {{ data.item.client_payload }} ({{ data.item.client_type }})
+                    </span>
+                </template>
+
+                <template v-slot:cell(sender_full)="data">
+                    <span v-if="data.item.sender_payload === '*'">
+                        <span class="text-danger font-italic">Alles</span>
+                    </span>
+                    <span v-else>
+                        {{ data.item.sender_payload }} ({{ data.item.sender_type }})
+                    </span>
+                </template>
+
+                <template v-slot:cell(action_formatted)="data">
+                    <span v-if="data.item.action.toLowerCase() === 'ok'">
+                        <span class="text-success">{{ data.item.action.toUpperCase() }}</span>
+                    </span>
+                    <span v-else>
+                        <span class="text-danger">{{ data.item.action.toUpperCase() }}</span>
+                    </span>
+                </template>
+
                 <template v-slot:cell(app_actions)="data">
                     <button class="btn btn-secondary btn-sm" :disabled="! $auth.check(['editor', 'administrator'])" @click="moveUp(data)"><i class="fas fa-chevron-up"></i></button>
                     <button class="btn btn-secondary btn-sm" :disabled="! $auth.check(['editor', 'administrator'])" @click="moveDown(data)"><i class="fas fa-chevron-down"></i></button>
@@ -72,23 +99,15 @@
                 filter: null,
                 fields: [
                     {
-                        key: 'client_payload',
+                        key: 'client_full',
                         label: 'Client',
                     },
                     {
-                        key: 'client_type',
-                        label: 'Client Type',
+                        key: 'sender_full',
+                        label: 'Absender',
                     },
                     {
-                        key: 'sender_payload',
-                        label: 'Sender',
-                    },
-                    {
-                        key: 'sender_type',
-                        label: 'Sender Type',
-                    },
-                    {
-                        key: 'action',
+                        key: 'action_formatted',
                         label: 'Aktion',
                     },
                     {
@@ -97,7 +116,7 @@
                     },
                     {
                         key: 'app_actions',
-                        label: ''
+                        label: 'Optionen'
                     }
                 ],
                 /**

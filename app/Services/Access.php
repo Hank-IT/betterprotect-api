@@ -16,6 +16,8 @@ class Access
 
         $modal->save();
 
+        AccessOrder::reOrder();
+
         return $modal;
     }
 }

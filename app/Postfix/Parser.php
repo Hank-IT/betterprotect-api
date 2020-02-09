@@ -42,7 +42,7 @@ class Parser
                             if (isset($result['size'])) $messages[$result['queue_id']]['size'] = $result['size'];
                             if (isset($result['nrcpt'])) $messages[$result['queue_id']]['nrcpt'] = $result['nrcpt'];
                             if (isset($result['host'])) $messages[$result['queue_id']]['host'] = $result['host'];
-                            $messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
+                            //$messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
                         }
                         break;
                     case 'bounce':
@@ -68,7 +68,6 @@ class Parser
                                 if (isset($result['status'])) $messages[$result['queue_id']]['status'] = Str::lower($result['status']);
                                 if (isset($result['response'])) $messages[$result['queue_id']]['response'] = $result['response'];
                                 $messages[$result['queue_id']]['host'] = $log->FromHost;
-                                $messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
                             }
                         } else {
                             if (isset($result['queue_id'])) $messages[$result['queue_id']]['queue_id'] = $result['queue_id'];
@@ -81,7 +80,6 @@ class Parser
                             if (isset($result['status'])) $messages[$result['queue_id']]['status'] = Str::lower($result['status']);
                             if (isset($result['response'])) $messages[$result['queue_id']]['response'] = $result['response'];
                             $messages[$result['queue_id']]['host'] = $log->FromHost;
-                            $messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
 
                             if (! empty($encryption = optional($this->matchEncryptionIndex($messages[$result['queue_id']]['relay_ip'], $log->SysLogTag))[0])) {
                                 $messages[$result['queue_id']] = array_merge($messages[$result['queue_id']], $encryption);
@@ -101,7 +99,6 @@ class Parser
                             if (isset($result['status'])) $messages[$result['queue_id']]['status'] = Str::lower($result['status']);
                             if (isset($result['response'])) $messages[$result['queue_id']]['response'] = $result['response'];
                             $messages[$result['queue_id']]['host'] = $log->FromHost;
-                            $messages[$result['queue_id']]['reported_at'] = $log->DeviceReportedTime;
                         }
                         break;
                     case 'smtpd':

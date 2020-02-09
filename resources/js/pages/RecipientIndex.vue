@@ -113,18 +113,13 @@
                         sortable: true,
                     },
                     {
-                        key: 'action',
-                        label: 'Aktion',
-                        sortable: true
-                    },
-                    {
                         key: 'data_source',
                         label: 'Quelle',
                         sortable: false,
                     },
                     {
                         key: 'app_actions',
-                        label: ''
+                        label: 'Optionen'
                     }
                 ],
 

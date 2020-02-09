@@ -52,7 +52,7 @@
                     </span>
                 </template>
                 <template v-slot:cell(status)="data">
-                    <span v-bind:class="getStatusClass(data)">{{ data.item.status }}</span>
+                    <span v-bind:class="getStatusClass(data)">{{ data.item.status.toUpperCase() }}</span>
                 </template>
             </b-table>
 

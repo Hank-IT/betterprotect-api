@@ -103,7 +103,7 @@
                     },
                     {
                         key: 'app_actions',
-                        label: ''
+                        label: 'Optionen'
                     }
                 ],
 
