@@ -52,6 +52,7 @@
                     </div>
                 </router-link>
 
+                <!--
                 <router-link :to="'#'" v-b-toggle.milter v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="menu-collapsed">Milter</span>
@@ -70,6 +71,7 @@
                         </a>
                     </div>
                 </b-collapse>
+                -->
 
                 <li v-if="$auth.check(['administrator'])" class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                     <small>System</small>
