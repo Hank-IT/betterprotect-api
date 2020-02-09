@@ -89,7 +89,7 @@ class LdapEmailSanitizer
     {
         return filter_var($address, FILTER_VALIDATE_EMAIL) !== false;
     }
-    
+
     /**
      * Loop through all ignored domains
      * and remove matching addresses.

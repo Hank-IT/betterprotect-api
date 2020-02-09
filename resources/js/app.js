@@ -76,6 +76,7 @@ import faLock from '@fortawesome/fontawesome-free-solid/faLock';
 import faUnlock from '@fortawesome/fontawesome-free-solid/faUnlock';
 import faChevronUp from '@fortawesome/fontawesome-free-solid/faChevronUp';
 import faChevronDown from '@fortawesome/fontawesome-free-solid/faChevronDown';
+import faChevronRight from '@fortawesome/fontawesome-free-solid/faChevronRight';
 
 fontawesome.library.add(faUser);
 fontawesome.library.add(faSignOutAlt);
@@ -96,6 +97,7 @@ fontawesome.library.add(faExclamation);
 fontawesome.library.add(faLock);
 fontawesome.library.add(faUnlock);
 fontawesome.library.add(faChevronUp);
+fontawesome.library.add(faChevronRight);
 fontawesome.library.add(faChevronDown);
 
 /*
