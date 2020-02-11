@@ -14,7 +14,7 @@ class ServerLogController extends Controller
     {
         $this->validate($request, [
             'search' => 'nullable|string',
-            'status' => 'nullable|string|in:reject,sent,deferred,bounced',
+            'status' => 'nullable|string|in:reject,sent,deferred,bounced,filter',
             'startDate' => 'required|date_format:Y/m/d H:i|before:endDate',
             'endDate' => 'required|date_format:Y/m/d H:i',
             'currentPage' => 'required|int',

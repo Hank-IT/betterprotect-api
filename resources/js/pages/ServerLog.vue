@@ -2,14 +2,22 @@
     <div class="server.log">
         <div class="toolbar">
             <b-row>
-                <b-col md="3">
+                <b-col md="4">
                     <form class="form-inline">
                         <b-btn variant="secondary" @click="currentLogs"><i class="fas fa-sync"></i></b-btn>
                         <b-select v-model="mailStatusSelected" :options="mailStatusOptions" @change="getLogs" class="ml-1"></b-select>
+                        <b-form-checkbox
+                                class="ml-5"
+                                v-model="autoRefresh"
+                                value="true"
+                                unchecked-value="false"
+                        >
+                            Automatisch aktualisieren
+                        </b-form-checkbox>
                     </form>
                 </b-col>
 
-                <b-col md="6" offset="3">
+                <b-col md="6" offset="2">
                     <b-form-group >
                         <b-input-group>
                             <b-input-group-prepend>
@@ -30,6 +38,7 @@
                         </b-input-group>
                     </b-form-group>
                 </b-col>
+
             </b-row>
         </div>
 
@@ -142,7 +151,7 @@
                         </div>
                     </td>
                     <td v-else>
-                        <template v-if="whoisAbuseContact === 'N/A'">{{ whoisAbuseContact}}</template>
+                        <template v-if="whoisAbuseContact === 'N/A'">{{ whoisAbuseContact }}</template>
                         <a v-else :href="['mailto:' + whoisAbuseContact]">{{ whoisAbuseContact }}</a>
                     </td>
                 </tr>
@@ -208,6 +217,12 @@
     export default {
         created() {
             this.getLogs();
+
+            window.setInterval(() => {
+                if (this.autoRefresh === 'true') {
+                    this.currentLogs(true);
+                }
+            }, 10000);
         },
         data() {
             return {
@@ -215,14 +230,14 @@
                  * Pagination
                  */
                 currentPage: 1,
-                perPage: 10,
+                perPage: 12,
                 to: 0,
                 from: 0,
                 totalRows: null,
                 sortBy: 'reported_at',
                 sortDesc: true,
                 displayedRowsOptions: [
-                    { value: 10, text: 10 },
+                    { value: 12, text: 12 },
                     { value: 25, text: 25 },
                     { value: 50, text: 50 },
                     { value: 100, text: 100 },
@@ -234,10 +249,11 @@
                 mailStatusSelected: null,
                 mailStatusOptions: [
                     { value: null, text: 'Status wählen' },
-                    { value: 'reject', text: 'reject' },
-                    { value: 'sent', text: 'sent' },
-                    { value: 'deferred', text: 'deferred' },
-                    { value: 'bounced', text: 'bounced' },
+                    { value: 'reject', text: 'REJECT' },
+                    { value: 'sent', text: 'SENT' },
+                    { value: 'deferred', text: 'DEFERRED' },
+                    { value: 'bounced', text: 'BOUNCED' },
+                    { value: 'filter', text: 'FILTER' },
                 ],
 
                 /**
@@ -277,6 +293,7 @@
                     firstDay: 1 //ISO first day of week - see moment documentation for details
                 },
                 logs: [],
+                autoRefresh: 'false',
                 logsLoading: false,
                 fields: [
                     {
@@ -404,18 +421,22 @@
                     }
                 });
             },
-            currentLogs() {
+            currentLogs(silent = false) {
                 this.currentStart = this.moment().subtract(1, 'hours');
                 this.currentEnd = this.moment();
+                this.dateRange.startDate = this.currentStart.format('YYYY/MM/DD HH:mm');
+                this.dateRange.endDate = this.currentEnd.format('YYYY/MM/DD HH:mm');
                 this.currentPage = 1;
-                this.getLogs();
+                this.getLogs(silent);
             },
             changePage(data) {
                 this.currentPage = data;
                 this.getLogs();
             },
-            getLogs() {
-                this.logsLoading = true;
+            getLogs(silent = false) {
+                if (! silent) {
+                    this.logsLoading = true;
+                }
 
                 axios.get('/server/log', {
                     params: {
@@ -431,7 +452,10 @@
                     this.totalRows = response.data.data.total;
                     this.from = response.data.data.from;
                     this.to = response.data.data.to;
-                    this.logsLoading = false;
+
+                    if (! silent) {
+                        this.logsLoading = false;
+                    }
                 }).catch((error) => {
                     if (error.response) {
                         if (error.response.status === 422) {
@@ -449,7 +473,9 @@
                         });
                     }
 
-                    this.logsLoading = false;
+                    if (! silent) {
+                        this.logsLoading = false;
+                    }
                 });
             },
             showModal(record, index) {
