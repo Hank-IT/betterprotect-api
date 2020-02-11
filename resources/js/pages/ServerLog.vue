@@ -273,10 +273,10 @@
                  */
                 maxDate: this.moment().format('YYYY/MM/DD HH:mm'),
                 currentStart: this.moment().subtract(1, 'hours'),
-                currentEnd: this.moment(),
+                currentEnd: this.moment().add(1, 'minutes'),
                 dateRange: {
                     startDate: this.moment().subtract(1, 'hours').format('YYYY/MM/DD HH:mm'),
-                    endDate: this.moment().format('YYYY/MM/DD HH:mm'),
+                    endDate: this.moment().add(1, 'minutes').format('YYYY/MM/DD HH:mm'),
                 },
                 opens: 'right',
                 timePicker: true,
@@ -423,7 +423,7 @@
             },
             currentLogs(silent = false) {
                 this.currentStart = this.moment().subtract(1, 'hours');
-                this.currentEnd = this.moment();
+                this.currentEnd = this.moment().add(1, 'minutes');
                 this.dateRange.startDate = this.currentStart.format('YYYY/MM/DD HH:mm');
                 this.dateRange.endDate = this.currentEnd.format('YYYY/MM/DD HH:mm');
                 this.currentPage = 1;
