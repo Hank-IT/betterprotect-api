@@ -4,7 +4,7 @@
             <b-row>
                 <b-col md="4">
                     <form class="form-inline">
-                        <b-btn variant="secondary" @click="currentLogs"><i class="fas fa-sync"></i></b-btn>
+                        <b-btn variant="secondary" @click="currentLogs(false)"><i class="fas fa-sync"></i></b-btn>
                         <b-select v-model="mailStatusSelected" :options="mailStatusOptions" @change="getLogs" class="ml-1"></b-select>
                         <b-form-checkbox
                                 class="ml-5"
