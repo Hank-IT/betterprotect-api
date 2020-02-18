@@ -101,6 +101,13 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::delete('/transport/{transport}', 'TransportController@destroy')->middleware('role:editor')->name('transport.destroy');
 
     /**
+     * Milter
+     */
+    Route::get('/milter', 'MilterController@index')->middleware('role:authorizer')->name('milter.index');
+    Route::post('/milter', 'MilterController@store')->middleware('role:authorizer')->name('milter.store');
+    Route::delete('/milter/{milter}', 'MilterController@destroy')->middleware('role:authorizer')->name('milter.destroy');
+
+    /**
      * RecipientAccessLdap
      */
     Route::post('/recipient/ldap/{ldapDirectory}', 'RecipientLdapController')->middleware('role:editor')->name('recipient.ldap');

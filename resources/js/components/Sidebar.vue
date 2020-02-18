@@ -30,7 +30,7 @@
 
                 <router-link :to="{ name: 'access.index' }" v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="menu-collapsed">Blacklist/Whitelist</span>
+                        <span class="menu-collapsed">Regeln</span>
                     </div>
                 </router-link>
 
@@ -52,7 +52,6 @@
                     </div>
                 </router-link>
 
-                <!--
                 <router-link :to="'#'" v-b-toggle.milter v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="menu-collapsed">Milter</span>
@@ -63,15 +62,14 @@
 
                 <b-collapse id="milter" v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])">
                     <div class="sidebar-submenu">
-                        <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
+                        <router-link :to="{ name: 'milter.index' }" class="list-group-item list-group-item-action bg-dark text-white">
                             <span class="menu-collapsed">Definitionen</span>
-                        </a>
+                        </router-link>
                         <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
                             <span class="menu-collapsed">Ausnahmen</span>
                         </a>
                     </div>
                 </b-collapse>
-                -->
 
                 <li v-if="$auth.check(['administrator'])" class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                     <small>System</small>

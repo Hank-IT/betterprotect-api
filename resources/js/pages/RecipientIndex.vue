@@ -1,7 +1,7 @@
 <template>
     <div class="recipient.index">
         <b-row>
-            <b-col md="3" >
+            <b-col md="3">
                 <b-button-group>
                     <button :disabled="! $auth.check(['editor', 'administrator'])" type="button" class="btn btn-primary" v-b-modal.recipient-store-modal><i class="fas fa-plus"></i></button>
                     <b-btn variant="secondary" @click="getRecipients"><i class="fas fa-sync"></i></b-btn>
@@ -9,7 +9,7 @@
                 </b-button-group>
             </b-col>
 
-            <b-col md="4" offset="5" >
+            <b-col md="4" offset="5">
                 <b-form-group >
                     <b-input-group>
                         <b-form-input v-model="search" placeholder="Suche Eintrag" @change="getRecipients"/>

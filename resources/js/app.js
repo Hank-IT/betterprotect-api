@@ -10,6 +10,7 @@ import Task from './components/Task';
 import AccessIndex from './pages/AccessIndex';
 import AccessStore from './components/AccessStore';
 import TransportIndex from './pages/TransportIndex';
+import MilterIndex from './pages/MilterIndex';
 import TransportStoreModal from './components/TransportStoreModal';
 import UserIndex from './pages/UserIndex';
 import UserStoreUpdateModal from './components/UserStoreUpdateModal';
@@ -194,6 +195,14 @@ Vue.router = new Router({
             path: '/relay-domain',
             name: 'relay-domain.index',
             component: RelayDomainIndex,
+            meta: {
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
+            }
+        },
+        {
+            path: '/milter',
+            name: 'milter.index',
+            component: MilterIndex,
             meta: {
                 auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }
