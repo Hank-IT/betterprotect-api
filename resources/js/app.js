@@ -11,6 +11,7 @@ import AccessIndex from './pages/AccessIndex';
 import AccessStore from './components/AccessStore';
 import TransportIndex from './pages/TransportIndex';
 import MilterIndex from './pages/MilterIndex';
+import MilterExceptionIndex from './pages/MilterExceptionIndex';
 import TransportStoreModal from './components/TransportStoreModal';
 import UserIndex from './pages/UserIndex';
 import UserStoreUpdateModal from './components/UserStoreUpdateModal';
@@ -42,6 +43,7 @@ import ServerUpdatePostfixForm from "./components/ServerUpdate/ServerUpdatePostf
 import ServerUpdateConsoleForm from "./components/ServerUpdate/ServerUpdateConsoleForm";
 import ServerUpdateLoggingForm from "./components/ServerUpdate/ServerUpdateLoggingForm";
 import ServerUpdateAmavisForm from "./components/ServerUpdate/ServerUpdateAmavisForm";
+import Echo from "laravel-echo";
 
 Vue.prototype.moment = moment;
 
@@ -129,6 +131,30 @@ Vue.use(Notifications);
  */
 Vue.use(VueFormWizard);
 
+Vue.mixin({
+    methods: {
+        connectWebsocket: function() {
+            window.Echo = new Echo({
+                broadcaster: 'pusher',
+                key: 'betterprotect',
+                wsHost: window.location.hostname,
+                wsPort: 80,
+                wssPort: 443,
+                wsPath: '/ws',
+                disableStats: true,
+                enabledTransports: ['ws', 'wss'],
+                auth: {
+                    headers: {
+                        Authorization: 'Bearer ' + this.$auth.token(),
+                    },
+                },
+            });
+
+            window.Echo.connector.pusher.config.authEndpoint = `${document.head.querySelector('meta[name="base-url"]').content}/broadcasting/auth`;
+        }
+    }
+});
+
 /*
  * Vue
  */
@@ -203,6 +229,14 @@ Vue.router = new Router({
             path: '/milter',
             name: 'milter.index',
             component: MilterIndex,
+            meta: {
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
+            }
+        },
+        {
+            path: '/milter/exception',
+            name: 'milter.exception.index',
+            component: MilterExceptionIndex,
             meta: {
                 auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }

@@ -58,6 +58,10 @@
                 });
             },
             listen() {
+                if (! window.Echo) {
+                    this.connectWebsocket();
+                }
+
                 window.Echo.private('task')
                     .listen('Task', (e) => {
                         let taskIndex = this.tasks.findIndex(x => x.id === e.task.id);

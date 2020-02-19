@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMiltersTable extends Migration
+class CreateMilterExceptionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateMiltersTable extends Migration
      */
     public function up()
     {
-        Schema::create('milters', function (Blueprint $table) {
+        Schema::create('milter_exceptions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
-            $table->string('definition');
+            $table->string('client_type');
+            $table->string('client_payload',1024);
             $table->text('description')->nullable();
             $table->timestamps();
         });
     }
-
 }

@@ -18,6 +18,10 @@
         created() {
             this.checkSchema();
 
+            if (! window.Echo) {
+                this.connectWebsocket();
+            }
+
             window.Echo.private('task')
                 .listen('Task', (e) => {
                     let task = e.task;

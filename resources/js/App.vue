@@ -24,34 +24,6 @@
     </div>
 </template>
 
-<script>
-    import Echo from "laravel-echo";
-
-    export default {
-        mounted() {
-            this.$auth.ready(function() {
-                window.Echo = new Echo({
-                    broadcaster: 'pusher',
-                    key: 'betterprotect',
-                    wsHost: window.location.hostname,
-                    wsPort: 80,
-                    wssPort: 443,
-                    wsPath: '/ws',
-                    disableStats: true,
-                    enabledTransports: ['ws', 'wss'],
-                    auth: {
-                        headers: {
-                            Authorization: 'Bearer ' + this.$auth.token(),
-                        },
-                    },
-                });
-
-                window.Echo.connector.pusher.config.authEndpoint = `${document.head.querySelector('meta[name="base-url"]').content}/broadcasting/auth`;
-            });
-        }
-    }
-</script>
-
 <style>
     .content {
         position: absolute;

@@ -19,9 +19,25 @@
                     <template slot="button-content">
                         <em>{{ $auth.user().username }}</em>
                     </template>
-                    <b-dropdown-item href="#" @click.prevent="$auth.logout()">Logout</b-dropdown-item>
+                    <b-dropdown-item href="#" @click.prevent="logout">Logout</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </div>
     </nav>
 </template>
+
+<script>
+    export default {
+        methods: {
+            logout() {
+                if (window.Echo) {
+                    window.Echo.disconnect();
+
+                    window.Echo = null;
+                }
+
+                this.$auth.logout()
+            }
+        }
+    }
+</script>

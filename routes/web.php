@@ -101,6 +101,13 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::delete('/transport/{transport}', 'TransportController@destroy')->middleware('role:editor')->name('transport.destroy');
 
     /**
+     * Milter Exceptions
+     */
+    Route::get('/milter/exception', 'MilterExceptionController@index')->middleware('role:authorizer')->name('milter.exception.index');
+    Route::post('/milter/exception', 'MilterExceptionController@store')->middleware('role:authorizer')->name('milter.exception.store');
+    Route::delete('/milter/exception/{exception}', 'MilterExceptionController@destroy')->middleware('role:authorizer')->name('milter.exception.destroy');
+
+    /**
      * Milter
      */
     Route::get('/milter', 'MilterController@index')->middleware('role:authorizer')->name('milter.index');

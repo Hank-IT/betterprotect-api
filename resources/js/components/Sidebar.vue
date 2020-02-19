@@ -65,9 +65,9 @@
                         <router-link :to="{ name: 'milter.index' }" class="list-group-item list-group-item-action bg-dark text-white">
                             <span class="menu-collapsed">Definitionen</span>
                         </router-link>
-                        <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
+                        <router-link :to="{ name: 'milter.exception.index' }" class="list-group-item list-group-item-action bg-dark text-white">
                             <span class="menu-collapsed">Ausnahmen</span>
-                        </a>
+                        </router-link>
                     </div>
                 </b-collapse>
 

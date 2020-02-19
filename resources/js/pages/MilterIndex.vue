@@ -46,7 +46,7 @@
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
-                            <li v-for="error in errors.payload" v-text="error"></li>
+                            <li v-for="error in errors.definition" v-text="error"></li>
                         </ul>
                     </b-form-invalid-feedback>
                 </b-form-group>
@@ -142,18 +142,18 @@
 
                         this.getMilters();
                     }).catch((error) => {
-                    if (error.response) {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: 'error'
+                        if (error.response) {
+                            this.$notify({
+                                title: error.response.data.message,
+                                type: 'error'
                         });
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
-                });
+                        } else {
+                            this.$notify({
+                                title: 'Unbekannter Fehler',
+                                type: 'error'
+                            });
+                        }
+                    });
             },
             handleOk(event) {
                 // Prevent modal from closing
