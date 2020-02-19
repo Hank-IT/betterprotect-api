@@ -18,6 +18,16 @@ class CreateMilterMilterExceptionTable extends Migration
             $table->unsignedInteger('milter_id');
             $table->unsignedInteger('milter_exception_id');
             $table->timestamps();
+
+            $table->foreign('milter_id')
+                ->references('id')
+                ->on('milters')
+                ->onDelete('cascade');
+
+            $table->foreign('milter_exception_id')
+                ->references('id')
+                ->on('milter_exceptions')
+                ->onDelete('cascade');
         });
     }
 }

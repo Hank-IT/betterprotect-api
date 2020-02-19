@@ -9,7 +9,7 @@ class ActivationController extends Controller
     public function store(Request $request, $id)
     {
         $this->validate($request, [
-            'model' => 'required|string|in:ClientSenderAccess,RelayDomain,RelayRecipient,Transport',
+            'model' => 'required|string|in:ClientSenderAccess,RelayDomain,RelayRecipient,Transport,MilterException',
         ]);
 
         app('App\\Models\\' . $request->model)->findOrFail($id)->activate();
@@ -24,7 +24,7 @@ class ActivationController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'model' => 'required|string|in:ClientSenderAccess,RelayDomain,RelayRecipient,Transport',
+            'model' => 'required|string|in:ClientSenderAccess,RelayDomain,RelayRecipient,Transport,MilterException',
         ]);
 
         app('App\\Models\\' . $request->model)->findOrFail($id)->deactivate();

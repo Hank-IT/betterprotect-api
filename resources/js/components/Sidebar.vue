@@ -52,7 +52,7 @@
                     </div>
                 </router-link>
 
-                <router-link :to="'#'" v-b-toggle.milter v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                <router-link :to="'#'" :class="{'router-link-active': subIsActive('/milter')}" v-b-toggle.milter v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="menu-collapsed">Milter</span>
                         <span class="ml-auto when-closed"><i class="fas fa-chevron-down"></i></span>
@@ -60,9 +60,9 @@
                     </div>
                 </router-link>
 
-                <b-collapse id="milter" v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])">
+                <b-collapse id="milter" v-bind="milterVisible" v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])">
                     <div class="sidebar-submenu">
-                        <router-link :to="{ name: 'milter.index' }" class="list-group-item list-group-item-action bg-dark text-white">
+                        <router-link :to="{ name: 'milter.index' }" exact class="list-group-item list-group-item-action bg-dark text-white">
                             <span class="menu-collapsed">Definitionen</span>
                         </router-link>
                         <router-link :to="{ name: 'milter.exception.index' }" class="list-group-item list-group-item-action bg-dark text-white">
@@ -98,6 +98,26 @@
         <slot></slot>
     </div>
 </template>
+
+<script>
+    export default {
+        methods: {
+            subIsActive(input) {
+                const paths = Array.isArray(input) ? input : [input];
+                return paths.some(path => {
+                    return this.$route.path.indexOf(path) === 0 // current path starts with this path string
+                })
+            }
+        },
+        computed: {
+            milterVisible() {
+                if (this.subIsActive('/milter')) {
+                    return { visible: true }
+                }
+            }
+        }
+    }
+</script>
 
 <style>
     .collapsed > div > .when-opened,

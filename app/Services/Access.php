@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Exceptions\ErrorException;
 use App\Models\ClientSenderAccess;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,14 +9,14 @@ class Access
 {
     public function store(array $data): Model
     {
-        $modal = new ClientSenderAccess;
+        $model = new ClientSenderAccess;
 
-        $modal->fill($data);
+        $model->fill($data);
 
-        $modal->save();
+        $model->save();
 
-        AccessOrder::reOrder();
+        app(Orderer::class, ['model' => $model])->reOrder();
 
-        return $modal;
+        return $model;
     }
 }

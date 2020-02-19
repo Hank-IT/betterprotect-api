@@ -10,7 +10,7 @@ class MilterExceptionController extends Controller
 {
     public function index()
     {
-        return MilterException::all();
+        return MilterException::orderBy('priority')->get();
     }
 
     public function store(MilterStoreRequest $request)

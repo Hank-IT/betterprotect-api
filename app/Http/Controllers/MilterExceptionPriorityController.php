@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MilterException;
 use App\Services\Orderer;
-use App\Models\ClientSenderAccess;
 
-class AccessPriorityController extends Controller
+class MilterExceptionPriorityController extends Controller
 {
-    public function moveUp(ClientSenderAccess $clientSenderAccess)
+    public function moveUp(MilterException $exception)
     {
-        app(Orderer::class, ['model' => $clientSenderAccess])->moveUp();
+        app(Orderer::class, ['model' => $exception])->moveUp();
 
         return response()->json([
             'status' => 'success',
@@ -18,9 +18,9 @@ class AccessPriorityController extends Controller
         ]);
     }
 
-    public function moveDown(ClientSenderAccess $clientSenderAccess)
+    public function moveDown(MilterException $exception)
     {
-        app(Orderer::class, ['model' => $clientSenderAccess])->moveDown();
+        app(Orderer::class, ['model' => $exception])->moveDown();
 
         return response()->json([
             'status' => 'success',

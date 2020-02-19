@@ -14,13 +14,9 @@ class CreateMilterExceptionsTable extends Migration
     public function up()
     {
         Schema::create('milter_exceptions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('client_type');
-            $table->string('client_payload',1024);
-            $table->text('description')->nullable();
-            $table->unsignedBigInteger('priority')->default(0);
-            $table->boolean('active')->default('1');
-            $table->timestamps();
+            $table->bigIncrements('id');
+            $table->string('definition', 1024);
+            $table->string('payload', 1024);
         });
     }
 }

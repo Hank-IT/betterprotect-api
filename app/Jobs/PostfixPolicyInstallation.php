@@ -27,12 +27,11 @@ class PostfixPolicyInstallation implements ShouldQueue
     protected $user;
 
     protected $handler = [
-        //\App\Services\PostfixPolicyInstallation\ClientAccessHandler::class,
-        //\App\Services\PostfixPolicyInstallation\SenderAccessHandler::class,
         \App\Services\PostfixPolicyInstallation\ClientSenderAccessHandler::class,
         \App\Services\PostfixPolicyInstallation\RecipientAccessHandler::class,
         \App\Services\PostfixPolicyInstallation\TransportMapHandler::class,
         \App\Services\PostfixPolicyInstallation\RelayDomainHandler::class,
+        \App\Services\PostfixPolicyInstallation\MilterExceptionHandler::class,
     ];
 
     public function __construct(Server $server, Authenticatable $user)

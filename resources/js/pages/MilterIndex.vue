@@ -162,7 +162,7 @@
                 this.storeMilter();
             },
             modalShown() {
-                this.form.payload = null;
+                this.form = {};
 
                 this.$refs.payload.focus();
 

@@ -106,6 +106,8 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::get('/milter/exception', 'MilterExceptionController@index')->middleware('role:authorizer')->name('milter.exception.index');
     Route::post('/milter/exception', 'MilterExceptionController@store')->middleware('role:authorizer')->name('milter.exception.store');
     Route::delete('/milter/exception/{exception}', 'MilterExceptionController@destroy')->middleware('role:authorizer')->name('milter.exception.destroy');
+    Route::post('/milter/exception/{exception}/move-up', 'MilterExceptionPriorityController@moveUp')->middleware('role:authorizer')->name('milter.exception.moveUp');
+    Route::post('/milter/exception/{exception}/move-down', 'MilterExceptionPriorityController@moveDown')->middleware('role:authorizer')->name('milter.exception.moveDown');
 
     /**
      * Milter

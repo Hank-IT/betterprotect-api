@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Support\IPv4;
+use App\Services\Orderer;
 use Illuminate\Http\Request;
-use App\Services\AccessOrder;
 use App\Models\ClientSenderAccess;
 use App\Services\Access as AccessService;
 use Illuminate\Validation\ValidationException;
@@ -102,7 +102,7 @@ class AccessController extends Controller
     {
         $access->delete();
 
-        AccessOrder::reOrder();
+        app(Orderer::class, ['model' => $access])->reOrder();
 
         return response()->json([
             'status' => 'success',

@@ -11,7 +11,7 @@ class ClientSenderAccessHandler extends AbstractHandler
 
     public function install()
     {
-        $this->task->update(['message' => 'Blacklist/Whitelist wird aktualisiert...']);
+        $this->task->update(['message' => 'Regeln werden aktualisiert...']);
 
         $this->insert($this->getClientSenderAccessRows());
     }
