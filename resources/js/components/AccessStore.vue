@@ -74,6 +74,16 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
+                <b-form-group label="Nachricht">
+                    <b-form-input :class="{ 'is-invalid': errors.message }" ref="message" type="text" v-model="form.message" placeholder="Nachricht"></b-form-input>
+
+                    <b-form-invalid-feedback>
+                        <ul class="form-group-validation-message-list">
+                            <li v-for="error in errors.message" v-text="error"></li>
+                        </ul>
+                    </b-form-invalid-feedback>
+                </b-form-group>
+
                 <hr>
 
                 <b-form-group label="Beschreibung">

@@ -65,6 +65,8 @@
 
         <b-modal title="Beschreibung" ok-only id="access-description-modal">
             <p>{{ this.modalDescription }}</p>
+            <hr>
+            <p v-if="this.modalMessage">Nachricht: {{ this.modalMessage }}</p>
         </b-modal>
 
         <are-you-sure-modal v-on:answered-yes="deleteAccess" v-on:answered-no="row = null"></are-you-sure-modal>
@@ -95,6 +97,7 @@
                 search: null,
 
                 modalDescription: null,
+                modalMessage: null,
                 rules: [],
                 filter: null,
                 fields: [
@@ -192,6 +195,8 @@
             },
             showModal(row) {
                 this.modalDescription = row.description;
+
+                this.modalMessage = row.message;
 
                 this.$bvModal.show('access-description-modal');
             },

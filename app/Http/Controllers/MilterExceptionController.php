@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MilterException;
 use App\Http\Requests\MilterStoreRequest;
+use App\Services\Orderer;
 use Symfony\Component\HttpFoundation\Response;
 
 class MilterExceptionController extends Controller
@@ -17,6 +18,8 @@ class MilterExceptionController extends Controller
     {
         $exception = MilterException::create($request->all());
 
+        app(Orderer::class, ['model' => $exception])->reOrder();
+
         $exception->milters()->sync($request->milter_id);
 
         return response()->json([
@@ -29,6 +32,8 @@ class MilterExceptionController extends Controller
     public function destroy(MilterException $exception)
     {
         $exception->delete();
+
+        app(Orderer::class, ['model' => $exception])->reOrder();
 
         return response()->json([
             'status' => 'success',

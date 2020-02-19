@@ -16,6 +16,7 @@ class ClientSenderAccess extends Model
         'client_type',
         'sender_payload',
         'sender_type',
+        'message',
         'description',
         'action',
         'priority',

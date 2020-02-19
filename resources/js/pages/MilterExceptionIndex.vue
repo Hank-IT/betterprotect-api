@@ -18,6 +18,10 @@
                     <button :disabled="! $auth.check(['editor', 'administrator'])" class="btn btn-danger btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>
                 </template>
 
+                <template v-slot:cell(client)="data">
+                    {{ data.item.client_payload }} ({{ data.item.client_type }})
+                </template>
+
                 <template v-slot:cell(milters)="data">
                     <span v-if="milterList(data).length">
                         {{ milterList(data).join(', ') }}
@@ -99,11 +103,7 @@
                 milterExceptionsLoading: false,
                 fields: [
                     {
-                        key: 'client_type',
-                        label: 'Typ',
-                    },
-                    {
-                        key: 'client_payload',
+                        key: 'client',
                         label: 'Client',
                     },
                     {

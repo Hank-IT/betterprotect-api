@@ -27,7 +27,6 @@ class ClientSenderAccessHandler extends AbstractHandler
 
         return $clientSenderAccess->map(function ($row) {
             return collect($row->toArray())
-                ->only(['client_type', 'client_payload', 'sender_type', 'sender_payload', 'action', 'priority'])
                 ->pipe(function($row) {
                     $row->put('action', strtolower($row->get('action')));
 
@@ -40,8 +39,13 @@ class ClientSenderAccessHandler extends AbstractHandler
                             break;
                     }
 
+                    if ($row->get('message')) {
+                        $row->put('action', $row->get('action') . ' - ' . $row->get('message'));
+                    }
+
                     return $row;
                 })
+                ->only(['client_type', 'client_payload', 'sender_type', 'sender_payload', 'action', 'priority'])
                 ->all();
         })->toArray();
     }

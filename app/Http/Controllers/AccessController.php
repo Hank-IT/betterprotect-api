@@ -41,6 +41,7 @@ class AccessController extends Controller
             'client_payload' => 'required|string',
             'sender_type' => 'required|in:*,mail_from_address,mail_from_domain,mail_from_localpart',
             'sender_payload' => 'required|string',
+            'message' => 'nullable|string',
             'description' => 'string|nullable',
             'action' => 'required|string|in:ok,reject'
         ]);

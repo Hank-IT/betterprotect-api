@@ -15,8 +15,9 @@ class CreateMilterExceptionsTable extends Migration
     {
         Schema::create('milter_exceptions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('definition', 1024);
             $table->string('payload', 1024);
+            $table->string('definition', 1024);
+            $table->unsignedBigInteger('priority')->default(0);
         });
     }
 }
