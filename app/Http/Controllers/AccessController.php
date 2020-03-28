@@ -67,13 +67,7 @@ class AccessController extends Controller
                         'client_payload' => 'Muss ein gültiges IPv4 Netz sein.'
                     ]);
                 }
-
-                $bits = explode('/', $request->client_payload);
-                if ($bits[1] < 24) {
-                    throw ValidationException::withMessages([
-                        'client_payload' => 'Das IPv4 Netz muss kleiner /24 sein.'
-                    ]);
-                }
+                
                 break;
         }
 
