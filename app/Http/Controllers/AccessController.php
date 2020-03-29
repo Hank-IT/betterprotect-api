@@ -67,7 +67,7 @@ class AccessController extends Controller
                         'client_payload' => 'Muss ein gültiges IPv4 Netz sein.'
                     ]);
                 }
-                
+
                 break;
         }
 

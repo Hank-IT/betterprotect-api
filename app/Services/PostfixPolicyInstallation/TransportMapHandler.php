@@ -31,11 +31,9 @@ class TransportMapHandler extends AbstractHandler
             if ($row->nexthop_type == 'ipv4' || $row->nexthop_type == 'ipv6') {
                 $nexthop = '[' . $row->nexthop . ']';
             } else {
-                if ($row->nexthop_mx) {
-                    $nexthop = $row->nexthop;
-                } else {
-                    $nexthop = '[' . $row->nexthop . ']';
-                }
+                $nexthop = $row->nexthop_mx
+                    ? $row->nexthop
+                    : '[' . $row->nexthop . ']';
             }
 
             return collect([

@@ -16,11 +16,9 @@ class TransportController extends Controller
             'perPage' => 'required|int',
         ]);
 
-        if ($request->filled('search')) {
-            $transport = Transport::where('domain', 'LIKE', '%' . $request->search . '%');
-        } else {
-            $transport = Transport::query();
-        }
+        $transport = $request->filled('search')
+            ? Transport::where('domain', 'LIKE', '%' . $request->search . '%')
+            : Transport::query();
 
         return response()->json([
             'status' => 'success',
@@ -71,10 +69,5 @@ class TransportController extends Controller
             'message' => 'Transport wurde erfolgreich entfernt.',
             'data' => [],
         ]);
-    }
-
-    public function show(Request $request, Transport $transport)
-    {
-
     }
 }

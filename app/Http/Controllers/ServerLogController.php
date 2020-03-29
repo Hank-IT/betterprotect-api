@@ -26,11 +26,9 @@ class ServerLogController extends Controller
             'parameter' => ['startDate' => Carbon::parse($request->startDate), 'endDate' => Carbon::parse($request->endDate)]
         ]);
 
-        if ($request->filled('search')) {
-            $log = $query->search($request->search, $request->get('status'));
-        } else {
-            $log = $query->get($request->get('status'));
-        }
+        $log = $request->filled('search')
+            ? $query->search($request->search, $request->get('status'))
+            : $query->get($request->get('status'));
 
         // Paginate
         $count = $log->count();

@@ -15,11 +15,9 @@ class RecipientController extends Controller
             'perPage' => 'required|int',
         ]);
 
-        if ($request->filled('search')) {
-            $recipients = RelayRecipient::where('payload', 'LIKE', '%' . $request->search . '%');
-        } else {
-            $recipients = RelayRecipient::query();
-        }
+        $recipients = $request->filled('search')
+            ? RelayRecipient::where('payload', 'LIKE', '%' . $request->search . '%')
+            : RelayRecipient::query();
 
         return response()->json([
             'status' => 'success',

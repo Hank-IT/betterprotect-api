@@ -40,11 +40,9 @@ class DatabasePostfixLog
            $query = $logDB->table('SystemEvents')
                ->select(['DeviceReportedTime', 'FromHost', 'Message', 'SysLogTag']);
 
-           if ($this->parameter['startDate'] === $this->parameter['endDate']) {
-               $query->whereDate('DeviceReportedTime', '=', $this->parameter['startDate']);
-           } else {
-               $query->whereBetween('DeviceReportedTime', [Carbon::parse($this->parameter['startDate']), Carbon::parse($this->parameter['endDate'])]);
-           }
+           $this->parameter['startDate'] === $this->parameter['endDate']
+               ? $query->whereDate('DeviceReportedTime', '=', $this->parameter['startDate'])
+               : $query->whereBetween('DeviceReportedTime', [Carbon::parse($this->parameter['startDate']), Carbon::parse($this->parameter['endDate'])]);
 
            $start = microtime(true);
            Log::info('Server ' . $server->hostname . ' log query started');
@@ -65,7 +63,7 @@ class DatabasePostfixLog
            return $data;
        });
 
-       if (!is_null($status)) {
+       if (! is_null($status)) {
            return $data->where('status', $status);
        }
 

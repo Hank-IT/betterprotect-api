@@ -14,19 +14,15 @@ class WhoisController extends Controller
         ]);
 
         // Whois
-        $info = (new Whois)->lookup($request->client_ip);
+        $info = app(Whois::class)->lookup($request->client_ip);
 
-        if (isset($info['regrinfo']['owner']['organization'])) {
-            $organization = $info['regrinfo']['owner']['organization'];
-        } else {
-            $organization = 'N/A';
-        }
+        $organization = isset($info['regrinfo']['owner']['organization'])
+            ? $info['regrinfo']['owner']['organization']
+            : 'N/A';
 
-        if (isset($info['regrinfo']['abuse']['email'])) {
-            $abuseEmail = $info['regrinfo']['abuse']['email'];
-        } else {
-            $abuseEmail = 'N/A';
-        }
+        $abuseEmail = isset($info['regrinfo']['abuse']['email'])
+            ? $info['regrinfo']['abuse']['email']
+            : 'N/A';
 
         return response()->json([
             'status' => 'success',

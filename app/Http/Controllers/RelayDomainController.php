@@ -16,11 +16,9 @@ class RelayDomainController extends Controller
             'perPage' => 'required|int',
         ]);
 
-        if ($request->filled('search')) {
-            $relayRecipient = RelayDomain::where('domain', 'LIKE', '%' . $request->search . '%');
-        } else {
-            $relayRecipient = RelayDomain::query();
-        }
+        $relayRecipient = $request->filled('search')
+            ? RelayDomain::where('domain', 'LIKE', '%' . $request->search . '%')
+            : $relayRecipient = RelayDomain::query();
 
         return response()->json([
             'status' => 'success',

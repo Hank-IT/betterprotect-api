@@ -19,11 +19,9 @@ class LdapDirectoryController extends Controller
         ]);
 
         if ($request->filled('currentPage', 'perPage')) {
-            if ($request->filled('search')) {
-                $ldapDirectory = LdapDirectory::where('connection', 'LIKE', '%' . $request->search . '%');
-            } else {
-                $ldapDirectory = LdapDirectory::query();
-            }
+            $ldapDirectory = $request->filled('search')
+                ? LdapDirectory::where('connection', 'LIKE', '%' . $request->search . '%')
+                : LdapDirectory::query();
 
             return response()->json([
                 'status' => 'success',

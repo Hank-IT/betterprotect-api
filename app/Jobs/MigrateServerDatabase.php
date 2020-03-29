@@ -54,10 +54,8 @@ class MigrateServerDatabase implements ShouldQueue
 
         $serverDatabase = app($this->database, ['server' => $this->server]);
 
-        if ($serverDatabase->migrate() == 0) {
-            $task->update(['message' => 'Datenbank ' . $this->database . ' erfolgreich aktualisiert.', 'status' => Task::STATUS_FINISHED, 'endDate' => Carbon::now()]);
-        } else {
-            $task->update(['message' => 'Datenbank ' . $this->database . ' konnte nicht aktualisiert werden.', 'status' => Task::STATUS_ERROR, 'endDate' => Carbon::now()]);
-        }
+        $serverDatabase->migrate() == 0
+            ? $task->update(['message' => 'Datenbank ' . $this->database . ' erfolgreich aktualisiert.', 'status' => Task::STATUS_FINISHED, 'endDate' => Carbon::now()])
+            : $task->update(['message' => 'Datenbank ' . $this->database . ' konnte nicht aktualisiert werden.', 'status' => Task::STATUS_ERROR, 'endDate' => Carbon::now()]);
     }
 }

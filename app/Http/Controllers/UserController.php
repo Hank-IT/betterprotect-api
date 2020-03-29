@@ -19,11 +19,9 @@ class UserController extends Controller
             'perPage' => 'required|int',
         ]);
 
-        if ($request->filled('search')) {
-            $user = User::where('username', 'LIKE', '%' . $request->search . '%');
-        } else {
-            $user = User::query();
-        }
+        $user = $request->filled('search')
+            ? User::where('username', 'LIKE', '%' . $request->search . '%')
+            : User::query();
 
         return response()->json([
             'status' => 'success',

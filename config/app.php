@@ -15,6 +15,8 @@ return [
 
     'name' => 'Betterprotect',
 
+    'version' => '1.0.0',
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
