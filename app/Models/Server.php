@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\Filesystem;
 use App\Services\ServerConsole;
+use App\Concerns\SerializesDate;
 use App\Services\Database\LogDatabase;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\Database\AmavisDatabase;
@@ -13,6 +14,8 @@ use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 
 class Server extends Model
 {
+    use SerializesDate;
+
     protected $fillable = [
         'hostname',
         'description',

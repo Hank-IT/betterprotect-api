@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
+use App\Concerns\SerializesDate;
 use App\Events\Task as TaskEvent;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
+    use SerializesDate;
+
     const STATUS_RUNNING = 1;
     const STATUS_ERROR = 2;
     const STATUS_FINISHED = 3;

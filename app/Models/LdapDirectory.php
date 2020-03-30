@@ -4,12 +4,15 @@ namespace App\Models;
 
 use App\Services\Settings;
 use Adldap\AdldapInterface;
+use App\Concerns\SerializesDate;
 use Adldap\Connections\Provider;
 use Adldap\Schemas\ActiveDirectory;
 use Illuminate\Database\Eloquent\Model;
 
 class LdapDirectory extends Model
 {
+    use SerializesDate;
+
     protected $fillable = [
         'connection',
         'schema',

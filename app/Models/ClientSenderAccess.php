@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Support\Activatable;
+use App\Concerns\SerializesDate;
 use Illuminate\Database\Eloquent\Model;
 
 class ClientSenderAccess extends Model
 {
-    use Activatable;
+    use Activatable, SerializesDate;
 
     protected $table = 'client_sender_access';
 
