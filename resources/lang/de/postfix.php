@@ -8,6 +8,7 @@ return [
             'deferred' => 'Verzögert',
             'bounced' => 'Bounced',
             'filter' => 'Gefiltert',
+            'unknown' => 'Unbekannt',
         ],
         'action' => [
             'reject' => 'Ablehnen',

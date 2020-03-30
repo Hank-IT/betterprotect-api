@@ -71,7 +71,7 @@ class MailFlowChart
 
             $dataSets[] = [
                 'fill' => false,
-                'label' => $key,
+                'label' => trans('postfix.mail.status.' . $key),
                 'backgroundColor' => $color,
                 'borderColor' => $color,
                 'data' => $data[$key],
