@@ -19,10 +19,6 @@
 
         <template v-if="!loading">
             <b-table hover :items="rules" :fields="fields" @row-clicked="showModal" v-if="rules.length" :tbody-tr-class="rowClass">
-                <template slot="action" slot-scope="data">
-                    <span :class="{ 'text-success': data.value === 'ok', 'text-danger': data.value === 'reject' }">{{ data.value }}</span>
-                </template>
-
                 <template v-slot:cell(client_full)="data">
                     <span v-if="data.item.client_payload === '*'">
                         <span class="text-danger font-italic">Alles</span>
@@ -43,10 +39,10 @@
 
                 <template v-slot:cell(action_formatted)="data">
                     <span v-if="data.item.action.toLowerCase() === 'ok'">
-                        <span class="text-success">{{ data.item.action.toUpperCase() }}</span>
+                        <span class="text-success">{{ translate('postfix.mail.action.' + data.item.action.toLowerCase()) }}</span>
                     </span>
                     <span v-else>
-                        <span class="text-danger">{{ data.item.action.toUpperCase() }}</span>
+                        <span class="text-danger">{{ translate('postfix.mail.action.' + data.item.action.toLowerCase()) }}</span>
                     </span>
                 </template>
 

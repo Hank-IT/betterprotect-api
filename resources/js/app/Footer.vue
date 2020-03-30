@@ -4,7 +4,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading c-pointer" role="tab" v-b-toggle.task-collapse variant="primary" aria-expanded="true" aria-controls="collapseOne">
                     <h5 class="panel-title mb-1">
-                        <i class="fas fa-tasks fa-fw"></i>Aufgaben
+                        <i class="fas fa-tasks fa-fw"></i>{{ translate('misc.tasks.tasks') }}
                     </h5>
                 </div>
 
@@ -14,11 +14,11 @@
                             <table class="table table-hover mb-0" id="tasks-table">
                                 <thead>
                                 <tr>
-                                    <th>Startzeit</th>
-                                    <th>Endzeit</th>
-                                    <th>Benutzer</th>
-                                    <th>Aufgabe</th>
-                                    <th>Status</th>
+                                    <th>{{ translate('misc.start-date') }}</th>
+                                    <th>{{ translate('misc.end-date') }}</th>
+                                    <th>{{ translate('misc.user') }}</th>
+                                    <th>{{ translate('misc.tasks.task') }}</th>
+                                    <th>{{ translate('misc.status') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>

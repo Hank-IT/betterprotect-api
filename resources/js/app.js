@@ -48,6 +48,7 @@ import LineChart from './components/LineChart';
 import MailFlowChartPage from './pages/charts/MailFlow';
 
 Vue.prototype.moment = moment;
+Vue.prototype.translate = require('./VueTranslation/Translation').default.translate;
 
 String.prototype.trunc = String.prototype.trunc ||
     function(n){

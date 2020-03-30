@@ -30,6 +30,7 @@
         "mrcrankhank/laravel-version": "^1.3",
         "pusher/pusher-php-server": "~3.0",
         "spatie/laravel-csp": "^2.4",
+        "tohidplus/laravel-vue-translation": "^2.0",
         "torann/geoip": "^1.0",
         "tymon/jwt-auth": "dev-develop"
     },

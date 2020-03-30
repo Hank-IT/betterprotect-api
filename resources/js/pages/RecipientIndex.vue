@@ -20,10 +20,6 @@
 
         <div v-if="!recipientsLoading">
             <b-table hover :items="recipients" :fields="fields" v-if="recipients.length" :tbody-tr-class="rowClass">
-                <template v-slot:cell(action)="data">
-                    <span :class="{ 'text-success': data.value.toString().toLowerCase() === 'ok', 'text-danger': data.value.toString().toLowerCase() === 'reject' }">{{ data.value }}</span>
-                </template>
-
                 <template v-slot:cell(app_actions)="data">
                     <button :disabled="! $auth.check(['editor', 'administrator'])" class="btn btn-warning btn-sm" @click="activation(data)"><i class="fas" :class="{ 'fa-lock': data.item.active === 1, 'fa-unlock': data.item.active === 0 }"></i></button>
                     <button :disabled="! $auth.check(['editor', 'administrator'])" class="btn btn-danger btn-sm" @click="deleteRow(data)"><i class="fas fa-trash-alt"></i></button>

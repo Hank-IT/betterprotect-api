@@ -119,9 +119,9 @@
                     { value: 'mail_from_localpart', text: 'Mail From Localpart' },
                 ],
                 actionOptions: [
-                    { value: null, text: 'Bitte Aktion auswählen' },
-                    { value: 'ok', text: 'Ok' },
-                    { value: 'reject', text: 'Ablehnen' },
+                    { value: null, text: this.translate('misc.choose-action') },
+                    { value: 'ok', text: this.translate('postfix.mail.action.ok') },
+                    { value: 'reject', text: this.translate('postfix.mail.action.reject') },
                 ],
                 form: {
                     client_type: null,

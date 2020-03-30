@@ -57,22 +57,16 @@ class MailFlowChart
         foreach($datasetKeys as $key) {
             switch($key) {
                 case 'reject':
-                    $color = '#fb9a99';
+                    $color = '#dc3545';
                     break;
                 case 'sent':
-                    $color = '#b2df8a';
+                    $color = '#28a745';
                     break;
                 case 'deferred':
-                    $color = '#fdbf6f';
-                    break;
-                case 'bounced':
-                    $color = '#a6cee3';
-                    break;
-                case 'filter':
-                    $color = '#a6cee3';
+                    $color = '#ffc107';
                     break;
                 default:
-                    $color = '#a6cee3';
+                    $color = '#17a2b8';
             }
 
             $dataSets[] = [

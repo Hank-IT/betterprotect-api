@@ -23,10 +23,11 @@
     </target>
 
     <target name="dist">
+        <exec command="${php.bin} artisan VueTranslation:generate" passthru="true"/>
         <exec command="${npm.bin} run production" passthru="true"/>
         <exec command="${php.bin} artisan update:generate-json-file files.json" passthru="true"/>
     </target>
-    
+
     <target name="build">
         <tar destfile="build.tar">
             <fileset dir=".">

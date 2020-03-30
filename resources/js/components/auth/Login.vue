@@ -94,7 +94,7 @@
                         <h3 class="card-title text-center mb-4"><i class="fas fa-envelope"></i> Betterprotect</h3>
                         <form autocomplete="off" @submit.stop.prevent="login" method="post">
                             <div class="form-group">
-                                <label for="username"><i class="fas fa-user"></i> Benutzer</label>
+                                <label for="username"><i class="fas fa-user"></i> {{ translate('misc.user') }}</label>
                                 <input :class="{ 'is-invalid': error }" type="text" id="username" class="form-control" v-model="username" autofocus @click="clearError">
 
                                 <b-form-invalid-feedback>
@@ -103,10 +103,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="password"><i class="fas fa-key"></i> Passwort</label>
+                                <label for="password"><i class="fas fa-key"></i> {{ translate('misc.password') }}</label>
                                 <input type="password" id="password" class="form-control" v-model="password">
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                            <button type="submit" class="btn btn-primary w-100">{{ translate('misc.auth.login') }}</button>
                         </form>
                     </div>
                 </div>

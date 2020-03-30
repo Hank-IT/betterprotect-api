@@ -61,7 +61,7 @@
                 </template>
                 <template v-slot:cell(status)="data">
                     <span v-if="data.item.status">
-                        <span v-bind:class="getStatusClass(data)">{{ data.item.status.toUpperCase() }}</span>
+                        <span v-bind:class="getStatusClass(data)">{{ translate('postfix.mail.status.' + data.item.status.toLowerCase()) }}</span>
                     </span>
                 </template>
             </b-table>
@@ -247,12 +247,12 @@
                  */
                 mailStatusSelected: null,
                 mailStatusOptions: [
-                    { value: null, text: 'Status wählen' },
-                    { value: 'reject', text: 'REJECT' },
-                    { value: 'sent', text: 'SENT' },
-                    { value: 'deferred', text: 'DEFERRED' },
-                    { value: 'bounced', text: 'BOUNCED' },
-                    { value: 'filter', text: 'FILTER' },
+                    { value: null, text: this.translate('misc.choose-status') },
+                    { value: 'reject', text: this.translate('postfix.mail.status.reject') },
+                    { value: 'sent', text: this.translate('postfix.mail.status.sent') },
+                    { value: 'deferred', text: this.translate('postfix.mail.status.deferred') },
+                    { value: 'bounced', text: this.translate('postfix.mail.status.bounced') },
+                    { value: 'filter', text: this.translate('postfix.mail.status.filter') },
                 ],
 
                 /**
