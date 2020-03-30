@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Charts;
 
 use Carbon\Carbon;
@@ -23,7 +25,7 @@ class MailFlowChart
         $this->end = $end;
     }
 
-    public function build()
+    public function build(): array
     {
         $labels = $this->createLabels();
 
@@ -51,7 +53,7 @@ class MailFlowChart
         $datasetKeys = $data->keys();
 
         // Build chart data
-        $datasets = [];
+        $dataSets = [];
         foreach($datasetKeys as $key) {
             switch($key) {
                 case 'reject':
@@ -73,7 +75,7 @@ class MailFlowChart
                     $color = '#a6cee3';
             }
 
-            $datasets[] = [
+            $dataSets[] = [
                 'fill' => false,
                 'label' => $key,
                 'backgroundColor' => $color,
@@ -84,11 +86,11 @@ class MailFlowChart
 
         return [
             'labels' => $labels->keys(),
-            'datasets' => $datasets
+            'datasets' => $dataSets
         ];
     }
 
-    protected function createdReportedAtGroupColumn($row)
+    protected function createdReportedAtGroupColumn($row): array
     {
         if (! isset($row['reported_at'])) {
             return $row;
@@ -101,7 +103,7 @@ class MailFlowChart
         return $row;
     }
 
-    protected function createLabels()
+    protected function createLabels(): Collection
     {
         // Create time period with hours as chart label
         // 2020-03-30 00
