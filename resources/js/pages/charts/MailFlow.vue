@@ -3,7 +3,7 @@
         <div class="toolbar">
             <b-row>
                 <b-col md="4">
-                    <b-btn variant="secondary" @click="renderChart"><i class="fas fa-sync"></i></b-btn>
+                    <b-btn variant="secondary" @click="currentChart"><i class="fas fa-sync"></i></b-btn>
                     <date-range-picker
                             :maxDate="maxDate"
                             :locale-data="locale"
@@ -45,8 +45,6 @@
                     responsive: true,
                     maintainAspectRatio: false
                 },
-
-
 
                 /**
                  * Datepicker
@@ -117,6 +115,12 @@
 
                 this.renderChart();
             },
+            async currentChart() {
+                this.currentStart = this.moment().subtract(24, 'hours');
+                this.currentEnd = this.moment().add(1, 'minutes');
+
+                this.renderChart();
+            }
         }
     }
 </script>|
