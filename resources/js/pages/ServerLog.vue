@@ -30,7 +30,6 @@
                                             v-model="dateRange"
                                             @update="updateSelectedDate"
                                     >
-                                        <!--Optional scope for the input displaying the dates -->
                                         <div slot="input" slot-scope="picker">{{ currentStart | date }} - {{ currentEnd | date }}</div>
                                     </date-range-picker>
                             </b-input-group-prepend>
@@ -269,7 +268,7 @@
                 search: null,
 
                 /**
-                 * Datepicker
+                 * Datepickerpicker
                  */
                 maxDate: this.moment().format('YYYY/MM/DD HH:mm'),
                 currentStart: this.moment().subtract(1, 'hours'),

@@ -157,6 +157,11 @@ Route::group(['middleware' => 'jwt.auth'], function(){
      */
     Route::post('/activation/{id}', 'ActivationController@store')->middleware('role:editor')->name('activation.store');
     Route::patch('/activation/{id}', 'ActivationController@update')->middleware('role:editor')->name('activation.update');
+
+    /**
+     * Charts
+     */
+    Route::get('/charts/mail-flow', 'Charts\MailFlowChartController');
 });
 
 /**

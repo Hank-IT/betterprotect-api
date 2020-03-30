@@ -18,6 +18,22 @@
                     </div>
                 </router-link>
 
+                <router-link :to="'#'" :class="{'router-link-active': subIsActive('/charts')}" v-b-toggle.charts v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-start align-items-center">
+                        <span class="menu-collapsed">Charts</span>
+                        <span class="ml-auto when-closed"><i class="fas fa-chevron-down"></i></span>
+                        <span class="ml-auto when-opened"><i class="fas fa-chevron-right"></i></span>
+                    </div>
+                </router-link>
+
+                <b-collapse id="charts" v-bind="chartsVisible" v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])">
+                    <div class="sidebar-submenu">
+                        <router-link :to="{ name: 'charts.mail-flow' }" exact class="list-group-item list-group-item-action bg-dark text-white">
+                            <span class="menu-collapsed">Mail Flow</span>
+                        </router-link>
+                    </div>
+                </b-collapse>
+
                 <router-link :to="{ name: 'server.queue' }" v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="menu-collapsed">Queue</span>
@@ -112,6 +128,11 @@
         computed: {
             milterVisible() {
                 if (this.subIsActive('/milter')) {
+                    return { visible: true }
+                }
+            },
+            chartsVisible() {
+                if (this.subIsActive('/charts')) {
                     return { visible: true }
                 }
             }

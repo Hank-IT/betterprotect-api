@@ -44,6 +44,8 @@ import ServerUpdateConsoleForm from "./components/ServerUpdate/ServerUpdateConso
 import ServerUpdateLoggingForm from "./components/ServerUpdate/ServerUpdateLoggingForm";
 import ServerUpdateAmavisForm from "./components/ServerUpdate/ServerUpdateAmavisForm";
 import Echo from "laravel-echo";
+import LineChart from './components/LineChart';
+import MailFlowChartPage from './pages/charts/MailFlow';
 
 Vue.prototype.moment = moment;
 
@@ -186,6 +188,14 @@ Vue.router = new Router({
             }
         },
         {
+            path: '/charts/mail-flow',
+            name: 'charts.mail-flow',
+            component: MailFlowChartPage,
+            meta: {
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
+            }
+        },
+        {
             path: '/server-queue',
             name:'server.queue',
             component: ServerQueue,
@@ -303,6 +313,8 @@ Vue.component('ServerUpdatePostfixForm', ServerUpdatePostfixForm);
 Vue.component('ServerUpdateConsoleForm', ServerUpdateConsoleForm);
 Vue.component('ServerUpdateLoggingForm', ServerUpdateLoggingForm);
 Vue.component('ServerUpdateAmavisForm', ServerUpdateAmavisForm);
+Vue.component('LineChart', LineChart);
+Vue.component('MailFlowChartPage', MailFlowChartPage);
 
 App.router = Vue.router;
 
