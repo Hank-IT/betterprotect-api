@@ -12,7 +12,7 @@
     "dependencies": {
         "@fortawesome/fontawesome": "^1.1.8",
         "@fortawesome/fontawesome-free-solid": "^5.0.13",
-        "@websanova/vue-auth": "^2.21.14-beta",
+        "@websanova/vue-auth": "^3.1.5-beta",
         "axios": "^0.18.1",
         "bootstrap": "^4.4.1",
         "bootstrap-vue": "^2.9.0",

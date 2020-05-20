@@ -2,11 +2,16 @@
 
 Route::get('/', 'AppController');
 
-Route::group(['middleware' => 'jwt.auth'], function(){
-    /**
-     * Authentication
-     */
-    Route::get('auth/user', 'AuthController@user')->middleware('role:readonly')->name('auth.user');
+// Auth
+Route::post('auth/login', 'Auth\LoginController@login')->name('auth.login');
+
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    /* Auth */
+    Route::post('auth/logout', 'Auth\LoginController@logout')->name('auth.logout');
+    Route::get('auth/user', 'Auth\LoginController@user')->name('auth.user');
+
+    /* Websockets */
+    Broadcast::routes();
 
     /**
      * Tasks
@@ -14,6 +19,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::get('/task', 'TaskController@index')->middleware('role:readonly')->name('task.index');
 
     /**
+     *
      * Server Mail log
      */
     Route::get('/server/log', 'ServerLogController@index')->middleware('role:readonly')->name('server.log.show');
@@ -163,14 +169,3 @@ Route::group(['middleware' => 'jwt.auth'], function(){
      */
     Route::get('/charts/mail-flow', 'Charts\MailFlowChartController');
 });
-
-/**
- * Authentication
- */
-
-Route::group(['middleware' => 'jwt.refresh'], function(){
-    Route::get('auth/refresh', 'AuthController@refresh')->name('auth.refresh');
-});
-
-Route::post('auth/login', 'AuthController@login')->name('auth.login');
-Route::post('auth/logout', 'AuthController@logout')->name('auth.logout');

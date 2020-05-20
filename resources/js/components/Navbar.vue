@@ -36,7 +36,10 @@
                     window.Echo = null;
                 }
 
-                this.$auth.logout()
+                this.$auth.logout({
+                    makeRequest: true,
+                    redirect: {name: 'auth.login'},
+                })
             }
         }
     }

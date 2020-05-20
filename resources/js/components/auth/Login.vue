@@ -124,26 +124,25 @@
                 error: false
             }
         },
-
         methods: {
             clearError() {
                 this.error = false;
             },
             login(){
-                this.$auth.login({
-                    data: {
-                        username: this.username,
-                        password: this.password
-                    },
-                    success: function () {
+                axios.get('/sanctum/csrf-cookie').then(response => {
+                    this.$auth.login({
+                        data: {
+                            username: this.username,
+                            password: this.password
+                        },
+                        rememberMe: false,
+                        redirect: '/',
+                        fetchUser: false,
+                    }).then(() => {
                         this.clearError();
-                    },
-                    error: (error) => {
+                    }).catch(error => {
                         this.error = error.response.data.message;
-                    },
-                    rememberMe: true,
-                    redirect: '/',
-                    fetchUser: true,
+                    })
                 });
             },
         }

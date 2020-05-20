@@ -1,4 +1,8 @@
 import Vue from 'vue';
+import auth from '@websanova/vue-auth';
+import httpAxios from '@websanova/vue-auth/drivers/http/axios.1.x.js';
+import authRouter from '@websanova/vue-auth/drivers/router/vue-router.2.x.js';
+import authBearer from './DummyAuthDriver';
 import Router from 'vue-router';
 import App from './App.vue';
 window.Pusher = require('pusher-js');
@@ -112,8 +116,8 @@ fontawesome.library.add(faChevronDown);
 window.axios = require('axios');
 import VueAxios from 'vue-axios'
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-let token = document.head.querySelector('meta[name="csrf-token"]');
-window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+//let token = document.head.querySelector('meta[name="csrf-token"]');
+//window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 window.axios.defaults.baseURL = document.head.querySelector('meta[name="base-url"]').content;
 Vue.use(VueAxios, window.axios);
 
@@ -280,11 +284,14 @@ Vue.router = new Router({
     ],
 });
 
-Vue.use(require('@websanova/vue-auth'), {
-    auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
-    http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
-    router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
-    rolesVar: 'role'
+Vue.use(auth, {
+    auth: authBearer,
+    http: httpAxios,
+    router: authRouter,
+    rolesKey: 'role',
+    refreshData: {
+        enabled: false,
+    }
 });
 
 Vue.component('Server', Server);
