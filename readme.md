@@ -49,12 +49,12 @@ Missing something from this list? Open an Issue and let me know! <a href="https:
 
 ### Built With
 * [Laravel](https://laravel.com)
+* [Laravel Sanctum](https://github.com/laravel/sanctum)
 * [Laravel Websockets](https://github.com/beyondcode/laravel-websockets)
 * [Bootstrap](https://getbootstrap.com)
 * [Bootstrap Vue](https://bootstrap-vue.js.org/)
 * [Font Awesome](https://fontawesome.com)
 * And many more!
-
 
 ## Getting Started
 <a href="https://github.com/MrCrankHank/Betterprotect/wiki/Getting-Started">Take a look at our Getting Started Guide</a>
