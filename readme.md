@@ -9,11 +9,9 @@
   <p align="center">
     Betterprotect is a Postfix Management System. It includes a Log Parser, the ability to whitelist/blacklist addresses and LDAP integration.
     <br />
-    <a href="https://github.com/MrCrankHank/Betterprotect/wiki"><strong>Explore the docs »</strong></a>
+    <a href="https://docs.betterprotect.de/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    ·
-    <a href="https://github.com/MrCrankHank/Betterprotect/wiki/Screenshots-v1.0">Screenshots</a>
     ·
     <a href="https://github.com/MrCrankHank/Betterprotect/issues">Report Bug</a>
     ·
