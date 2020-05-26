@@ -13,9 +13,9 @@
     <br />
     <br />
     ·
-    <a href="https://github.com/MrCrankHank/Betterprotect/issues">Report Bug</a>
+    <a href="https://github.com/Hank-IT/Betterprotect/issues">Report Bug</a>
     ·
-    <a href="https://github.com/MrCrankHank/Betterprotect/issues">Request Feature</a>
+    <a href="https://github.com/Hank-IT/Betterprotect/issues">Request Feature</a>
   </p>
 </p>
 
@@ -43,7 +43,7 @@ The main features are:
 * **Recipients**. Betterprotect keeps a list of recipients for which Postfix should accept mail. It is also able to pull recipient addresses from users and groups out of one or more Ldap Directories (currently only ActiveDirectory).
 * **LDAP Authentication** for Betterprotect admins. No need to open up another user management.
 
-Missing something from this list? Open an Issue and let me know! <a href="https://github.com/MrCrankHank/Betterprotect/issues">Request Feature</a>
+Missing something from this list? Open an Issue and let me know! <a href="https://github.com/Hank-IT/Betterprotect/issues">Request Feature</a>
 
 ### Built With
 * [Laravel](https://laravel.com)
@@ -55,13 +55,13 @@ Missing something from this list? Open an Issue and let me know! <a href="https:
 * And many more!
 
 ## Getting Started
-<a href="https://github.com/MrCrankHank/Betterprotect/wiki/Getting-Started">Take a look at our Getting Started Guide</a>
+<a href="https://docs.betterprotect.de/installation/">Take a look at our installation guide</a>
 
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-Please open an Issue before you start building your feature: <a href="https://github.com/MrCrankHank/Betterprotect/issues">Issues</a>
+Please open an Issue before you start building your feature: <a href="https://github.com/Hank-IT/Betterprotect/issues">Issues</a>
 
 ## Security
 If you find a security related issue, please contact me on the email address below. All security problems will be addressed as fast as possible.
@@ -74,4 +74,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Alexander Hank - mail@alexander-hank.com
 
-Project Link: [https://github.com/MrCrankHank/Betterprotect](https://github.com/MrCrankHank/Betterprotect)
+Project Link: [https://github.com/Hank-IT/Betterprotect](https://github.com/Hank-IT/Betterprotect)
