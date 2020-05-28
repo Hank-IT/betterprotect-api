@@ -12,11 +12,11 @@
         <!-- Modal Component -->
         <b-modal id="access-store-modal" ref="accessStoreModal" size="lg" title="Blacklist/Whitelist Eintrag" @ok="handleOk" @shown="modalShown">
             <b-form @submit.stop.prevent="storeAccess">
-                <b-form-group label="Beliebiger Client">
-                    <b-form-checkbox type="checkbox" placeholder="Beliebiger Client" v-model="clientVisible" value="false" unchecked-value="true" @change="allClientsCheckboxChanged"></b-form-checkbox>
+                <b-form-group :label="translate('features.policy.access.any_client')">
+                    <b-form-checkbox type="checkbox" :placeholder="translate('features.policy.access.any_client')" v-model="clientVisible" value="false" unchecked-value="true" @change="allClientsCheckboxChanged"></b-form-checkbox>
                 </b-form-group>
 
-                <b-form-group label="Client Typ *" v-if="clientVisible === 'true'">
+                <b-form-group :label="translate('validation.attributes.client_type') + ' *'" v-if="clientVisible === 'true'">
                     <b-form-select :class="{ 'is-invalid': errors.client_type }" v-model="form.client_type" :options="clientTypeOptions"></b-form-select>
 
                     <b-form-invalid-feedback>
@@ -26,8 +26,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Client *" v-if="clientVisible === 'true'">
-                    <b-form-input :class="{ 'is-invalid': errors.client_payload }" ref="client_payload" type="text" v-model="form.client_payload" placeholder="Eintrag"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.client_payload') + ' *'" v-if="clientVisible === 'true'">
+                    <b-form-input :class="{ 'is-invalid': errors.client_payload }" ref="client_payload" type="text" v-model="form.client_payload" :placeholder="translate('misc.entry')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -38,11 +38,11 @@
 
                 <hr>
 
-                <b-form-group label="Beliebiger Sender">
-                    <b-form-checkbox type="checkbox" placeholder="Beliebiger Sender" v-model="senderVisible" value="false" unchecked-value="true" @change="allSendersCheckboxChanged"></b-form-checkbox>
+                <b-form-group :label="translate('features.policy.access.any_sender')">
+                    <b-form-checkbox type="checkbox" :placeholder="translate('features.policy.access.any_sender')" v-model="senderVisible" value="false" unchecked-value="true" @change="allSendersCheckboxChanged"></b-form-checkbox>
                 </b-form-group>
 
-                <b-form-group label="Sender Typ *" v-if="senderVisible === 'true'">
+                <b-form-group :label="translate('validation.attributes.sender_type') + ' *'" v-if="senderVisible === 'true'">
                     <b-form-select :class="{ 'is-invalid': errors.sender_type }" v-model="form.sender_type" :options="senderTypeOptions"></b-form-select>
 
                     <b-form-invalid-feedback>
@@ -52,8 +52,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Sender *" v-if="senderVisible === 'true'">
-                    <b-form-input :class="{ 'is-invalid': errors.sender_payload }" type="text" v-model="form.sender_payload" placeholder="Eintrag"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.sender_payload') + ' *'" v-if="senderVisible === 'true'">
+                    <b-form-input :class="{ 'is-invalid': errors.sender_payload }" type="text" v-model="form.sender_payload" :placeholder="translate('misc.entry')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -64,7 +64,7 @@
 
                 <hr>
 
-                <b-form-group label="Aktion *">
+                <b-form-group :label="translate('validation.attributes.action') + ' *'">
                     <b-form-select :class="{ 'is-invalid': errors.action }" v-model="form.action" :options="actionOptions"></b-form-select>
 
                     <b-form-invalid-feedback>
@@ -74,8 +74,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Nachricht">
-                    <b-form-input :class="{ 'is-invalid': errors.message }" ref="message" type="text" v-model="form.message" placeholder="Nachricht"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.message') + ' *'">
+                    <b-form-input :class="{ 'is-invalid': errors.message }" ref="message" type="text" v-model="form.message" :placeholder="translate('validation.attributes.message')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -86,8 +86,8 @@
 
                 <hr>
 
-                <b-form-group label="Beschreibung">
-                    <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="form.description" rows="4" placeholder="Beschreibung"></b-form-textarea>
+                <b-form-group :label="translate('validation.attributes.description')">
+                    <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="form.description" rows="4" :placeholder="translate('validation.attributes.description')"></b-form-textarea>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -105,21 +105,21 @@
         data() {
             return {
                 clientTypeOptions: [
-                    { value: null, text: 'Bitte Typ auswählen' },
-                    { value: 'client_hostname', text: 'Client Hostname' },
-                    { value: 'client_reverse_hostname', text: 'Client Reverse Hostname' },
-                    { value: 'client_ipv4', text: 'Client IPv4' },
-                    { value: 'client_ipv6', text: 'Client IPv6' },
-                    { value: 'client_ipv4_net', text: 'Client IPv4 Netzwerk' },
+                    { value: null, text: this.translate('misc.choose_entry') },
+                    { value: 'client_hostname', text: this.translate('features.policy.access.client_types.client_hostname') },
+                    { value: 'client_reverse_hostname', text: this.translate('features.policy.access.client_types.client_reverse_hostname') },
+                    { value: 'client_ipv4', text: this.translate('features.policy.access.client_types.client_ipv4') },
+                    { value: 'client_ipv6', text: this.translate('features.policy.access.client_types.client_ipv6') },
+                    { value: 'client_ipv4_net', text: this.translate('features.policy.access.client_types.client_ipv4_net') },
                 ],
                 senderTypeOptions: [
-                    { value: null, text: 'Bitte Typ auswählen' },
-                    { value: 'mail_from_address', text: 'Mail From Adresse' },
-                    { value: 'mail_from_domain', text: 'Mail From Domäne' },
-                    { value: 'mail_from_localpart', text: 'Mail From Localpart' },
+                    { value: null, text:this.translate('misc.choose_entry') },
+                    { value: 'mail_from_address', text: this.translate('features.policy.access.sender_types.mail_from_address') },
+                    { value: 'mail_from_domain', text: this.translate('features.policy.access.sender_types.mail_from_domain') },
+                    { value: 'mail_from_localpart', text: this.translate('features.policy.access.sender_types.mail_from_localpart') },
                 ],
                 actionOptions: [
-                    { value: null, text: this.translate('misc.choose-action') },
+                    { value: null, text: this.translate('misc.choose_entry') },
                     { value: 'ok', text: this.translate('postfix.mail.action.ok') },
                     { value: 'reject', text: this.translate('postfix.mail.action.reject') },
                 ],

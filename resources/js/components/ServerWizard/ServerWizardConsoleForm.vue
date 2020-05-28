@@ -1,11 +1,11 @@
 <template>
     <div class="server-wizard.server">
-        <b-form-checkbox v-model="ssh_feature_enabled" :value="true" :unchecked-value="false">SSH Funktionen aktivieren</b-form-checkbox>
+        <b-form-checkbox v-model="ssh_feature_enabled" :value="true" :unchecked-value="false">{ translate('features.console.name') }}</b-form-checkbox>
 
         <template v-if="ssh_feature_enabled">
             <b-form>
-                <b-form-group label="Benutzer *">
-                    <b-form-input :class="{ 'is-invalid': errors.ssh_user, 'is-valid': isValid('ssh_user') }" type="text" ref="user" v-model="form.ssh_user" placeholder="Benutzer" :disabled="submitted"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.user') + ' *'">
+                    <b-form-input :class="{ 'is-invalid': errors.ssh_user, 'is-valid': isValid('ssh_user') }" type="text" ref="user" v-model="form.ssh_user" :placeholder="translate('validation.attributes.user')" :disabled="submitted"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -14,8 +14,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Public Key *">
-                    <b-form-textarea :class="{ 'is-invalid': errors.ssh_public_key, 'is-valid': isValid('ssh_public_key') }" type="text" v-model="form.ssh_public_key" rows="4" placeholder="Public Key" :disabled="submitted"></b-form-textarea>
+                <b-form-group :label="translate('validation.attributes.ssh_public_key') + ' *'">
+                    <b-form-textarea :class="{ 'is-invalid': errors.ssh_public_key, 'is-valid': isValid('ssh_public_key') }" type="text" v-model="form.ssh_public_key" rows="4" :placeholder="translate('validation.attributes.ssh_public_key')" :disabled="submitted"></b-form-textarea>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -24,8 +24,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Private Key *">
-                    <b-form-textarea :class="{ 'is-invalid': errors.ssh_private_key, 'is-valid': isValid('ssh_private_key') }" type="text" v-model="form.ssh_private_key" rows="4" placeholder="Private Key" :disabled="submitted"></b-form-textarea>
+                <b-form-group :label="translate('validation.attributes.ssh_private_key') + ' *'">
+                    <b-form-textarea :class="{ 'is-invalid': errors.ssh_private_key, 'is-valid': isValid('ssh_private_key') }" type="text" v-model="form.ssh_private_key" rows="4" :placeholder="translate('validation.attributes.ssh_private_key')" :disabled="submitted"></b-form-textarea>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -33,11 +33,11 @@
                         </ul>
                     </b-form-invalid-feedback>
 
-                    <p class="text-muted mb-0">Der Schlüssel wird aus Sicherheitsgründen nicht angezeigt!</p>
+                    <p class="text-muted mb-0">{{ translate('misc.password-field-explanation.security') }}</p>
                 </b-form-group>
 
-                <b-form-group label="Sudo Pfad *">
-                    <b-form-input :class="{ 'is-invalid': errors.ssh_command_sudo, 'is-valid': isValid('ssh_command_sudo') }" type="text" v-model="form.ssh_command_sudo" placeholder="Sudo Pfad" :disabled="submitted"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.ssh_command_sudo') + ' *'">
+                    <b-form-input :class="{ 'is-invalid': errors.ssh_command_sudo, 'is-valid': isValid('ssh_command_sudo') }" type="text" v-model="form.ssh_command_sudo" :placeholder="translate('validation.attributes.ssh_command_sudo')" :disabled="submitted"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -46,8 +46,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Postqueue Pfad *">
-                    <b-form-input :class="{ 'is-invalid': errors.ssh_command_postqueue, 'is-valid': isValid('ssh_command_postqueue') }" type="text" v-model="form.ssh_command_postqueue" placeholder="Postqueue Pfad" :disabled="submitted"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.ssh_command_postqueue') + ' *'">
+                    <b-form-input :class="{ 'is-invalid': errors.ssh_command_postqueue, 'is-valid': isValid('ssh_command_postqueue') }" type="text" v-model="form.ssh_command_postqueue" :placeholder="translate('validation.attributes.ssh_command_postqueue')" :disabled="submitted"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -56,8 +56,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Postsuper Pfad *">
-                    <b-form-input :class="{ 'is-invalid': errors.ssh_command_postsuper, 'is-valid': isValid('ssh_command_postsuper') }" type="text" v-model="form.ssh_command_postsuper" placeholder="Postsuper Pfad" :disabled="submitted"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.ssh_command_postsuper') + ' *'">
+                    <b-form-input :class="{ 'is-invalid': errors.ssh_command_postsuper, 'is-valid': isValid('ssh_command_postsuper') }" type="text" v-model="form.ssh_command_postsuper" :placeholder="translate('validation.attributes.ssh_command_postsuper')" :disabled="submitted"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -114,7 +114,7 @@
                         }
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }

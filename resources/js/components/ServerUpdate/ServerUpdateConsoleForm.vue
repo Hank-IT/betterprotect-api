@@ -1,10 +1,10 @@
 <template>
     <b-form>
-        <b-form-checkbox v-model="form.ssh_feature_enabled" :value="1" :unchecked-value="0">SSH Funktionen aktivieren</b-form-checkbox>
+        <b-form-checkbox v-model="form.ssh_feature_enabled" :value="1" :unchecked-value="0">{{ translate('features.console.name') }}</b-form-checkbox>
 
         <template v-if="form.ssh_feature_enabled">
-            <b-form-group label="Benutzer *">
-                <b-form-input :class="{ 'is-invalid': errors.ssh_user }" type="text" ref="user" v-model="form.ssh_user" placeholder="Benutzer"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.user') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.ssh_user }" type="text" ref="user" v-model="form.ssh_user" :placeholder="translate('validation.attributes.user')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -13,8 +13,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Public Key *">
-                <b-form-textarea :class="{ 'is-invalid': errors.ssh_public_key }" type="text" v-model="form.ssh_public_key" rows="4" placeholder="Public Key"></b-form-textarea>
+            <b-form-group :label="translate('validation.attributes.ssh_public_key') + ' *'">
+                <b-form-textarea :class="{ 'is-invalid': errors.ssh_public_key }" type="text" v-model="form.ssh_public_key" rows="4" :placeholder="translate('validation.attributes.ssh_public_key')"></b-form-textarea>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -23,12 +23,12 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Private Key *">
+            <b-form-group :label="translate('validation.attributes.ssh_private_key') + ' *'">
                 <b-input-group>
-                    <b-form-textarea :class="{ 'is-invalid': errors.ssh_private_key }" type="text" v-model="form.ssh_private_key" rows="4" placeholder="Private Key"></b-form-textarea>
+                    <b-form-textarea :class="{ 'is-invalid': errors.ssh_private_key }" type="text" v-model="form.ssh_private_key" rows="4" :placeholder="translate('validation.attributes.ssh_private_key')"></b-form-textarea>
 
                     <b-input-group-append>
-                        <b-button variant="outline-secondary" @click="setPasswordEmpty">Leeren</b-button>
+                        <b-button variant="outline-secondary" @click="setPasswordEmpty">{{ translate('misc.clear') }}</b-button>
                     </b-input-group-append>
                 </b-input-group>
 
@@ -39,15 +39,15 @@
                 </b-form-invalid-feedback>
 
                 <ul class="text-muted mb-0 mt-1 pl-3">
-                    <li>Das Passwort wird aus Sicherheitsgründen nicht angezeigt.</li>
-                    <li>Geben Sie ein neues Passwort ein, um das Passwort zu ändern.</li>
-                    <li>Lassen Sie das Feld Leer, um das Passwort beizubehalten.</li>
-                    <li>Klicken Sie Leeren, um das Passwort zu entfernen.</li>
+                    <li>{{ translate('misc.password-field-explanation.security') }}</li>
+                    <li>{{ translate('misc.password-field-explanation.new') }}</li>
+                    <li>{{ translate('misc.password-field-explanation.empty') }}</li>
+                    <li>{{ translate('misc.password-field-explanation.clear') }}</li>
                 </ul>
             </b-form-group>
 
-            <b-form-group label="Sudo Pfad *">
-                <b-form-input :class="{ 'is-invalid': errors.ssh_command_sudo }" type="text" v-model="form.ssh_command_sudo" placeholder="Sudo Pfad"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.ssh_command_sudo') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.ssh_command_sudo }" type="text" v-model="form.ssh_command_sudo" :placeholder="translate('validation.attributes.ssh_command_sudo')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -56,8 +56,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Postqueue Pfad *">
-                <b-form-input :class="{ 'is-invalid': errors.ssh_command_postqueue }" type="text" v-model="form.ssh_command_postqueue" placeholder="Postqueue Pfad"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.ssh_command_postqueue') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.ssh_command_postqueue }" type="text" v-model="form.ssh_command_postqueue" :placeholder="translate('validation.attributes.ssh_command_postqueue')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -66,8 +66,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Postsuper Pfad *">
-                <b-form-input :class="{ 'is-invalid': errors.ssh_command_postsuper }" type="text" v-model="form.ssh_command_postsuper" placeholder="Postsuper Pfad"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.ssh_command_postsuper') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.ssh_command_postsuper }" type="text" v-model="form.ssh_command_postsuper" :placeholder="translate('validation.attributes.ssh_command_postsuper')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -77,7 +77,7 @@
             </b-form-group>
         </template>
 
-        <b-button variant="primary" type="submit" @click="submit">Speichern & Schließen</b-button>
+        <b-button variant="primary" type="submit" @click="submit">{{ translate('misc.save_close') }}</b-button>
     </b-form>
 </template>
 
@@ -105,7 +105,7 @@
                     }
                 } else {
                     this.$notify({
-                        title: 'Unbekannter Fehler',
+                        title: this.translate('misc.errors.unknown'),
                         type: 'error'
                     });
                 }
@@ -133,7 +133,7 @@
                         }
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }

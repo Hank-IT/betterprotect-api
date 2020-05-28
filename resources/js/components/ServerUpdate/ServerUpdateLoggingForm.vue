@@ -1,10 +1,10 @@
 <template>
     <b-form>
-        <b-form-checkbox v-model="form.log_feature_enabled" :value="1" :unchecked-value="0">Log Viewer aktivieren</b-form-checkbox>
+        <b-form-checkbox v-model="form.log_feature_enabled" :value="1" :unchecked-value="0">{{ translate('features.logging.name') }}</b-form-checkbox>
 
         <template v-if="form.log_feature_enabled">
-            <b-form-group label="Datenbankhost *">
-                <b-form-input :class="{ 'is-invalid': errors.log_db_host }" type="text" v-model="form.log_db_host" placeholder="Datenbankhost"></b-form-input>
+            <b-form-group :label="translate('misc.database.host') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.log_db_host }" type="text" v-model="form.log_db_host" :placeholder="translate('misc.database.host')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -13,8 +13,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Datenbankname *">
-                <b-form-input :class="{ 'is-invalid': errors.log_db_name }" type="text" v-model="form.log_db_name" placeholder="Datenbankname"></b-form-input>
+            <b-form-group :label="translate('misc.database.name') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.log_db_name }" type="text" v-model="form.log_db_name" :placeholder="translate('misc.database.name')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -23,8 +23,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Datenbankbenutzer">
-                <b-form-input :class="{ 'is-invalid': errors.log_db_user }" type="text" v-model="form.log_db_user" placeholder="Datenbankbenutzer"></b-form-input>
+            <b-form-group :label="translate('misc.database.user')">
+                <b-form-input :class="{ 'is-invalid': errors.log_db_user }" type="text" v-model="form.log_db_user" :placeholder="translate('misc.database.user')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -33,12 +33,12 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Datenbankpasswort">
+            <b-form-group :label="translate('misc.database.password')">
                 <b-input-group>
-                    <b-form-input :class="{ 'is-invalid': errors.log_db_password }" type="password" v-model="form.log_db_password" placeholder="Datenbankpasswort"></b-form-input>
+                    <b-form-input :class="{ 'is-invalid': errors.log_db_password }" type="password" v-model="form.log_db_password" :placeholder="translate('misc.database.password')"></b-form-input>
 
                     <b-input-group-append>
-                        <b-button variant="outline-secondary" @click="setPasswordEmpty">Leeren</b-button>
+                        <b-button variant="outline-secondary" @click="setPasswordEmpty">{{ translate('misc.clear') }}</b-button>
                     </b-input-group-append>
                 </b-input-group>
 
@@ -49,15 +49,15 @@
                 </b-form-invalid-feedback>
 
                 <ul class="text-muted mb-0 mt-1 pl-3">
-                    <li>Das Passwort wird aus Sicherheitsgründen nicht angezeigt.</li>
-                    <li>Geben Sie ein neues Passwort ein, um das Passwort zu ändern.</li>
-                    <li>Lassen Sie das Feld Leer, um das Passwort beizubehalten.</li>
-                    <li>Klicken Sie Leeren, um das Passwort zu entfernen.</li>
+                    <li>{{ translate('misc.password-field-explanation.security') }}</li>
+                    <li>{{ translate('misc.password-field-explanation.new') }}</li>
+                    <li>{{ translate('misc.password-field-explanation.empty') }}</li>
+                    <li>{{ translate('misc.password-field-explanation.clear') }}</li>
                 </ul>
             </b-form-group>
 
-            <b-form-group label="Datenbankport *">
-                <b-form-input :class="{ 'is-invalid': errors.log_db_port }" type="text" v-model="form.log_db_port" placeholder="Datenbankport"></b-form-input>
+            <b-form-group :label="translate('misc.database.port') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.log_db_port }" type="text" v-model="form.log_db_port" :placeholder="translate('misc.database.port')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -67,7 +67,7 @@
             </b-form-group>
         </template>
 
-        <b-button variant="primary" type="submit" @click="submit">Speichern & Schließen</b-button>
+        <b-button variant="primary" type="submit" @click="submit">{{ translate('misc.save_close') }}</b-button>
     </b-form>
 </template>
 
@@ -95,7 +95,7 @@
                     }
                 } else {
                     this.$notify({
-                        title: 'Unbekannter Fehler',
+                        title: this.translate('misc.errors.unknown'),
                         type: 'error'
                     });
                 }
@@ -123,7 +123,7 @@
                         }
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }

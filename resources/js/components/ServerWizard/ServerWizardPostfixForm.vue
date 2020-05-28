@@ -1,11 +1,11 @@
 <template>
     <div class="server-wizard.postfix">
-        <b-form-checkbox v-model="postfix_feature_enabled" :value="true" :unchecked-value="false">Postfix Funktionen aktivieren</b-form-checkbox>
+        <b-form-checkbox v-model="postfix_feature_enabled" :value="true" :unchecked-value="false">{{ translate('features.postfix.name') }}</b-form-checkbox>
 
         <template v-if="postfix_feature_enabled">
             <b-form>
-                <b-form-group label="Datenbankhost *">
-                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_host, 'is-valid': isValid('postfix_db_host')  }" type="text" v-model="form.postfix_db_host" placeholder="Datenbankhost" :disabled="submitted"></b-form-input>
+                <b-form-group :label="translate('misc.database.host') + ' *'">
+                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_host, 'is-valid': isValid('postfix_db_host')  }" type="text" v-model="form.postfix_db_host" :placeholder="translate('misc.database.host')" :disabled="submitted"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -14,8 +14,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Datenbankname *">
-                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_name, 'is-valid': isValid('postfix_db_name')  }" type="text" v-model="form.postfix_db_name" placeholder="Datenbankname" :disabled="submitted"></b-form-input>
+                <b-form-group :label="translate('misc.database.name') + ' *'">
+                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_name, 'is-valid': isValid('postfix_db_name')  }" type="text" v-model="form.postfix_db_name" :placeholder="translate('misc.database.name')" :disabled="submitted"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -24,8 +24,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Datenbankbenutzer">
-                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_user, 'is-valid': isValid('postfix_db_user')  }" type="text" v-model="form.postfix_db_user" placeholder="Datenbankbenutzer" :disabled="submitted"></b-form-input>
+                <b-form-group :label="translate('misc.database.user')">
+                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_user, 'is-valid': isValid('postfix_db_user')  }" type="text" v-model="form.postfix_db_user" :placeholder="translate('misc.database.user')" :disabled="submitted"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -34,8 +34,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Datenbankpasswort">
-                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_password, 'is-valid': isValid('postfix_db_password')  }" type="password" v-model="form.postfix_db_password" placeholder="Datenbankpasswort" :disabled="submitted"></b-form-input>
+                <b-form-group :label="translate('misc.database.password')">
+                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_password, 'is-valid': isValid('postfix_db_password')  }" type="password" v-model="form.postfix_db_password"  :placeholder="translate('misc.database.password')" :disabled="submitted"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -43,11 +43,11 @@
                         </ul>
                     </b-form-invalid-feedback>
 
-                    <p class="text-muted mb-0">Das Passwort wird aus Sicherheitsgründen nicht angezeigt!</p>
+                    <p class="text-muted mb-0">{{ translate('misc.password-field-explanation.security') }}</p>
                 </b-form-group>
 
-                <b-form-group label="Datenbankport *">
-                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_port, 'is-valid': isValid('postfix_db_port')  }" type="text" v-model="form.postfix_db_port" placeholder="Datenbankport" :disabled="submitted"></b-form-input>
+                <b-form-group :label="translate('misc.database.port') + ' *'">
+                    <b-form-input :class="{ 'is-invalid': errors.postfix_db_port, 'is-valid': isValid('postfix_db_port')  }" type="text" v-model="form.postfix_db_port" :placeholder="translate('misc.database.port')" :disabled="submitted"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -104,7 +104,7 @@
                         }
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }

@@ -16,7 +16,7 @@
                                 <tr>
                                     <th>{{ translate('misc.start-date') }}</th>
                                     <th>{{ translate('misc.end-date') }}</th>
-                                    <th>{{ translate('misc.user') }}</th>
+                                    <th>{{ translate('validation.attributes.user') }}</th>
                                     <th>{{ translate('misc.tasks.task') }}</th>
                                     <th>{{ translate('misc.status') }}</th>
                                 </tr>

@@ -1,7 +1,7 @@
 <template>
     <b-form>
-        <b-form-group label="Hostname *">
-            <b-form-input :class="{ 'is-invalid': errors.hostname }" type="text" ref="hostname" v-model="form.hostname" placeholder="Hostname"></b-form-input>
+        <b-form-group :label="translate('validation.attributes.hostname') + ' *'">
+            <b-form-input :class="{ 'is-invalid': errors.hostname }" type="text" ref="hostname" v-model="form.hostname" :placeholder="translate('validation.attributes.hostname')"></b-form-input>
 
             <b-form-invalid-feedback>
                 <ul class="form-group-validation-message-list">
@@ -10,8 +10,8 @@
             </b-form-invalid-feedback>
         </b-form-group>
 
-        <b-form-group label="Beschreibung">
-            <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="form.description" rows="4" placeholder="Beschreibung"></b-form-textarea>
+        <b-form-group :label="translate('validation.attributes.description')">
+            <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="form.description" rows="4" :placeholder="translate('validation.attributes.description')"></b-form-textarea>
 
             <b-form-invalid-feedback>
                 <ul class="form-group-validation-message-list">
@@ -20,7 +20,7 @@
             </b-form-invalid-feedback>
         </b-form-group>
 
-        <b-button variant="primary" type="submit" @click="submit">Speichern & Schließen</b-button>
+        <b-button variant="primary" type="submit" @click="submit">{{ translate('misc.save_close') }}</b-button>
     </b-form>
 </template>
 
@@ -48,7 +48,7 @@
                     }
                 } else {
                     this.$notify({
-                        title: 'Unbekannter Fehler',
+                        title: this.translate('misc.errors.unknown'),
                         type: 'error'
                     });
                 }
@@ -76,7 +76,7 @@
                         }
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }

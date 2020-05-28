@@ -91,10 +91,10 @@
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="card-title text-center mb-4"><i class="fas fa-envelope"></i> Betterprotect</h3>
+                        <h3 class="card-title text-center mb-4"><i class="fas fa-envelope"></i> {{ translate('misc.app') }}</h3>
                         <form autocomplete="off" @submit.stop.prevent="login" method="post">
                             <div class="form-group">
-                                <label for="username"><i class="fas fa-user"></i> {{ translate('misc.user') }}</label>
+                                <label for="username"><i class="fas fa-user"></i> {{ translate('validation.attributes.user') }}</label>
                                 <input :class="{ 'is-invalid': error }" type="text" id="username" class="form-control" v-model="username" autofocus @click="clearError">
 
                                 <b-form-invalid-feedback>

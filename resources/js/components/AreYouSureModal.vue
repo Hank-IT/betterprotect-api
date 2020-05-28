@@ -1,6 +1,6 @@
 <template>
-    <b-modal title="Sind Sie sicher?" hide-backdrop cancel-disabled ok-disabled id="are-you-sure-modal" ref="areYouSureModal">
-        <p class="text-danger"><i class="fas fa-exclamation"></i> Der Eintrag wird gelöscht.</p>
+    <b-modal :title="translate('misc.are-you-sure')" hide-backdrop cancel-disabled ok-disabled id="are-you-sure-modal" ref="areYouSureModal">
+        <p class="text-danger"><i class="fas fa-exclamation"></i> {{ translate('misc.entry-will-be-removed') }}</p>
 
         <template v-slot:modal-footer>
             <div class="w-100">

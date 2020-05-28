@@ -25,7 +25,6 @@
         "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.0",
         "league/flysystem-sftp": "^1.0",
-        "mariuzzo/laravel-js-localization": "^1.4",
         "mmucklo/email-parse": "^2.0",
         "mrcrankhank/console-access": "^2.0",
         "mrcrankhank/laravel-update": "^2.2",
