@@ -7,7 +7,7 @@
         </form>
 
         <form @submit.prevent="updateSchema" class="inline" v-if="schemaUpdate">
-            <button type="submit" class="btn btn-primary btn-sm mb-1">Aktualisieren</button>
+            <button type="submit" class="btn btn-primary btn-sm mb-1">{{ translate('misc.refresh') }}</button>
         </form>
     </div>
 </template>

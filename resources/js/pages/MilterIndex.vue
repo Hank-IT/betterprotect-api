@@ -23,7 +23,7 @@
 
         <div class="text-center" v-if="miltersLoading">
             <div class="spinner-border spinner-3x3" role="status">
-                <span class="sr-only">Lade...</span>
+                <span class="sr-only">{{ translate('misc.loading') }}...</span>
             </div>
         </div>
 

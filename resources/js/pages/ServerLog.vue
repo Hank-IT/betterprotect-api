@@ -85,7 +85,7 @@
 
         <div class="text-center" v-if="logsLoading">
             <div class="spinner-border spinner-3x3" role="status">
-                <span class="sr-only">Lade...</span>
+                <span class="sr-only">{{ translate('misc.loading') }}...</span>
             </div>
         </div>
 
@@ -135,7 +135,7 @@
                     <th>Organisation</th>
                     <td v-if="whoisLoading">
                         <div class="spinner-border spinner-1x1" role="status">
-                            <span class="sr-only">Lade...</span>
+                            <span class="sr-only">{{ translate('misc.loading') }}...</span>
                         </div>
                     </td>
                     <td v-else>
@@ -146,7 +146,7 @@
                     <th>Abuse Kontakt</th>
                     <td v-if="whoisLoading">
                         <div class="spinner-border spinner-1x1" role="status">
-                            <span class="sr-only">Lade...</span>
+                            <span class="sr-only">{{ translate('misc.loading') }}...</span>
                         </div>
                     </td>
                     <td v-else>

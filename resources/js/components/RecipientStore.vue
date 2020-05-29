@@ -1,10 +1,10 @@
 <template>
     <div class="recipient.store">
         <!-- Modal Component -->
-        <b-modal id="recipient-store-modal" ref="recipientStoreModal" size="lg" title="Empfänger hinzufügen" @ok="handleOk" @shown="modalShown">
+        <b-modal id="recipient-store-modal" ref="recipientStoreModal" size="lg" :title="translate('features.policy.recipient.store')" @ok="handleOk" @shown="modalShown">
             <b-form>
                 <b-form-group label="Eintrag *">
-                    <b-form-input :class="{ 'is-invalid': errors.payload }" ref="payload" type="text" v-model="form.payload" placeholder="Eintrag"></b-form-input>
+                    <b-form-input :class="{ 'is-invalid': errors.payload }" ref="payload" type="text" v-model="form.payload" :placeholder="translate('misc.entry')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">

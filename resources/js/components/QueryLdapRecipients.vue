@@ -1,7 +1,7 @@
 <template>
     <div class="ldap.query">
         <!-- Modal Component -->
-        <b-modal id="ldap-query-modal" ref="ldapQueryModal" size="lg" title="LDAP" @ok="handleOk" @shown="modalShown">
+        <b-modal id="ldap-query-modal" ref="ldapQueryModal" size="lg" :title="translate('features.ldap.ldap')" @ok="handleOk" @shown="modalShown">
             <b-form>
                 <b-form-select v-model="ldapDirectory" :options="ldapDirectories" :value-field="'id'" :html-field="'connection'"></b-form-select>
             </b-form>

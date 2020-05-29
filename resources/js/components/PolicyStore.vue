@@ -1,7 +1,7 @@
 <template>
     <div class="policy.store">
         <!-- Modal Component -->
-        <b-modal id="policy-store-modal" ref="policy-store-modal" size="lg" title="Policy Installation" @shown="modalShown" @ok="handleOk">
+        <b-modal id="policy-store-modal" ref="policy-store-modal" size="lg" :title="translate('features.policy.installation')" @shown="modalShown" @ok="handleOk">
             <b-form @submit.stop.prevent="installPolicy">
                 <b-form-select v-model="selectedServer" :options="servers" class="mb-3"></b-form-select>
             </b-form>

@@ -8,13 +8,13 @@
                     variant="danger"
                     class="float-right"
                     @click="areYouSureModalYes">
-                    Ja
+                    {{ translate('misc.yes') }}
                 </b-button>
                 <b-button
                     variant="secondary"
                     class="float-right  mr-1"
                     @click="areYouSureModalNo">
-                    Nein
+                    {{ translate('misc.no') }}
                 </b-button>
             </div>
         </template>

@@ -1,8 +1,8 @@
 <template>
-    <b-modal id="relay-domain-store-modal" ref="relayDomainStoreModal" size="lg" title="Relay Domäne" @ok="handleOk" @shown="modalShown">
+    <b-modal id="relay-domain-store-modal" ref="relayDomainStoreModal" size="lg" :title="translate('features.policy.relay_domain.relay_domain')" @ok="handleOk" @shown="modalShown">
         <b-form>
             <b-form-group label="Domain *">
-                <b-form-input :class="{ 'is-invalid': errors.domain }" type="text" ref="domain" v-model="form.domain" placeholder="Domain"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.domain }" type="text" ref="domain" v-model="form.domain" :placeholder="translate('validation.attributes.domain')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -54,7 +54,7 @@
                         }
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }

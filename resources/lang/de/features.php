@@ -17,7 +17,32 @@ return [
         'name' => 'Postfix Funktionen aktivieren',
     ],
 
+    'ldap' => [
+        'ldap' => 'LDAP',
+        'auth' => 'Folgende Einstellungen werden gebraucht, wenn das LDAP für die Anmeldung an dieser Anwendung genutzt werden soll:',
+    ],
+
+    'server' => [
+        'disabled' => 'Server ist deaktiviert',
+    ],
+
     'policy' => [
+        'install' => 'Policy installieren',
+        'installation' => 'Policy Installation',
+        'last-installation' => 'Letzte Policy Installation',
+
+        'transport' => [
+            'transport-placeholder' => 'z.B. smtp'
+        ],
+
+        'recipient' => [
+            'store' => 'Empfänger hinzufügen'
+        ],
+
+        'relay_domain' => [
+            'relay_domain' => 'Relay Domäne',
+        ],
+
         'access' => [
             'any_client' => 'Beliebiger Client',
             'any_sender' => 'Beliebiger Absender',

@@ -1,8 +1,8 @@
 <template>
     <b-modal id="ldap-directory-update-store-modal" ref="ldapDirectoryUpdateStoreModal" size="lg" title="LDAP Directory hinzufügen" @ok="handleOk" @shown="modalShown">
         <b-form>
-            <b-form-group label="Verbindung *">
-                <b-form-input :class="{ 'is-invalid': errors.connection }" type="text" ref="connection" v-model="form.connection" placeholder="Verbindung"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.connection') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.connection }" type="text" ref="connection" v-model="form.connection" :placeholder="translate('validation.attributes.connection')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -11,8 +11,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Server *">
-                <b-form-input :class="{ 'is-invalid': errors.servers }" type="text" ref="servers" v-model="form.servers" placeholder="Server"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.server') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.servers }" type="text" ref="servers" v-model="form.servers" placeholder="translate('validation.attributes.server')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -21,8 +21,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Port *">
-                <b-form-input :class="{ 'is-invalid': errors.port }" type="text" ref="port" v-model="form.port" placeholder="Port"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.port') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.port }" type="text" ref="port" v-model="form.port" :placeholder="translate('validation.attributes.port')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -31,8 +31,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Timeout *">
-                <b-form-input :class="{ 'is-invalid': errors.timeout }" type="text" ref="timeout" v-model="form.timeout" placeholder="Timeout"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.timeout') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.timeout }" type="text" ref="timeout" v-model="form.timeout" :placeholder="translate('validation.attributes.timeout')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -41,8 +41,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Basis (DN) *">
-                <b-form-input :class="{ 'is-invalid': errors.base_dn }" type="text" ref="base_dn" v-model="form.base_dn" placeholder="Basis (DN)"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.base_dn') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.base_dn }" type="text" ref="base_dn" v-model="form.base_dn" :placeholder="translate('validation.attributes.base_dn')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -51,8 +51,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Benutzer *">
-                <b-form-input :class="{ 'is-invalid': errors.bind_user }" type="text" ref="bind_user" v-model="form.bind_user" placeholder="Benutzer"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.bind_user') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.bind_user }" type="text" ref="bind_user" v-model="form.bind_user" :placeholder="translate('validation.attributes.bind_user')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -61,8 +61,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Passwort *">
-                <b-form-input :class="{ 'is-invalid': errors.bind_password }" type="password" ref="bind_password" v-model="form.bind_password" placeholder="Passwort"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.bind_password') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.bind_password }" type="password" ref="bind_password" v-model="form.bind_password" :placeholder="translate('validation.attributes.bind_password')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -71,8 +71,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="SSL benutzen">
-                <b-form-checkbox :class="{ 'is-invalid': errors.use_ssl }" type="checkbox" ref="use_ssl" v-model="form.use_ssl" placeholder="SSL benutzen" value="1" unchecked-value="0"></b-form-checkbox>
+            <b-form-group :label="translate('validation.attributes.use_ssl')">
+                <b-form-checkbox :class="{ 'is-invalid': errors.use_ssl }" type="checkbox" ref="use_ssl" v-model="form.use_ssl" :placeholder="translate('validation.attributes.use_ssl')" value="1" unchecked-value="0"></b-form-checkbox>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -81,8 +81,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="TLS benutzen">
-                <b-form-checkbox :class="{ 'is-invalid': errors.use_tls }" type="checkbox" ref="use_tls" v-model="form.use_tls" placeholder="TLS benutzen" value="1" unchecked-value="0"></b-form-checkbox>
+            <b-form-group :label="translate('validation.attributes.use_tls')">
+                <b-form-checkbox :class="{ 'is-invalid': errors.use_tls }" type="checkbox" ref="use_tls" v-model="form.use_tls" :placeholder="translate('validation.attributes.use_tls')" value="1" unchecked-value="0"></b-form-checkbox>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -91,8 +91,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Ignorierte Domänen (Empfänger Abfrage)">
-                <b-form-input :class="{ 'is-invalid': errors.ignored_domains }" type="text" ref="ignored_domains" v-model="form.ignored_domains" placeholder="Ignorierte Domänen"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.ignored_domains')">
+                <b-form-input :class="{ 'is-invalid': errors.ignored_domains }" type="text" ref="ignored_domains" v-model="form.ignored_domains" :placeholder="translate('validation.attributes.ignored_domains')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -101,13 +101,13 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-button v-b-toggle.authentication-settings variant="primary"><i class="fas fa-arrows-alt-v"></i> Weitere Einstellungen</b-button>
+            <b-button v-b-toggle.authentication-settings variant="primary"><i class="fas fa-arrows-alt-v"></i> {{ translate('misc.more-settings') }}</b-button>
 
             <b-collapse id="authentication-settings" class="mt-2">
-                <b-alert show>Folgende Einstellungen werden gebraucht, wenn das LDAP für die Anmeldung an dieser Anwendung genutzt werden soll:</b-alert>
+                <b-alert show>{{ translate('features.ldap.auth') }}</b-alert>
 
-                <b-form-group label="Gruppe (DN)">
-                    <b-form-input :class="{ 'is-invalid': errors.group_dn }" type="text" ref="group_dn" v-model="form.group_dn" placeholder="Gruppe (DN)"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.group_dn')">
+                    <b-form-input :class="{ 'is-invalid': errors.group_dn }" type="text" ref="group_dn" v-model="form.group_dn" :placeholder="translate('validation.attributes.group_dn')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -116,8 +116,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Account Prefix">
-                    <b-form-input :class="{ 'is-invalid': errors.account_prefix }" type="text" ref="group_dn" v-model="form.account_prefix" placeholder="Account Prefix"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.account_prefix')">
+                    <b-form-input :class="{ 'is-invalid': errors.account_prefix }" type="text" ref="account_prefix" v-model="form.account_prefix" :placeholder="translate('validation.attributes.account_prefix')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -126,8 +126,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Account Suffix">
-                    <b-form-input :class="{ 'is-invalid': errors.account_suffix }" type="text" ref="account_suffix" v-model="form.account_suffix" placeholder="Account Suffix"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.account_suffix')">
+                    <b-form-input :class="{ 'is-invalid': errors.account_suffix }" type="text" ref="account_suffix" v-model="form.account_suffix" :placeholder="translate('validation.attributes.account_suffix')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -136,8 +136,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Discover Attribut">
-                    <b-form-input :class="{ 'is-invalid': errors.discover_attr }" type="text" ref="discover_attr" v-model="form.discover_attr" placeholder="Discover Attribut"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.discover_attr')">
+                    <b-form-input :class="{ 'is-invalid': errors.discover_attr }" type="text" ref="discover_attr" v-model="form.discover_attr" :placeholder="translate('validation.attributes.discover_attr')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -146,8 +146,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Authentifizierungs Attribut">
-                    <b-form-input :class="{ 'is-invalid': errors.authenticate_attr }" type="text" ref="authenticate_attr" v-model="form.authenticate_attr" placeholder="Authentifizierungs Attribut"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.authenticate_attr')">
+                    <b-form-input :class="{ 'is-invalid': errors.authenticate_attr }" type="text" ref="authenticate_attr" v-model="form.authenticate_attr" :placeholder="translate('validation.attributes.authenticate_attr')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -156,8 +156,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Single Sign On Attribut">
-                    <b-form-input :class="{ 'is-invalid': errors.sso_auth_attr }" type="text" ref="sso_auth_attr" v-model="form.sso_auth_attr" placeholder="Single Sign On Attribut"></b-form-input>
+                <b-form-group :label="translate('validation.attributes.sso_auth_attr')">
+                    <b-form-input :class="{ 'is-invalid': errors.sso_auth_attr }" type="text" ref="sso_auth_attr" v-model="form.sso_auth_attr" :placeholder="translate('validation.attributes.sso_auth_attr')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -166,8 +166,8 @@
                     </b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group label="Passwort Sync">
-                    <b-form-checkbox :class="{ 'is-invalid': errors.password_sync }" type="checkbox" ref="password_sync" v-model="form.password_sync" placeholder="Passwort Sync" value="1" unchecked-value="0"></b-form-checkbox>
+                <b-form-group :label="translate('validation.attributes.password_sync')">
+                    <b-form-checkbox :class="{ 'is-invalid': errors.password_sync }" type="checkbox" ref="password_sync" v-model="form.password_sync" :placeholder="translate('validation.attributes.password_sync')" value="1" unchecked-value="0"></b-form-checkbox>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">

@@ -1,8 +1,8 @@
 <template>
     <b-modal id="user-store-update-modal" ref="userStoreUpdateModal" size="lg" title="Benutzer hinzufügen" @ok="handleOk" @shown="modalShown">
         <b-form>
-            <b-form-group label="Benutzername *">
-                <b-form-input :class="{ 'is-invalid': errors.username }" type="text" ref="username" v-model="form.username" placeholder="Benutzername"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.username') + ' *'">
+                <b-form-input :class="{ 'is-invalid': errors.username }" type="text" ref="username" v-model="form.username" :placeholder="translate('validation.attributes.username')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -11,8 +11,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="E-Mail">
-                <b-form-input :class="{ 'is-invalid': errors.email }" type="text" ref="email" v-model="form.email" placeholder="E-Mail"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.email')">
+                <b-form-input :class="{ 'is-invalid': errors.email }" type="text" ref="email" v-model="form.email" :placeholder="translate('validation.attributes.email')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -25,8 +25,8 @@
                 <b-form-select v-model="form.role" :options="roles"></b-form-select>
             </b-form-group>
 
-            <b-form-group label="Passwort *" v-if="user == null || (user && user.objectguid === null)">
-                <b-form-input :class="{ 'is-invalid': errors.password }" type="password" ref="email" v-model="form.password" placeholder="Passwort"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.password') + ' *'" v-if="user == null || (user && user.objectguid === null)">
+                <b-form-input :class="{ 'is-invalid': errors.password }" type="password" ref="email" v-model="form.password" :placeholder="translate('validation.attributes.password')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -35,8 +35,8 @@
                 </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group label="Passwort bestätigen *" v-if="user == null || (user && user.objectguid === null)">
-                <b-form-input :class="{ 'is-invalid': errors.password_confirmation }" type="password" ref="password_confirmation" v-model="form.password_confirmation" placeholder="Passwort bestätigen"></b-form-input>
+            <b-form-group :label="translate('validation.attributes.password_confirmation') + ' *'" v-if="user == null || (user && user.objectguid === null)">
+                <b-form-input :class="{ 'is-invalid': errors.password_confirmation }" type="password" ref="password_confirmation" v-model="form.password_confirmation" :placeholder="translate('validation.attributes.password_confirmation')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
@@ -59,10 +59,10 @@
                 errors: [],
                 selectedRole: null,
                 roles: [
-                    { value: 'readonly', 'text': 'Read Only' },
-                    { value: 'authorizer', text: 'Autorisierer' },
-                    { value: 'editor', text: 'Bearbeiter' },
-                    { value: 'administrator', text: 'Administrator' },
+                    { value: 'readonly', 'text': this.translate('misc.roles.readonly') },
+                    { value: 'authorizer', text: this.translate('misc.roles.authorizer') },
+                    { value: 'editor', text: this.translate('misc.roles.editor') },
+                    { value: 'administrator', text: this.translate('misc.roles.administrator') },
                 ]
             }
         },
@@ -97,7 +97,7 @@
                             }
                         } else {
                             this.$notify({
-                                title: 'Unbekannter Fehler',
+                                title: this.translate('misc.errors.unknown'),
                                 type: 'error'
                             });
                         }
@@ -130,7 +130,7 @@
                         }
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }
@@ -160,7 +160,7 @@
                         }
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }
