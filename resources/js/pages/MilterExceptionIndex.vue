@@ -27,13 +27,13 @@
                         {{ milterList(data).join(', ') }}
                     </span>
                     <span v-else>
-                        <span class="text-danger font-italic">Deaktiviert</span>
+                        <span class="text-danger font-italic">{{ translate('misc.disabled') }}</span>
                     </span>
                 </template>
             </b-table>
 
             <b-alert show variant="warning" v-else>
-                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+                <h4 class="alert-heading text-center">{{ translate('misc.no-data-available') }}</h4>
             </b-alert>
         </div>
 
@@ -45,7 +45,7 @@
 
         <are-you-sure-modal v-on:answered-yes="deleteMilterException" v-on:answered-no="row = null"></are-you-sure-modal>
 
-        <b-modal id="milter-store-exception-modal" ref="milterStoreExceptionModal" size="lg" title="Milter Ausnahme hinzufügen" @ok="handleOk" @shown="modalShown">
+        <b-modal id="milter-store-exception-modal" ref="milterStoreExceptionModal" size="lg" :title="translate('features.policy.milter.title')" @ok="handleOk" @shown="modalShown">
             <b-form>
                 <b-form-group label="Client Typ *">
                     <b-form-select :class="{ 'is-invalid': errors.client_type }" v-model="form.client_type" :options="clientTypeOptions"></b-form-select>
@@ -58,7 +58,7 @@
                 </b-form-group>
 
                 <b-form-group label="Client *">
-                    <b-form-input :class="{ 'is-invalid': errors.client_payload }" ref="client_payload" type="text" v-model="form.client_payload" placeholder="Client"></b-form-input>
+                    <b-form-input :class="{ 'is-invalid': errors.client_payload }" ref="client_payload" type="text" v-model="form.client_payload" :placeholder="translate('validation.attributes.client_payload')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -78,7 +78,7 @@
                 </b-form-group>
 
                 <b-form-group label="Beschreibung">
-                    <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="form.description" rows="4" placeholder="Beschreibung"></b-form-textarea>
+                    <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="form.description" rows="4" :placeholder="translate('validation.attributes.description')"></b-form-textarea>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -104,27 +104,27 @@
                 fields: [
                     {
                         key: 'client',
-                        label: 'Client',
+                        label: this.translate('validation.attributes.client_payload')
                     },
                     {
                         key: 'milters',
-                        label: 'Milter',
+                        label: this.translate('validation.attributes.milter_id'),
                     },
                     {
                         key: 'description',
-                        label: 'Beschreibung',
+                        label: this.translate('validation.attributes.description'),
                     },
                     {
                         key: 'app_actions',
-                        label: 'Optionen'
+                        label: this.translate('misc.options'),
                     }
                 ],
 
                 clientTypeOptions: [
-                    { value: null, text: 'Bitte Typ auswählen' },
-                    { value: 'client_ipv4', text: 'Client IPv4' },
-                    { value: 'client_ipv6', text: 'Client IPv6' },
-                    { value: 'client_ipv4_net', text: 'Client IPv4 Netzwerk' },
+                    { value: null, text: this.translate('misc.choose_entry') },
+                    { value: 'client_ipv4', text: this.translate('features.policy.access.client_types.client_ipv4') },
+                    { value: 'client_ipv6', text: this.translate('features.policy.access.client_types.client_ipv6') },
+                    { value: 'client_ipv4_net', text: this.translate('features.policy.access.client_types.client_ipv4_net') },
                 ],
 
                 milters: [],
@@ -166,17 +166,14 @@
 
                         this.getMilterExceptions();
                     }).catch((error) => {
-                        if (error.response) {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
-                            });
-                        } else {
-                            this.$notify({
-                                title: 'Unbekannter Fehler',
-                                type: 'error'
-                            });
-                        }
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
+                        this.$notify({
+                            title: title,
+                            type: 'error'
+                        });
                     });
                 } else {
                     axios.patch('/activation/' + data.item.id, {
@@ -189,17 +186,14 @@
 
                         this.getMilterExceptions();
                     }).catch((error) => {
-                        if (error.response) {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
-                            });
-                        } else {
-                            this.$notify({
-                                title: 'Unbekannter Fehler',
-                                type: 'error'
-                            });
-                        }
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
+                        this.$notify({
+                            title: title,
+                            type: 'error'
+                        });
                     });
                 }
             },
@@ -215,17 +209,15 @@
                     this.milterExceptions = response.data;
                     this.milterExceptionsLoading = false;
                 }).catch((error) => {
-                    if (error.response) {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: 'error'
-                        });
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
+                    let title = error.response
+                        ? error.response.data.message
+                        : this.translate('misc.errors.unknown');
+
+                    this.$notify({
+                        title: title,
+                        type: 'error'
+                    });
+
                     this.milterExceptionsLoading = false;
                 });
             },
@@ -235,17 +227,14 @@
                         return { value: item.id, text: item.name };
                     });
                 }).catch((error) => {
-                    if (error.response) {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: 'error'
-                        });
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
+                    let title = error.response
+                        ? error.response.data.message
+                        : this.translate('misc.errors.unknown');
+
+                    this.$notify({
+                        title: title,
+                        type: 'error'
+                    });
                 });
             },
             deleteRow(data) {
@@ -262,17 +251,14 @@
 
                         this.getMilterExceptions();
                     }).catch((error) => {
-                        if (error.response) {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
+                        this.$notify({
+                            title: title,
+                            type: 'error'
                         });
-                        } else {
-                            this.$notify({
-                                title: 'Unbekannter Fehler',
-                                type: 'error'
-                            });
-                        }
                 });
             },
             handleOk(event) {

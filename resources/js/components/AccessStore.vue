@@ -10,7 +10,7 @@
         </b-row>
 
         <!-- Modal Component -->
-        <b-modal id="access-store-modal" ref="accessStoreModal" size="lg" title="Blacklist/Whitelist Eintrag" @ok="handleOk" @shown="modalShown">
+        <b-modal id="access-store-modal" ref="accessStoreModal" size="lg" :title="translate('features.policy.access.title')" @ok="handleOk" @shown="modalShown">
             <b-form @submit.stop.prevent="storeAccess">
                 <b-form-group :label="translate('features.policy.access.any_client')">
                     <b-form-checkbox type="checkbox" :placeholder="translate('features.policy.access.any_client')" v-model="clientVisible" value="false" unchecked-value="true" @change="allClientsCheckboxChanged"></b-form-checkbox>

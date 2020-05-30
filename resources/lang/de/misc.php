@@ -53,6 +53,14 @@ return [
     'ipv6' => 'IPv6',
     'hostname' => 'Hostname',
     'loading' => 'Lade',
+    'all' => 'Alles',
+    'no-data-available' => 'Keine Daten vorhanden',
+    'message' => 'Nachricht',
+    'created_at' => 'Erstellt am',
+    'options' => 'Optionen',
+    'search' => 'Suche',
+    'pagination' => 'Zeige Zeile :from bis :to von :total Zeilen.',
+    'disabled' => 'Deaktiviert',
 
     'roles' => [
         'readonly' => 'Read Only',

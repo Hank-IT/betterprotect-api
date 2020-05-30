@@ -21,7 +21,7 @@
             <b-table hover :items="rules" :fields="fields" @row-clicked="showModal" v-if="rules.length" :tbody-tr-class="rowClass">
                 <template v-slot:cell(client_full)="data">
                     <span v-if="data.item.client_payload === '*'">
-                        <span class="text-danger font-italic">Alles</span>
+                        <span class="text-danger font-italic">{{ translate('misc.all') }}</span>
                     </span>
                     <span v-else>
                         {{ data.item.client_payload }} ({{ data.item.client_type }})
@@ -30,7 +30,7 @@
 
                 <template v-slot:cell(sender_full)="data">
                     <span v-if="data.item.sender_payload === '*'">
-                        <span class="text-danger font-italic">Alles</span>
+                        <span class="text-danger font-italic">{{ translate('misc.all') }}</span>
                     </span>
                     <span v-else>
                         {{ data.item.sender_payload }} ({{ data.item.sender_type }})
@@ -55,14 +55,14 @@
             </b-table>
 
             <b-alert show variant="warning" v-else>
-                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+                <h4 class="alert-heading text-center">{{ translate('misc.no-data-available') }}</h4>
             </b-alert>
         </template>
 
-        <b-modal title="Beschreibung" ok-only id="access-description-modal">
+        <b-modal :title="translate('validation.attributes.description')" ok-only id="access-description-modal">
             <p>{{ this.modalDescription }}</p>
             <hr>
-            <p v-if="this.modalMessage">Nachricht: {{ this.modalMessage }}</p>
+            <p v-if="this.modalMessage">{{ translate('misc.message') }}: {{ this.modalMessage }}</p>
         </b-modal>
 
         <are-you-sure-modal v-on:answered-yes="deleteAccess" v-on:answered-no="row = null"></are-you-sure-modal>
@@ -99,23 +99,23 @@
                 fields: [
                     {
                         key: 'client_full',
-                        label: 'Client',
+                        label: this.translate('validation.attributes.client_payload'),
                     },
                     {
                         key: 'sender_full',
-                        label: 'Absender',
+                        label: this.translate('validation.attributes.sender_payload'),
                     },
                     {
                         key: 'action_formatted',
-                        label: 'Aktion',
+                        label: this.translate('validation.attributes.action'),
                     },
                     {
                         key: 'created_at',
-                        label: 'Erstellt am',
+                        label: this.translate('misc.created_at'),
                     },
                     {
                         key: 'app_actions',
-                        label: 'Optionen'
+                        label: this.translate('misc.options'),
                     }
                 ],
                 /**
@@ -153,7 +153,7 @@
                             });
                         } else {
                             this.$notify({
-                                title: 'Unbekannter Fehler',
+                                title: this.translate('misc.errors.unknown'),
                                 type: 'error'
                             });
                         }
@@ -177,7 +177,7 @@
                             });
                         } else {
                             this.$notify({
-                                title: 'Unbekannter Fehler',
+                                title: this.translate('misc.errors.unknown'),
                                 type: 'error'
                             });
                         }
@@ -213,7 +213,7 @@
                         });
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }

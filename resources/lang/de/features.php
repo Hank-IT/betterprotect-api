@@ -43,7 +43,12 @@ return [
             'relay_domain' => 'Relay Domäne',
         ],
 
+        'milter' => [
+            'title' => 'Milter Ausnahme hinzufügen',
+        ],
+
         'access' => [
+            'title' => 'Blacklist/Whitelist Eintrag',
             'any_client' => 'Beliebiger Client',
             'any_sender' => 'Beliebiger Absender',
             'client_types' => [

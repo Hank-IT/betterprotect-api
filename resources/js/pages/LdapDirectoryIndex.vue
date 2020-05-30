@@ -11,7 +11,7 @@
             <b-col md="4" offset="5">
                 <b-form-group >
                     <b-input-group>
-                        <b-form-input v-model="search" placeholder="Suche Verbindung" @change="getLdapDirectories"/>
+                        <b-form-input v-model="search" :placeholder="translate('misc.search')" @change="getLdapDirectories"/>
                     </b-input-group>
                 </b-form-group>
             </b-col>
@@ -26,7 +26,7 @@
             </b-table>
 
             <b-alert show variant="warning" v-else>
-                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+                <h4 class="alert-heading text-center">{{ translate('misc.no-data-available') }}</h4>
             </b-alert>
 
             <b-row v-if="totalRows > 10">
@@ -37,7 +37,7 @@
                     <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" @change="changePage"></b-pagination>
                 </b-col>
                 <b-col cols="2" offset="3" v-if="ldapDirectories.length">
-                    <p class="mt-1">Zeige Zeile {{ from }} bis {{ to }} von {{ totalRows }} Zeilen.</p>
+                    <p class="mt-1">{{ translate('misc.pagination', {'from': from, 'to': to, 'total': totalRows}) }}</p>
                 </b-col>
             </b-row>
         </template>
@@ -95,15 +95,15 @@
                 fields: [
                     {
                         key: 'connection',
-                        label: 'Verbindung',
+                        label: this.translate('validation.attributes.connection'),
                     },
                     {
                         key: 'base_dn',
-                        label: 'Base DN',
+                        label: this.translate('validation.attributes.base_dn'),
                     },
                     {
                         key: 'app_actions',
-                        label: 'Optionen'
+                        label: this.translate('misc.options'),
                     }
                 ],
 
@@ -140,7 +140,7 @@
                         });
                     } else {
                         this.$notify({
-                            title: 'Unbekannter Fehler',
+                            title: this.translate('misc.errors.unknown'),
                             type: 'error'
                         });
                     }
@@ -168,7 +168,7 @@
                             });
                         } else {
                             this.$notify({
-                                title: 'Unbekannter Fehler',
+                                title: this.translate('misc.errors.unknown'),
                                 type: 'error'
                             });
                         }
