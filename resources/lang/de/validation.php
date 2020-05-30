@@ -214,5 +214,6 @@ return [
         'nexthop_port' => 'Nexthop Port',
         'nexthop_mx' => 'Nexthop MX Lookup',
         'milter_id' => 'Milter',
+        'definition' => 'Definition',
     ],
 ];

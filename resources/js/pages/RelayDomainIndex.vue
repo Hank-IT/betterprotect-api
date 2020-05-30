@@ -11,7 +11,7 @@
             <b-col md="4" offset="5" >
                 <b-form-group >
                     <b-input-group>
-                        <b-form-input v-model="search" placeholder="Suche Domain" @change="getRelayDomains"/>
+                        <b-form-input v-model="search" :placeholder="translate('misc.search')" @change="getRelayDomains"/>
                     </b-input-group>
                 </b-form-group>
             </b-col>
@@ -26,7 +26,7 @@
             </b-table>
 
             <b-alert show variant="warning" v-else>
-                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+                <h4 class="alert-heading text-center">{{ translate('misc.no-data-available') }}</h4>
             </b-alert>
 
             <b-row v-if="totalRows > 10">
@@ -37,7 +37,7 @@
                     <b-pagination size="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage" v-if="totalRows > 10" @change="changePage"></b-pagination>
                 </b-col>
                 <b-col cols="2" offset="3" v-if="relayDomains.length">
-                    <p class="mt-1">Zeige Zeile {{ from }} bis {{ to }} von {{ totalRows }} Zeilen.</p>
+                    <p class="mt-1">{{ translate('misc.pagination', {'from': from, 'to': to, 'total': totalRows}) }}</p>
                 </b-col>
             </b-row>
         </template>
@@ -94,17 +94,17 @@
                 fields: [
                     {
                         key: 'domain',
-                        label: 'Domain',
+                        label: this.translate('validation.attributes.domain'),
                         sortable: true,
                     },
                     {
                         key: 'created_at',
-                        label: 'Erstellt am',
+                        label: this.translate('misc.created_at'),
                         sortable: false,
                     },
                     {
                         key: 'app_actions',
-                        label: 'Optionen'
+                        label: this.translate('misc.options'),
                     }
                 ],
 
@@ -136,17 +136,15 @@
 
                         this.getRelayDomains();
                     }).catch((error) => {
-                        if (error.response) {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
-                            });
-                        } else {
-                            this.$notify({
-                                title: 'Unbekannter Fehler',
-                                type: 'error'
-                            });
-                        }
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
+                        this.$notify({
+                            title: title,
+                            type: 'error'
+                        });
+
                         this.loading = false;
                     });
                 } else {
@@ -160,17 +158,15 @@
 
                         this.getRelayDomains();
                     }).catch((error) => {
-                        if (error.response) {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
-                            });
-                        } else {
-                            this.$notify({
-                                title: 'Unbekannter Fehler',
-                                type: 'error'
-                            });
-                        }
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
+                        this.$notify({
+                            title: title,
+                            type: 'error'
+                        });
+
                         this.loading = false;
                     });
                 }
@@ -201,17 +197,15 @@
                     this.to = response.data.data.to;
                     this.loading = false;
                 }).catch((error) => {
-                    if (error.response) {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: 'error'
-                        });
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
+                    let title = error.response
+                        ? error.response.data.message
+                        : this.translate('misc.errors.unknown');
+
+                    this.$notify({
+                        title: title,
+                        type: 'error'
+                    });
+
                     this.loading = false;
                 });
             },
@@ -225,17 +219,14 @@
 
                         this.getRelayDomains();
                     }).catch((error) => {
-                    if (error.response) {
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
                         this.$notify({
-                            title: error.response.data.message,
+                            title: title,
                             type: 'error'
                         });
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
                 });
             }
         }

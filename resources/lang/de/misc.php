@@ -61,6 +61,10 @@ return [
     'search' => 'Suche',
     'pagination' => 'Zeige Zeile :from bis :to von :total Zeilen.',
     'disabled' => 'Deaktiviert',
+    'data_source' => 'Quelle',
+    'back' => 'Zrück',
+    'next' => 'Weiter',
+    'finish' => 'Fertig',
 
     'roles' => [
         'readonly' => 'Read Only',

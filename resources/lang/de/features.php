@@ -2,18 +2,22 @@
 
 return [
     'amavis' => [
+        'title' => 'Amavis',
         'name' => 'Amavis Funktionen aktivieren',
     ],
 
     'console' => [
+        'title' => 'Konsole',
         'name' => 'SSH Funktionen aktivieren',
     ],
 
     'logging' => [
+        'title' => 'Log Viewer',
         'name' => 'Log Viewer aktivieren',
     ],
 
     'postfix' => [
+        'title' => 'Postfix',
         'name' => 'Postfix Funktionen aktivieren',
     ],
 
@@ -23,7 +27,10 @@ return [
     ],
 
     'server' => [
+        'title' => 'Server',
         'disabled' => 'Server ist deaktiviert',
+        'wizard' => 'Server Wizard',
+        'configuration-finished' => 'Die Konfiguration ist abgeschlossen.',
     ],
 
     'policy' => [
@@ -45,6 +52,7 @@ return [
 
         'milter' => [
             'title' => 'Milter Ausnahme hinzufügen',
+            'add-milter' => 'Milter hinzufügen',
         ],
 
         'access' => [

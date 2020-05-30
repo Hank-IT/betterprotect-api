@@ -5,14 +5,14 @@
                 <b-button-group>
                     <button :disabled="! $auth.check(['editor', 'administrator'])" type="button" class="btn btn-primary" v-b-modal.recipient-store-modal><i class="fas fa-plus"></i></button>
                     <b-btn variant="secondary" @click="getRecipients"><i class="fas fa-sync"></i></b-btn>
-                    <button :disabled="! $auth.check(['editor', 'administrator'])" type="button" class="btn btn-secondary" v-b-modal.ldap-query-modal>LDAP</button>
+                    <button :disabled="! $auth.check(['editor', 'administrator'])" type="button" class="btn btn-secondary" v-b-modal.ldap-query-modal>{{ translate('features.ldap.ldap') }}</button>
                 </b-button-group>
             </b-col>
 
             <b-col md="4" offset="5">
                 <b-form-group >
                     <b-input-group>
-                        <b-form-input v-model="search" placeholder="Suche Eintrag" @change="getRecipients"/>
+                        <b-form-input v-model="search" :placeholder="translate('misc.search')" @change="getRecipients"/>
                     </b-input-group>
                 </b-form-group>
             </b-col>
@@ -27,7 +27,7 @@
             </b-table>
 
             <b-alert show variant="warning" v-else>
-                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+                <h4 class="alert-heading text-center">{{ translate('misc.no-data-available') }}</h4>
             </b-alert>
 
             <b-row v-if="totalRows > 10">
@@ -39,7 +39,7 @@
                 </b-col>
 
                 <b-col cols="2" offset="3" v-if="recipients.length">
-                    <p class="mt-1">Zeige Zeile {{ from }} bis {{ to }} von {{ totalRows }} Zeilen.</p>
+                    <p class="mt-1">{{ translate('misc.pagination', {'from': from, 'to': to, 'total': totalRows})}}</p>
                 </b-col>
             </b-row>
         </div>
@@ -109,17 +109,17 @@
                 fields: [
                     {
                         key: 'payload',
-                        label: 'Eintrag',
+                        label: this.translate('validation.attributes.payload'),
                         sortable: true,
                     },
                     {
                         key: 'data_source',
-                        label: 'Quelle',
+                        label: this.translate('misc.data_source'),
                         sortable: false,
                     },
                     {
                         key: 'app_actions',
-                        label: 'Optionen'
+                        label: this.translate('misc.options'),
                     }
                 ],
 
@@ -151,17 +151,15 @@
 
                         this.getRecipients();
                     }).catch((error) => {
-                        if (error.response) {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
-                            });
-                        } else {
-                            this.$notify({
-                                title: 'Unbekannter Fehler',
-                                type: 'error'
-                            });
-                        }
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
+                        this.$notify({
+                            title: title,
+                            type: 'error'
+                        });
+
                         this.loading = false;
                     });
                 } else {
@@ -175,17 +173,15 @@
 
                         this.getRecipients();
                     }).catch((error) => {
-                        if (error.response) {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
-                            });
-                        } else {
-                            this.$notify({
-                                title: 'Unbekannter Fehler',
-                                type: 'error'
-                            });
-                        }
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
+                        this.$notify({
+                            title: title,
+                            type: 'error'
+                        });
+
                         this.loading = false;
                     });
                 }
@@ -214,17 +210,15 @@
                     this.to = response.data.data.to;
                     this.recipientsLoading = false;
                 }).catch((error) => {
-                    if (error.response) {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: 'error'
-                        });
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
+                    let title = error.response
+                        ? error.response.data.message
+                        : this.translate('misc.errors.unknown');
+
+                    this.$notify({
+                        title: title,
+                        type: 'error'
+                    });
+
                     this.recipientsLoading = false;
                 });
             },
@@ -238,17 +232,14 @@
 
                         this.getRecipients();
                     }).catch((error) => {
-                        if (error.response) {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
-                            });
-                        } else {
-                            this.$notify({
-                                title: 'Unbekannter Fehler',
-                                type: 'error'
-                            });
-                        }
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
+                        this.$notify({
+                            title: title,
+                            type: 'error'
+                        });
                     });
             }
         }

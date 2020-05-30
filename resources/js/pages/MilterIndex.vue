@@ -17,7 +17,7 @@
             </b-table>
 
             <b-alert show variant="warning" v-else>
-                <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+                <h4 class="alert-heading text-center">{{ translate('misc.no-data-available') }}</h4>
             </b-alert>
         </div>
 
@@ -29,10 +29,10 @@
 
         <are-you-sure-modal v-on:answered-yes="deleteMilter" v-on:answered-no="row = null"></are-you-sure-modal>
 
-        <b-modal id="milter-store-modal" ref="milterStoreModal" size="lg" title="Milter hinzufügen" @ok="handleOk" @shown="modalShown">
+        <b-modal id="milter-store-modal" ref="milterStoreModal" size="lg" :title="translate('features.policy.milter.add-milter')" @ok="handleOk" @shown="modalShown">
             <b-form>
                 <b-form-group label="Name *">
-                    <b-form-input :class="{ 'is-invalid': errors.name }" ref="payload" type="text" v-model="form.name" placeholder="Name"></b-form-input>
+                    <b-form-input :class="{ 'is-invalid': errors.name }" ref="payload" type="text" v-model="form.name" :placeholder="translate('validation.attributes.name')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -42,7 +42,7 @@
                 </b-form-group>
 
                 <b-form-group label="Definition *">
-                    <b-form-input :class="{ 'is-invalid': errors.definition }" ref="definition" type="text" v-model="form.definition" placeholder="Definition"></b-form-input>
+                    <b-form-input :class="{ 'is-invalid': errors.definition }" ref="definition" type="text" v-model="form.definition" :placeholder="translate('validation.attributes.definition')"></b-form-input>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -52,7 +52,7 @@
                 </b-form-group>
 
                 <b-form-group label="Beschreibung">
-                    <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="form.description" rows="4" placeholder="Beschreibung"></b-form-textarea>
+                    <b-form-textarea :class="{ 'is-invalid': errors.description }" type="text" v-model="form.description" rows="4" :placeholder="translate('validation.attributes.description')"></b-form-textarea>
 
                     <b-form-invalid-feedback>
                         <ul class="form-group-validation-message-list">
@@ -78,19 +78,19 @@
                 fields: [
                     {
                         key: 'name',
-                        label: 'Name',
+                        label: this.translate('validation.attributes.name'),
                     },
                     {
                         key: 'definition',
-                        label: 'Definition',
+                        label: this.translate('validation.attributes.definition'),
                     },
                     {
                         key: 'description',
-                        label: 'Beschreibung',
+                        label: this.translate('validation.attributes.description'),
                     },
                     {
                         key: 'app_actions',
-                        label: 'Optionen'
+                        label: this.translate('misc.options'),
                     }
                 ],
 
@@ -114,17 +114,15 @@
                     this.milters = response.data;
                     this.miltersLoading = false;
                 }).catch((error) => {
-                    if (error.response) {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: 'error'
-                        });
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
+                    let title = error.response
+                        ? error.response.data.message
+                        : this.translate('misc.errors.unknown');
+
+                    this.$notify({
+                        title: title,
+                        type: 'error'
+                    });
+
                     this.miltersLoading = false;
                 });
             },
@@ -142,17 +140,14 @@
 
                         this.getMilters();
                     }).catch((error) => {
-                        if (error.response) {
-                            this.$notify({
-                                title: error.response.data.message,
-                                type: 'error'
+                        let title = error.response
+                            ? error.response.data.message
+                            : this.translate('misc.errors.unknown');
+
+                        this.$notify({
+                            title: title,
+                            type: 'error'
                         });
-                        } else {
-                            this.$notify({
-                                title: 'Unbekannter Fehler',
-                                type: 'error'
-                            });
-                        }
                     });
             },
             handleOk(event) {

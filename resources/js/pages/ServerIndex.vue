@@ -9,7 +9,7 @@
             </b-col>
         </b-row>
 
-        <b-modal id="server-wizard" size="xl" title="Server Wizard" :hide-footer="true" @close="serverWizardModalClose" :no-close-on-backdrop="true">
+        <b-modal id="server-wizard" size="xl" :title="translate('features.server.wizard')" :hide-footer="true" @close="serverWizardModalClose" :no-close-on-backdrop="true">
             <form-wizard color="#007bff" :key="serverWizardKey">
                 <h2 slot="title"></h2>
 
@@ -31,12 +31,12 @@
 
                 <template slot="footer" slot-scope="props">
                     <div class="wizard-footer-left">
-                        <wizard-button  v-if="props.activeTabIndex > 0" @click.native="props.prevTab()" :style="props.fillButtonStyle">Zurück</wizard-button>
+                        <wizard-button  v-if="props.activeTabIndex > 0" @click.native="props.prevTab()" :style="props.fillButtonStyle">{{ translate('misc.back') }}</wizard-button>
                     </div>
                     <div class="wizard-footer-right">
-                        <wizard-button v-if="!props.isLastStep" @click.native="wizardButtonNext(props)" class="wizard-footer-right" :style="props.fillButtonStyle">Weiter</wizard-button>
+                        <wizard-button v-if="!props.isLastStep" @click.native="wizardButtonNext(props)" class="wizard-footer-right" :style="props.fillButtonStyle">{{ translate('misc.next') }}</wizard-button>
 
-                        <wizard-button v-else @click.native="wizardButtonNext(props)" class="wizard-footer-right finish-button" :style="props.fillButtonStyle">  {{ props.isLastStep ? 'Fertig' : 'Weiter' }}</wizard-button>
+                        <wizard-button v-else @click.native="wizardButtonNext(props)" class="wizard-footer-right finish-button" :style="props.fillButtonStyle">  {{ props.isLastStep ? translate('misc.finish') : translate('misc.next') }}</wizard-button>
                     </div>
                 </template>
             </form-wizard>
@@ -45,19 +45,19 @@
         <b-modal id="server-edit" size="xl" title="Server bearbeiten" :hide-footer="true" :no-close-on-backdrop="true">
             <b-card>
                 <b-tabs content-class="mt-3" fill>
-                    <b-tab title="Server" active>
+                    <b-tab :title="translate('features.server.title')" active>
                         <server-update-server-form :server="server" @edit-server-finished="hideEditModal"></server-update-server-form>
                     </b-tab>
-                    <b-tab title="Postfix">
+                    <b-tab :title="translate('features.postfix.title')">
                         <server-update-postfix-form :server="server" @edit-server-finished="hideEditModal"></server-update-postfix-form>
                     </b-tab>
-                    <b-tab title="Konsole">
+                    <b-tab :title="translate('features.console.title')">
                         <server-update-console-form :server="server" @edit-server-finished="hideEditModal"></server-update-console-form>
                     </b-tab>
-                    <b-tab title="Logging">
+                    <b-tab :title="translate('features.logging.title')">
                         <server-update-logging-form :server="server" @edit-server-finished="hideEditModal"></server-update-logging-form>
                     </b-tab>
-                    <b-tab title="Amavis">
+                    <b-tab :title="translate('features.amavis.title')">
                         <server-update-amavis-form :server="server" @edit-server-finished="hideEditModal"></server-update-amavis-form>
                     </b-tab>
                 </b-tabs>
@@ -74,7 +74,7 @@
         ></server>
 
         <b-alert show variant="warning" v-if="!servers.length && !loading">
-            <h4 class="alert-heading text-center">Keine Daten vorhanden</h4>
+            <h4 class="alert-heading text-center">{{ translate('misc.no-data-available') }}</h4>
         </b-alert>
 
         <div class="text-center" v-if="loading">
@@ -144,7 +144,7 @@
                     this.$bvModal.hide('server-wizard');
 
                     this.$notify({
-                        title: 'Die Konfiguration ist abgeschlossen.',
+                        title: this.translate('features.server.configuration-finished'),
                         type: 'success'
                     });
 
@@ -154,9 +154,6 @@
             updateServerWizardId(data) {
                 this.server = data;
             },
-            serverWizardModalClose(bvModalEvt) {
-                //bvModalEvt.preventDefault();
-            },
             getAllServers() {
                 this.loading = true;
                 axios.get('/server').then((response) => {
@@ -164,17 +161,14 @@
 
                     this.loading = false;
                 }).catch((error) => {
-                    if (error.response) {
-                        this.$notify({
-                            title: error.response.data.message,
-                            type: 'error'
-                        });
-                    } else {
-                        this.$notify({
-                            title: 'Unbekannter Fehler',
-                            type: 'error'
-                        });
-                    }
+                    let title = error.response
+                        ? error.response.data.message
+                        : this.translate('misc.errors.unknown');
+
+                    this.$notify({
+                        title: title,
+                        type: 'error'
+                    });
 
                     this.loading = false;
                 });
