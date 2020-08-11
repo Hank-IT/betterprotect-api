@@ -33,7 +33,7 @@ class TransportController extends Controller
             'domain' => 'required|string|unique:transports',
             'transport' => 'nullable|string',
             'nexthop_type' => 'nullable|string|in:ipv4,ipv6,hostname',
-            'nexthop' => 'nullcable|string',
+            'nexthop' => 'nullable|string',
             'nexthop_port' => 'nullable|integer|max:65535|required_unless:nexthop_type,null',
             'nexthop_mx' => 'nullable|boolean',
             'data_source' => 'nullable|string',
