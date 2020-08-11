@@ -1,0 +1,64 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./docker
+      dockerfile: apache/Dockerfile
+      args:
+        - UID
+    ports:
+    - "80:80"
+    - "443:443"
+    working_dir: /var/www/betterprotect
+    networks:
+    - betterprotect
+    volumes:
+    - ./:/var/www/betterprotect:Z
+    - ./docker/apache/site.conf:/etc/apache2/sites-enabled/site.conf
+    - ./docker/configuration/certificates:/certificates
+    depends_on:
+      - websockets
+  database:
+    image: mariadb:latest
+    ports:
+    - "3306:3306"
+    networks:
+    - betterprotect
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: ${DB_DATABASE:?err}
+      MYSQL_USER: ${DB_USERNAME:?err}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?err}
+    volumes:
+    - database-storage:/var/lib/mysql
+  worker:
+    build:
+      context: ./docker
+      dockerfile: Worker/Dockerfile
+      args:
+        - UID
+    working_dir: /usr/share/nginx/betterprotect
+    networks:
+      - betterprotect
+    volumes:
+      - ./:/usr/share/nginx/betterprotect:Z
+    depends_on:
+      - database
+  websockets:
+    build:
+      context: ./docker
+      dockerfile: websockets/Dockerfile
+      args:
+        - UID
+    working_dir: /home/betterprotect
+    ports:
+      - "6001:6001"
+    networks:
+      - betterprotect
+    volumes:
+      - ./:/home/betterprotect:Z
+networks:
+  betterprotect:
+    driver: bridge
+volumes:
+  database-storage:
