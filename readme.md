@@ -72,6 +72,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Alexander Hank - mail@alexander-hank.com
+Alexander Hank - mail@hank-it.com
 
 Project Link: [https://github.com/Hank-IT/Betterprotect](https://github.com/Hank-IT/Betterprotect)
