@@ -38,9 +38,7 @@
         </div>
 
         <div class="text-center" v-if="milterExceptionsLoading">
-            <div class="spinner-border spinner-3x3" role="status">
-                <span class="sr-only">{{ translate('misc.loading') }}...</span>
-            </div>
+            <b-spinner type="grow" :label="translate('misc.loading') + '...'"></b-spinner>
         </div>
 
         <are-you-sure-modal v-on:answered-yes="deleteMilterException" v-on:answered-no="row = null"></are-you-sure-modal>

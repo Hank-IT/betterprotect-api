@@ -81,7 +81,6 @@ import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 import faArrowsAltV from '@fortawesome/fontawesome-free-solid/faArrowsAltV';
 import faPaperPlane from '@fortawesome/fontawesome-free-solid/faPaperPlane';
 import faExclamation from '@fortawesome/fontawesome-free-solid/faExclamation';
-import faTrash from '@fortawesome/fontawesome-free-solid/faTrash';
 import faLock from '@fortawesome/fontawesome-free-solid/faLock';
 import faUnlock from '@fortawesome/fontawesome-free-solid/faUnlock';
 import faChevronUp from '@fortawesome/fontawesome-free-solid/faChevronUp';

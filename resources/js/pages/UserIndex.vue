@@ -45,9 +45,7 @@
         <are-you-sure-modal v-on:answered-yes="deleteUser" v-on:answered-no="row = null"></are-you-sure-modal>
 
         <div class="text-center" v-if="loading">
-            <div class="spinner-border spinner-3x3" role="status">
-                <span class="sr-only">{{ translate('misc.loading') }}...</span>
-            </div>
+            <b-spinner type="grow" :label="translate('misc.loading') + '...'"></b-spinner>
         </div>
 
         <user-store-update-modal
