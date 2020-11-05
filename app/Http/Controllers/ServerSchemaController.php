@@ -13,7 +13,7 @@ class ServerSchemaController extends Controller
     public function store(Server $server, Request $request)
     {
         $this->validate($request, [
-            'database' => 'required|string|in:postfix_db,amavis_db,log_db',
+            'database' => 'required|string|in:postfix_db,log_db',
         ]);
 
         MigrateServerDatabase::dispatch($server, Auth::user(), $request->database)->onQueue('task');
@@ -28,7 +28,7 @@ class ServerSchemaController extends Controller
     public function show(Server $server, Request $request)
     {
         $this->validate($request, [
-            'database' => 'required|string|in:postfix_db,amavis_db,log_db',
+            'database' => 'required|string|in:postfix_db,log_db',
         ]);
 
         $database = app($request->database, ['server' => $server]);

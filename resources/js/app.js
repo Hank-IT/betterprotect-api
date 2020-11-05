@@ -33,7 +33,6 @@ import ServerWizardServerForm from "./components/ServerWizard/ServerWizardServer
 import ServerWizardPostfixForm from "./components/ServerWizard/ServerWizardPostfixForm";
 import ServerWizardConsoleForm from "./components/ServerWizard/ServerWizardConsoleForm";
 import ServerWizardLoggingForm from "./components/ServerWizard/ServerWizardLoggingForm";
-import ServerWizardAmavisForm from "./components/ServerWizard/ServerWizardAmavisForm";
 import AreYouSureModal from './components/AreYouSureModal';
 import RelayDomainIndex from "./pages/RelayDomainIndex";
 import ServerQueue from "./pages/ServerQueue";
@@ -46,7 +45,6 @@ import ServerUpdateServerForm from "./components/ServerUpdate/ServerUpdateServer
 import ServerUpdatePostfixForm from "./components/ServerUpdate/ServerUpdatePostfixForm";
 import ServerUpdateConsoleForm from "./components/ServerUpdate/ServerUpdateConsoleForm";
 import ServerUpdateLoggingForm from "./components/ServerUpdate/ServerUpdateLoggingForm";
-import ServerUpdateAmavisForm from "./components/ServerUpdate/ServerUpdateAmavisForm";
 import Echo from "laravel-echo";
 import LineChart from './components/LineChart';
 import MailFlowChartPage from './pages/charts/MailFlow';
@@ -313,13 +311,11 @@ Vue.component('ServerWizardServerForm', ServerWizardServerForm);
 Vue.component('ServerWizardPostfixForm', ServerWizardPostfixForm);
 Vue.component('ServerWizardConsoleForm', ServerWizardConsoleForm);
 Vue.component('ServerWizardLoggingForm', ServerWizardLoggingForm);
-Vue.component('ServerWizardAmavisForm', ServerWizardAmavisForm);
 Vue.component('ServerSchemaCheck', ServerSchemaCheck);
 Vue.component('ServerUpdateServerForm', ServerUpdateServerForm);
 Vue.component('ServerUpdatePostfixForm', ServerUpdatePostfixForm);
 Vue.component('ServerUpdateConsoleForm', ServerUpdateConsoleForm);
 Vue.component('ServerUpdateLoggingForm', ServerUpdateLoggingForm);
-Vue.component('ServerUpdateAmavisForm', ServerUpdateAmavisForm);
 Vue.component('LineChart', LineChart);
 Vue.component('MailFlowChartPage', MailFlowChartPage);
 

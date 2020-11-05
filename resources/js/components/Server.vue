@@ -7,7 +7,6 @@
             <template v-if="server.active">
                 <server-schema-check :server="server" :database="'postfix_db'" v-if="server.postfix_feature_enabled"></server-schema-check>
                 <server-schema-check :server="server" :database="'log_db'" v-if="server.log_feature_enabled"></server-schema-check>
-                <server-schema-check :server="server" :database="'amavis_db'" v-if="server.amavis_feature_enabled"></server-schema-check>
             </template>
             <p v-else>{{ translate('features.server.disabled') }}</p>
 

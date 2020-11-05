@@ -25,9 +25,6 @@
                 <tab-content title="Logging" icon="fas fa-tasks">
                     <server-wizard-logging-form :bus="bus" :server="server"></server-wizard-logging-form>
                 </tab-content>
-                <tab-content title="Amavis" icon="fas fa-trash">
-                    <server-wizard-amavis-form :bus="bus" :server="server"></server-wizard-amavis-form>
-                </tab-content>
 
                 <template slot="footer" slot-scope="props">
                     <div class="wizard-footer-left">
@@ -56,9 +53,6 @@
                     </b-tab>
                     <b-tab :title="translate('features.logging.title')">
                         <server-update-logging-form :server="server" @edit-server-finished="hideEditModal"></server-update-logging-form>
-                    </b-tab>
-                    <b-tab :title="translate('features.amavis.title')">
-                        <server-update-amavis-form :server="server" @edit-server-finished="hideEditModal"></server-update-amavis-form>
                     </b-tab>
                 </b-tabs>
             </b-card>
@@ -132,9 +126,6 @@
                         break;
                     case 3:
                         this.bus.$emit('server-wizard-submit-log', props);
-                        break;
-                    case 4:
-                        this.bus.$emit('server-wizard-submit-amavis', props);
                         break;
                 }
 

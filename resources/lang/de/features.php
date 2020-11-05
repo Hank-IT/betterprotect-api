@@ -1,11 +1,6 @@
 <?php
 
 return [
-    'amavis' => [
-        'title' => 'Amavis',
-        'name' => 'Amavis Funktionen aktivieren',
-    ],
-
     'console' => [
         'title' => 'Konsole',
         'name' => 'SSH Funktionen aktivieren',

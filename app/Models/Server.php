@@ -7,7 +7,6 @@ use App\Services\ServerConsole;
 use App\Concerns\SerializesDate;
 use App\Services\Database\LogDatabase;
 use Illuminate\Database\Eloquent\Model;
-use App\Services\Database\AmavisDatabase;
 use App\Services\Database\PostfixDatabase;
 use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
@@ -50,19 +49,9 @@ class Server extends Model
         'ssh_command_postqueue',
         'ssh_command_postsuper',
         'ssh_feature_enabled',
-
-        /**
-         * Amavis
-         */
-        'amavis_db_host',
-        'amavis_db_name',
-        'amavis_db_user',
-        'amavis_db_password',
-        'amavis_db_port',
-        'amavis_feature_enabled',
     ];
 
-    protected $hidden = ['postfix_db_password', 'log_db_password', 'ssh_private_key', 'amavis_db_password'];
+    protected $hidden = ['postfix_db_password', 'log_db_password', 'ssh_private_key'];
 
     /**
      * @throws PublicKeyMismatchException
@@ -76,11 +65,6 @@ class Server extends Model
     public function postfixDatabase()
     {
         return app(PostfixDatabase::class, ['server' => $this]);
-    }
-
-    public function amavisDatabase()
-    {
-        return app(AmavisDatabase::class, ['server' => $this]);
     }
 
     public function logDatabase()
@@ -111,16 +95,6 @@ class Server extends Model
     public function getLogDBPasswordAttribute()
     {
         return decrypt($this->attributes['log_db_password']);
-    }
-
-    public function setAmavisDBPasswordAttribute($value)
-    {
-        $this->attributes['amavis_db_password'] = encrypt($value);
-    }
-
-    public function getAmavisDBPasswordAttribute()
-    {
-        return decrypt($this->attributes['amavis_db_password']);
     }
 
     public function setSshPrivateKeyAttribute($value)

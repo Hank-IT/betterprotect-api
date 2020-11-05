@@ -14,8 +14,8 @@ class MailFlowChartController extends Controller
     public function __invoke(Request $request)
     {
         $this->validate($request, [
-            'startDate' => 'required|date_format:Y/m/d H:i|before:endDate',
-            'endDate' => 'required|date_format:Y/m/d H:i',
+            'startDate' => ['required', 'date_format:Y/m/d H:i', 'before:endDate'],
+            'endDate' => ['required', 'date_format:Y/m/d H:i'],
         ]);
 
         // Pull and parse logs for all enabled servers

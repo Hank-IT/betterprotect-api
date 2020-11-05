@@ -18,13 +18,12 @@ class AccessController extends Controller
             'search' => 'nullable|string',
         ]);
 
-        if ($request->filled('search')) {
-            $clientSenderAccess = ClientSenderAccess::where('client_payload', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('sender_payload', 'LIKE', '%' . $request->search . '%');
-        } else {
-            $clientSenderAccess = ClientSenderAccess::query();
-        }
+        $clientSenderAccess = ClientSenderAccess::query();
 
+        if ($request->filled('search')) {
+            $clientSenderAccess = $clientSenderAccess->where('client_payload', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('sender_payload', 'LIKE', '%' . $request->search . '%');
+        }
         $clientSenderAccess->orderBy('priority');
 
         return response()->json([
