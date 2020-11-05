@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <b-navbar-nav>
                 <form class="form-inline my-2 my-lg-0">
-                    <button :disabled="! $auth.check(['authorizer', 'editor', 'administrator'])" class="btn btn-success my-2 my-sm-0" v-b-modal.policy-store-modal><i class="fas fa-upload"></i> {{ translate('features.policy.install') }}</button>
+                    <button type="button" :disabled="! $auth.check(['authorizer', 'editor', 'administrator'])" class="btn btn-success my-2 my-sm-0" v-b-modal.policy-store-modal><i class="fas fa-upload"></i> {{ translate('features.policy.install') }}</button>
                 </form>
             </b-navbar-nav>
 

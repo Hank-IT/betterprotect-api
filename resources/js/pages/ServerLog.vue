@@ -84,9 +84,7 @@
         </template>
 
         <div class="text-center" v-if="logsLoading">
-            <div class="spinner-border spinner-3x3" role="status">
-                <span class="sr-only">{{ translate('misc.loading') }}...</span>
-            </div>
+            <b-spinner type="grow" :label="translate('misc.loading') + '...'"></b-spinner>
         </div>
 
         <b-modal id="mail-log-modal" ref="mailLogModal" size="xl" title="Mail Log" @shown="loadWhoisData">
@@ -134,9 +132,7 @@
                 <tr>
                     <th>Organisation</th>
                     <td v-if="whoisLoading">
-                        <div class="spinner-border spinner-1x1" role="status">
-                            <span class="sr-only">{{ translate('misc.loading') }}...</span>
-                        </div>
+                        <b-spinner small type="grow" :label="translate('misc.loading') + '...'"></b-spinner>
                     </td>
                     <td v-else>
                         {{ whoisOrganisation }}
@@ -145,9 +141,7 @@
                 <tr>
                     <th>Abuse Kontakt</th>
                     <td v-if="whoisLoading">
-                        <div class="spinner-border spinner-1x1" role="status">
-                            <span class="sr-only">{{ translate('misc.loading') }}...</span>
-                        </div>
+                        <b-spinner small type="grow" :label="translate('misc.loading') + '...'"></b-spinner>
                     </td>
                     <td v-else>
                         <template v-if="whoisAbuseContact === 'N/A'">{{ whoisAbuseContact }}</template>
@@ -420,22 +414,20 @@
                     }
                 });
             },
-            currentLogs(silent = false) {
+            currentLogs() {
                 this.currentStart = this.moment().subtract(1, 'hours');
                 this.currentEnd = this.moment().add(1, 'minutes');
                 this.dateRange.startDate = this.currentStart.format('YYYY/MM/DD HH:mm');
                 this.dateRange.endDate = this.currentEnd.format('YYYY/MM/DD HH:mm');
                 this.currentPage = 1;
-                this.getLogs(silent);
+                this.getLogs();
             },
             changePage(data) {
                 this.currentPage = data;
                 this.getLogs();
             },
-            getLogs(silent = false) {
-                if (! silent) {
-                    this.logsLoading = true;
-                }
+            getLogs() {
+                this.logsLoading = true;
 
                 axios.get('/server/log', {
                     params: {
@@ -451,10 +443,9 @@
                     this.totalRows = response.data.data.total;
                     this.from = response.data.data.from;
                     this.to = response.data.data.to;
+                    this.currentPage = 1;
 
-                    if (! silent) {
-                        this.logsLoading = false;
-                    }
+                    this.logsLoading = false;
                 }).catch((error) => {
                     if (error.response) {
                         if (error.response.status === 422) {
@@ -472,9 +463,7 @@
                         });
                     }
 
-                    if (! silent) {
-                        this.logsLoading = false;
-                    }
+                    this.logsLoading = false;
                 });
             },
             showModal(record, index) {

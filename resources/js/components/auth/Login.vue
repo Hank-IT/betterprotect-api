@@ -88,7 +88,7 @@
         </div>
 
         <div class="row justify-content-center align-items-center login-form">
-            <div class="col-4">
+            <div class="col-xl-4 col-lg-5 col-md-6 col-sm-9 col-10">
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title text-center mb-4"><i class="fas fa-envelope"></i> {{ translate('misc.app') }}</h3>
@@ -106,7 +106,10 @@
                                 <label for="password"><i class="fas fa-key"></i> {{ translate('misc.password') }}</label>
                                 <input type="password" id="password" class="form-control" v-model="password">
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">{{ translate('misc.auth.login') }}</button>
+                            <button type="submit" class="btn btn-primary w-100" :disabled="isSubmitting">
+                                <b-spinner small type="grow" v-show="isSubmitting"></b-spinner>
+                                {{ translate('misc.auth.login') }}
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -121,7 +124,8 @@
             return {
                 username: null,
                 password: null,
-                error: false
+                error: false,
+                isSubmitting: false,
             }
         },
         methods: {
@@ -129,6 +133,8 @@
                 this.error = false;
             },
             login(){
+                this.isSubmitting = true;
+
                 axios.get('/sanctum/csrf-cookie').then(response => {
                     this.$auth.login({
                         data: {
@@ -140,8 +146,10 @@
                         fetchUser: false,
                     }).then(() => {
                         this.clearError();
+                        this.isSubmitting = false;
                     }).catch(error => {
                         this.error = error.response.data.message;
+                        this.isSubmitting = false;
                     })
                 });
             },
