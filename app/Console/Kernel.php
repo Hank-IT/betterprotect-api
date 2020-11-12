@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('geoip:update')->weeklyOn(3, '8:00');
+        // $schedule->command('geoip:update')->weeklyOn(3, '8:00');
     }
 
     /**

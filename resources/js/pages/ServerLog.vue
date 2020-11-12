@@ -433,7 +433,7 @@
                     params: {
                         startDate: this.currentStart.format('YYYY/MM/DD HH:mm'),
                         endDate: this.currentEnd.format('YYYY/MM/DD HH:mm'),
-                        currentPage: this.currentPage,
+                        currentPage: this.search ? 1: this.currentPage, // Reset page to 1 on search requests
                         perPage: this.perPage,
                         search: this.search,
                         status: this.mailStatusSelected,
@@ -443,7 +443,6 @@
                     this.totalRows = response.data.data.total;
                     this.from = response.data.data.from;
                     this.to = response.data.data.to;
-                    this.currentPage = 1;
 
                     this.logsLoading = false;
                 }).catch((error) => {

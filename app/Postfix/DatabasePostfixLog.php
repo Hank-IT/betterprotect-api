@@ -5,6 +5,7 @@ namespace App\Postfix;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+//use App\Postfix\Parser\Parser;
 
 class DatabasePostfixLog
 {
@@ -47,7 +48,7 @@ class DatabasePostfixLog
            $start = microtime(true);
            Log::info('Server ' . $server->hostname . ' log query started');
 
-           $queryResult = $query->orderBy('DeviceReportedTime','desc')->get();
+           $queryResult = $query->orderBy('DeviceReportedTime','desc')->get()->toArray();
 
            $time = microtime(true) - $start;
            Log::info('Server ' . $server->hostname . ' log query finished. ' . $time . ' seconds.');
@@ -55,7 +56,7 @@ class DatabasePostfixLog
            $start = microtime(true);
            Log::info('Server ' . $server->hostname . ' log parsing started.');
 
-           $data = app(Parser::class)->parse($queryResult->toArray());
+           $data = app(Parser::class)->parse($queryResult);
 
            $time = microtime(true) - $start;
            Log::info('Server ' . $server->hostname . ' log parsing finished. ' . $time . ' seconds.');
