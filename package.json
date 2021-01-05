@@ -13,7 +13,7 @@
         "@fortawesome/fontawesome": "^1.1.8",
         "@fortawesome/fontawesome-free-solid": "^5.0.13",
         "@websanova/vue-auth": "^3.3.8",
-        "axios": "^0.18.1",
+        "axios": "^0.21.1",
         "bootstrap": "^4.5.3",
         "bootstrap-vue": "^2.20.1",
         "chart.js": "^2.9.4",
