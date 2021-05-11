@@ -9,7 +9,7 @@
             </b-col>
         </b-row>
 
-        <b-modal id="server-wizard" size="xl" :title="translate('features.server.wizard')" :hide-footer="true" @close="serverWizardModalClose" :no-close-on-backdrop="true">
+        <b-modal id="server-wizard" size="xl" :title="translate('features.server.wizard')" :hide-footer="true" :no-close-on-backdrop="true">
             <form-wizard color="#007bff" :key="serverWizardKey">
                 <h2 slot="title"></h2>
 

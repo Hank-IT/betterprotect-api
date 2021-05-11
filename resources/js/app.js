@@ -1,9 +1,9 @@
 import Vue from 'vue';
+import Router from 'vue-router';
 import auth from '@websanova/vue-auth';
 import httpAxios from '@websanova/vue-auth/drivers/http/axios.1.x.js';
 import authRouter from '@websanova/vue-auth/drivers/router/vue-router.2.x.js';
 import authBearer from './DummyAuthDriver';
-import Router from 'vue-router';
 import App from './App.vue';
 window.Pusher = require('pusher-js');
 import ServerIndex from './pages/ServerIndex';
