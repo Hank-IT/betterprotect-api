@@ -184,20 +184,20 @@
             },
             allClientsCheckboxChanged() {
                 if (this.clientVisible === 'true') {
-                    this.form.client_type = '*';
-                    this.form.client_payload = '*';
-                } else {
                     this.form.client_type = null;
                     this.form.client_payload  = null;
+                } else {
+                    this.form.client_type = '*';
+                    this.form.client_payload = '*';
                 }
             },
             allSendersCheckboxChanged() {
                 if (this.senderVisible === 'true') {
-                    this.form.sender_type = '*';
-                    this.form.sender_payload = '*';
-                } else {
                     this.form.sender_type = null;
                     this.form.sender_payload  = null;
+                } else {
+                    this.form.sender_type = '*';
+                    this.form.sender_payload = '*';
                 }
             }
         }
