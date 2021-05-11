@@ -12,7 +12,7 @@
             </b-form-group>
 
             <b-form-group :label="translate('validation.attributes.server') + ' *'">
-                <b-form-input :class="{ 'is-invalid': errors.servers }" type="text" ref="servers" v-model="form.servers" placeholder="translate('validation.attributes.server')"></b-form-input>
+                <b-form-input :class="{ 'is-invalid': errors.servers }" type="text" ref="servers" v-model="form.servers" :placeholder="translate('validation.attributes.server')"></b-form-input>
 
                 <b-form-invalid-feedback>
                     <ul class="form-group-validation-message-list">
