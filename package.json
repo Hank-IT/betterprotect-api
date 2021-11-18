@@ -14,7 +14,7 @@
         "@fortawesome/fontawesome-free-solid": "^5.0.13",
         "@websanova/vue-auth": "^3.3.8",
         "axios": "^0.21.1",
-        "bootstrap": "^4.6.0",
+        "bootstrap": "^4.6.1",
         "bootstrap-vue": "^2.21.2",
         "chart.js": "^2.9.4",
         "flag-icon-css": "^3.5.0",
