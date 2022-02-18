@@ -89,7 +89,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
      */
     Route::get('/recipient', 'RecipientController@index')->middleware('role:readonly')->name('recipient.index');
     Route::post('/recipient', 'RecipientController@store')->middleware('role:editor')->name('recipient.store');
-    Route::patch('/recipient/{recipient}', 'RecipientController@update')->middleware('role:editor')->name('recipient.update');
     Route::delete('/recipient/{recipient}', 'RecipientController@destroy')->middleware('role:editor')->name('recipient.destroy');
 
     /**

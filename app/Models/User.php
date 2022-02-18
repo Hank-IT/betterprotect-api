@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Concerns\SerializesDate;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable, SerializesDate;
+    use Notifiable, SerializesDate, HasFactory, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.

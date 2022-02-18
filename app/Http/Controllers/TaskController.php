@@ -8,6 +8,6 @@ class TaskController extends Controller
 {
     public function index()
     {
-        return Task::orderBy('startDate', 'desc')->get();
+        return Task::orderBy('startDate', 'desc')->limit(50)->get();
     }
 }

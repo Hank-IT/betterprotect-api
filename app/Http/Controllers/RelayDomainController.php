@@ -18,7 +18,7 @@ class RelayDomainController extends Controller
 
         $relayRecipient = $request->filled('search')
             ? RelayDomain::where('domain', 'LIKE', '%' . $request->search . '%')
-            : $relayRecipient = RelayDomain::query();
+            : RelayDomain::query();
 
         return response()->json([
             'status' => 'success',
