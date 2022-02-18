@@ -182,13 +182,6 @@ class Parser
                         break;
                 }
             }
-
-            if (isset($result['client_ip'])) {
-                // Geo IP
-                $location = geoip()->getLocation($result['client_ip'])->toArray();
-                $messages[$result['queue_id']]['client_ip_country'] = $location['country'];
-                $messages[$result['queue_id']]['client_ip_country_iso_code'] = Str::lower($location['iso_code']);
-            }
         }
 
        return $messages;
