@@ -10,5 +10,5 @@ class Transport extends Model
 {
     use Activatable, SerializesDate;
 
-    protected $fillable = ['domain', 'transport', 'nexthop', 'nexthop_type', 'nexthop_mx', 'data_source'];
+    protected $fillable = ['domain', 'transport', 'nexthop', 'nexthop_type', 'nexthop_port', 'nexthop_mx', 'data_source'];
 }
