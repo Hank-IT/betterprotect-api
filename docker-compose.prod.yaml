@@ -58,7 +58,6 @@ services:
         restart: always
         command:
             - php artisan queue:work --tries 3 --timeout 120 database --queue task
-        user: "${UID:-1000}:${UID:-1000}"
         volumes:
             - app-storage:/var/www/html/storage
         depends_on:
@@ -71,7 +70,6 @@ services:
         restart: always
         command:
             - php artisan websocket:serve
-        user: "${UID:-1000}:${UID:-1000}"
         volumes:
             - app-storage:/var/www/html/storage
         depends_on:
