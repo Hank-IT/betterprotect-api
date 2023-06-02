@@ -31,8 +31,8 @@ services:
         networks:
             - default
 
-    web:
-        image: docker.hank-it.com/betterprotect/web:${APP_TAG}
+    webserver:
+        image: docker.hank-it.com/betterprotect/webserver:${APP_TAG}
         build:
             context: .
             dockerfile: ./docker/nginx/Dockerfile
