@@ -1,9 +1,6 @@
 version: '3.8'
 services:
     fpm:
-        build:
-            context: .
-            dockerfile: ./docker/fpm/Dockerfile
         image: docker.hank-it.com/betterprotect/fpm:${APP_TAG}
         restart: always
         environment:
@@ -33,11 +30,6 @@ services:
 
     webserver:
         image: docker.hank-it.com/betterprotect/webserver:${APP_TAG}
-        build:
-            context: .
-            dockerfile: ./docker/nginx/Dockerfile
-            args:
-                FPM_IMAGE: docker.hank-it.com/betterprotect/fpm
         restart: always
         networks:
             - default
@@ -51,6 +43,7 @@ services:
         depends_on:
             - database
             - fpm
+            - websocket
 
     queue:
         image: docker.hank-it.com/betterprotect/fpm:${APP_TAG}
@@ -79,6 +72,12 @@ services:
     database:
         image: mariadb:10.10
         restart: always
+        healthcheck:
+            test: [ "CMD", "mysqladmin", "--user=${DB_USERNAME}", "--password=${DB_PASSWORD}", "--host=database", "--port=3306", "ping", "--silent" ]
+            interval: 5s
+            timeout: 60s
+            retries: 20
+            start_period: 5s
         networks:
             - default
         environment:
