@@ -49,6 +49,26 @@ services:
         image: docker.hank-it.com/betterprotect/fpm:${APP_TAG}
         entrypoint: bash -c
         restart: always
+        environment:
+            APP_KEY: ${APP_KEY:?err}
+            ASSET_URL: ${APP_URL}
+            APP_URL: ${APP_URL}
+            APP_DOMAIN: ${APP_DOMAIN}
+            SESSION_SECURE_COOKIE: ${SESSION_SECURE_COOKIE}
+            DB_HOST: database
+            DB_DATABASE: ${DB_DATABASE:?err}
+            DB_USERNAME: ${DB_USERNAME:?err}
+            DB_PASSWORD: ${DB_PASSWORD:?err}
+            MAIL_DRIVER: ${MAIL_DRIVER}
+            MAIL_HOST: ${MAIL_HOST}
+            MAIL_PORT: ${MAIL_PORT}
+            MAIL_USERNAME: ${MAIL_USERNAME}
+            MAIL_PASSWORD: ${MAIL_PASSWORD}
+            MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
+            PUSHER_APP_KEY: betterprotect
+            PUSHER_APP_SECRET: betterprotect
+            PUSHER_APP_ID: betterprotect
+            PUSHER_APP_CLUSTER: eu
         command:
             - php artisan queue:work --tries 3 --timeout 120 database --queue task
         volumes:
@@ -61,6 +81,26 @@ services:
         image: docker.hank-it.com/betterprotect/fpm:${APP_TAG}
         entrypoint: bash -c
         restart: always
+        environment:
+            APP_KEY: ${APP_KEY:?err}
+            ASSET_URL: ${APP_URL}
+            APP_URL: ${APP_URL}
+            APP_DOMAIN: ${APP_DOMAIN}
+            SESSION_SECURE_COOKIE: ${SESSION_SECURE_COOKIE}
+            DB_HOST: database
+            DB_DATABASE: ${DB_DATABASE:?err}
+            DB_USERNAME: ${DB_USERNAME:?err}
+            DB_PASSWORD: ${DB_PASSWORD:?err}
+            MAIL_DRIVER: ${MAIL_DRIVER}
+            MAIL_HOST: ${MAIL_HOST}
+            MAIL_PORT: ${MAIL_PORT}
+            MAIL_USERNAME: ${MAIL_USERNAME}
+            MAIL_PASSWORD: ${MAIL_PASSWORD}
+            MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
+            PUSHER_APP_KEY: betterprotect
+            PUSHER_APP_SECRET: betterprotect
+            PUSHER_APP_ID: betterprotect
+            PUSHER_APP_CLUSTER: eu
         command:
             - php artisan websocket:serve
         volumes:
