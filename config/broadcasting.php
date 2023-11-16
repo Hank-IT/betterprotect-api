@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('BROADCAST_DRIVER', 'null'),
+    'default' => 'soketi',
 
     /*
     |--------------------------------------------------------------------------
@@ -30,17 +30,20 @@ return [
 
     'connections' => [
 
-        'pusher' => [
+        'soketi' => [
             'driver' => 'pusher',
-            'key' => env('PUSHER_APP_KEY'),
-            'secret' => env('PUSHER_APP_SECRET'),
-            'app_id' => env('PUSHER_APP_ID'),
+            'key' => env('WEBSOCKET_APP_KEY', 'placeholder'),
+            'secret' => env('WEBSOCKET_APP_SECRET', 'placeholder'),
+            'app_id' => env('WEBSOCKET_APP_ID', 'placeholder'),
             'options' => [
-                'cluster' => env('PUSHER_APP_CLUSTER'),
-                'encrypted' => env('PUSHER_APP_ENCRYPTED', true),
-                'host' => '127.0.0.1',
-                'port' => 6001,
-                'scheme' => 'http'
+                'host' => env('WEBSOCKET_HOST', 'websockets'),
+                'port' => env('WEBSOCKET_PORT', 6001),
+                'scheme' => env('WEBSOCKET_SCHEME', 'http'),
+                'encrypted' => true,
+                'useTLS' => env('WEBSOCKET_SCHEME') === 'https',
+            ],
+            'client_options' => [
+                // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
             ],
         ],
 
