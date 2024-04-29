@@ -8,7 +8,7 @@ services:
                 FPM_IMAGE: bp-fpm
         image: bp-web
         labels:
-            - traefik.http.routers.lra-management-web.rule=Host(${APP_DOMAIN})
+            - traefik.http.routers.bp-web.rule=Host(`${APP_DOMAIN}`)
             - "traefik.http.routers.bp-web.tls.certresolver=lets-encrypt"
             - "traefik.http.routers.bp-web.tls=true"
             - "traefik.http.services.bp-web.loadbalancer.server.port=8080"
@@ -67,7 +67,7 @@ services:
 
     queue-default:
         image: bp-fpm
-        entrypoint: docker-queue-listen-entrypoint
+        entrypoint: docker-dev-queue-listen-default-entrypoint
         environment:
             PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
             PHP_OPCACHE_ENABLE: 0
@@ -82,15 +82,13 @@ services:
 
     queue-task:
         image: bp-fpm
-        entrypoint: sh -c
+        entrypoint: docker-dev-queue-listen-task-entrypoint
         environment:
             PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
             PHP_OPCACHE_ENABLE: 0
         deploy:
             mode: replicated
             replicas: 6
-        command:
-            - php artisan queue:listen --queue=task
         user: "${UID:-1000}:${UID:-1000}"
         volumes:
             - "./:/var/www/html"
@@ -100,20 +98,30 @@ services:
     redis:
         image: redis
 
-    vite:
+    mix:
         image: node:19-alpine
         working_dir: /home/node/app
-        entrypoint: npm run dev
+        entrypoint: npm run watch
         networks:
             - traefik
         volumes:
-            - "./:/home/node/app"
-        labels:
-            - traefik.http.routers.lra-management-vite.rule=Host(`vite-${APP_DOMAIN}`)
-            - "traefik.http.routers.lra-management-vite.tls=true"
-            - "traefik.http.routers.lra-management-vite.tls.certresolver=lets-encrypt"
-            - "traefik.http.services.lra-management-vite.loadbalancer.server.port=8080"
-            - "traefik.http.services.lra-management-vite.loadbalancer.server.scheme=http"
+            - ./:/home/node/app
+
+    ssh-mx00:
+        build:
+            context: .
+            dockerfile: ./docker/ssh/Dockerfile
+        image: bp-ssh
+        environment:
+            LOCAL_PORT: ${SSH_LOCAL_PORT}
+            REMOTE_HOST: ${SSH_REMOTE_HOST}
+            REMOTE_PORT: ${SSH_REMOTE_PORT}
+            SSH_USER: ${SSH_USER}
+            SSH_ID_FILE: /ssh.key
+        volumes:
+            - ./ssh.key:/ssh.key
+        networks:
+            - default
 
     websockets:
         image: quay.io/soketi/soketi:89604f268623cf799573178a7ba56b7491416bde-16-debian
@@ -126,16 +134,59 @@ services:
             - default
             - traefik
         labels:
-            - traefik.http.routers.lra-management-soketi.rule=Host(${APP_DOMAIN}) && PathPrefix(`/ws`)
-            - "traefik.http.routers.lra-management-soketi.entrypoints=websecure"
-            - "traefik.http.routers.lra-management-soketi.tls=true"
-            - "traefik.http.services.lra-management-soketi.loadbalancer.server.port=6001"
-            - "traefik.http.services.lra-management-soketi.loadbalancer.server.scheme=http"
-            - "traefik.http.routers.lra-management-soketi.middlewares=lra-management-soketi-stripprefix"
-            - "traefik.http.middlewares.lra-management-soketi-stripprefix.stripprefix.prefixes=/ws"
+            - traefik.http.routers.bp-soketi.rule=Host(`${APP_DOMAIN}`) && PathPrefix(`/ws`)
+            - "traefik.http.routers.bp-soketi.entrypoints=websecure"
+            - "traefik.http.routers.bp-soketi.tls=true"
+            - "traefik.http.services.bp-soketi.loadbalancer.server.port=6001"
+            - "traefik.http.services.bp-soketi.loadbalancer.server.scheme=http"
+            - "traefik.http.routers.bp-soketi.middlewares=bp-soketi-stripprefix"
+            - "traefik.http.middlewares.bp-soketi-stripprefix.stripprefix.prefixes=/ws"
+
+    opensearch:
+        image: opensearchproject/opensearch:2
+        restart: always
+        container_name: opensearch
+        ulimits:
+            memlock:
+                soft: -1 # Set memlock to unlimited (no soft or hard limit)
+                hard: -1
+            nofile:
+                soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+                hard: 65536
+        environment:
+            discovery.type: single-node
+            node.name: opensearch
+            OPENSEARCH_JAVA_OPTS: "-Xms2048m -Xmx4096m"
+            OPENSEARCH_INITIAL_ADMIN_PASSWORD: password
+        volumes:
+            - opensearch-data:/usr/share/opensearch/data
+            - ./config.yml:/usr/share/opensearch/plugins/opensearch-security/securityconfig/config.yml
+            - ./internal_users.yml:/usr/share/opensearch/plugins/opensearch-security/securityconfig/internal_users.yml
+        ports:
+            - 9200:9200
+            - 9600:9600
+        networks:
+            - default
+
+    opensearch-dashboards:
+        image: opensearchproject/opensearch-dashboards:2
+        container_name: opensearch-dashboards
+        restart: always
+        ports:
+            - 5601:5601
+        expose:
+            - "5601"
+        environment:
+            OPENSEARCH_HOSTS: '["https://opensearch:9200"]'
+        networks:
+            - default
+            - traefik
+        depends_on:
+            - opensearch
 
 volumes:
     database-storage:
+    opensearch-data:
 
 networks:
     traefik:

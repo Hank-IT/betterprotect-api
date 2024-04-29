@@ -8,7 +8,7 @@ RUN composer install --optimize-autoloader \
 				 --prefer-dist \
                  --ignore-platform-reqs
 
-FROM php:8.1-fpm-alpine as artisan
+FROM php:8.0-fpm-alpine as artisan
 
 WORKDIR /app
 
@@ -16,7 +16,8 @@ COPY --from=composer  /app .
 
 RUN php artisan event:cache && \
     php artisan route:cache && \
-    php artisan view:cache
+    php artisan view:cache && \
+    php artisan VueTranslation:generate
 
 FROM node:19-alpine as node
 
@@ -25,7 +26,7 @@ WORKDIR /app
 COPY --from=composer  /app .
 
 RUN npm ci && \
-    npm run build && \
+    npm run prod && \
     rm -f .env.testing && \
     rm -f .eslintrc.js && \
     rm -f .gitattributes && \
@@ -36,22 +37,16 @@ RUN npm ci && \
     rm -f env.properties.example && \
     rm -f package.json && \
     rm -f package-lock.json && \
-    rm -f phpstan.neon && \
     rm -f phpstorm.config.js && \
     rm -f phpunit.xml && \
-    rm -f phpunit.dusk.xml && \
-    rm -f postcss.config.cjs && \
     rm -f readme.md && \
-    rm -f tailwind.config.cjs && \
-    rm -f vite.config.js && \
+    rm -f webpack.mix.js && \
     rm -rf node_modules && \
     rm -rf docker && \
     rm -rf .git && \
-    rm -rf .npmrc && \
-    rm -rf tests && \
-    rm -rf swagger
+    rm -rf tests
 
-FROM php:8.1-fpm-alpine as production
+FROM php:8.0-fpm-alpine as production
 ARG FPM_MAX_CHILDREN=96
 ARG FPM_START_SERVERS=48
 ARG FPM_MIN_SPARE_SERVERS=24
@@ -98,7 +93,14 @@ RUN apk del .build-dependencies-in-virtual-world && rm -rf /tmp/pear
 COPY --from=node --chown=root:www-data /app /var/www/html
 COPY --chown=root:root --chmod=0755 docker/fpm/deploy.sh /deploy.sh
 COPY --chown=root:root docker/fpm/sudo /etc/sudoers.d/bp
-COPY --chown=root:root --chmod=0755 docker/fpm/docker-fpm-entrypoint docker/fpm/docker-queue-default-entrypoint docker/fpm/docker-queue-task-entrypoint docker/fpm/docker-queue-listen-entrypoint docker/fpm/docker-scheduler-entrypoint /usr/local/bin/
+COPY --chown=root:root --chmod=0755 \
+               docker/fpm/docker-dev-queue-listen-default-entrypoint  \
+               docker/fpm/docker-dev-queue-listen-task-entrypoint \
+               docker/fpm/docker-fpm-entrypoint \
+               docker/fpm/docker-queue-default-entrypoint \
+               docker/fpm/docker-queue-task-entrypoint \
+               docker/fpm/docker-scheduler-entrypoint \
+               /usr/local/bin/
 
 RUN chown -R www-data:www-data /var/www/html/storage && \
     chown -R www-data:www-data /var/www/html/bootstrap/cache && \

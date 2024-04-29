@@ -1,6 +1,6 @@
 <template>
     <div class="server-wizard.server">
-        <b-form-checkbox v-model="ssh_feature_enabled" :value="true" :unchecked-value="false">{ translate('features.console.name') }}</b-form-checkbox>
+        <b-form-checkbox v-model="ssh_feature_enabled" :value="true" :unchecked-value="false">{{ translate('features.console.name') }}</b-form-checkbox>
 
         <template v-if="ssh_feature_enabled">
             <b-form>

@@ -13,7 +13,6 @@
         "ext-ldap": "*",
         "ext-mbstring": "*",
         "adldap2/adldap2-laravel": "^6.0",
-        "beyondcode/laravel-websockets": "^1.0",
         "doctrine/dbal": "^2.9",
         "jsmitty12/phpwhois": "^6.0",
         "laravel/framework": "^9.0",
@@ -24,8 +23,8 @@
         "laravelcollective/html": "^6.0",
         "mmucklo/email-parse": "^2.0",
         "mrcrankhank/console-access": "^2.0",
-        "hankit/laravel-update": "^4.0",
-        "pusher/pusher-php-server": "~4.0",
+        "opensearch-project/opensearch-php": "^2.2",
+        "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-csp": "^2.4",
         "tohidplus/laravel-vue-translation": "^2.0"
     },

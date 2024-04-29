@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\MailLogging;
 
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 use App\Models\Server;
+use App\Services\MailLogging\LegacyPostfixParser\DatabasePostfixLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Postfix\DatabasePostfixLog;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class ServerLogController extends Controller
+class LegacyServerLogController extends Controller
 {
     public function index(Request $request)
     {

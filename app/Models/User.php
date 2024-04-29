@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\SerializesDate;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -38,5 +39,10 @@ class User extends Authenticatable
     public function isRole($role)
     {
         return $this->role == $role;
+    }
+
+    protected static function newFactory()
+    {
+        return UserFactory::new();
     }
 }

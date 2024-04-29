@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Server;
 use App\Exceptions\ErrorException;
-use App\Postfix\Queue;
+use App\Models\Server;
+use App\Services\MailLogging\LegacyPostfixParser\Queue;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;

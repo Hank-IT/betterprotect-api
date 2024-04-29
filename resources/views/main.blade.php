@@ -6,11 +6,11 @@
     <meta name="base-url" content="{{ url('/') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css', true) }}">
 
     <title>{{ config('app.name') }}</title>
 
     <div id="app"></div>
 
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js', true) }}"></script>
 </html>

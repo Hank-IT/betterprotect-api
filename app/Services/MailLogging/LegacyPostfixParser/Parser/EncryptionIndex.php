@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Postfix\Parser;
+namespace App\Services\MailLogging\LegacyPostfixParser\Parser;
 
 class EncryptionIndex
 {

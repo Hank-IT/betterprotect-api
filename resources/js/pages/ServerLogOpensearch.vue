@@ -429,7 +429,7 @@
             getLogs() {
                 this.logsLoading = true;
 
-                axios.get('/server/log/legacy', {
+                axios.get('/server/log', {
                     params: {
                         startDate: this.currentStart.format('YYYY/MM/DD HH:mm'),
                         endDate: this.currentEnd.format('YYYY/MM/DD HH:mm'),
@@ -439,13 +439,15 @@
                         status: this.mailStatusSelected,
                     }
                 }).then((response) => {
-                    this.logs = Object.values(response.data.data.data);
-                    this.totalRows = response.data.data.total;
-                    this.from = response.data.data.from;
-                    this.to = response.data.data.to;
+                    this.logs = Object.values(response.data.data);
+                    this.totalRows = response.data.total;
+                    this.from = response.data.from;
+                    this.to = response.data.to;
 
                     this.logsLoading = false;
                 }).catch((error) => {
+                    console.log(error)
+
                     if (error.response) {
                         if (error.response.status === 422) {
                             this.errors = error.response.data.errors;

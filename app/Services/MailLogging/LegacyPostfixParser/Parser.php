@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Postfix;
+namespace App\Services\MailLogging\LegacyPostfixParser;
 
-use Illuminate\Support\Str;
 use App\Services\PostfixPolicyInstallation\ClientSenderAccessHandler;
+use Illuminate\Support\Str;
 
 class Parser
 {

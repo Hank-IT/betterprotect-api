@@ -12,9 +12,15 @@
                     </div>
                 </router-link>
 
-                <router-link :to="{ name: 'server.log' }" v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                <router-link :to="{ name: 'server.log-opensearch' }" v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="menu-collapsed">{{ translate('misc.menu.log_viewer') }}</span>
+                    </div>
+                </router-link>
+
+                <router-link :to="{ name: 'server.log' }" v-if="$auth.check(['readonly', 'authorizer', 'editor', 'administrator'])" class="bg-dark list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-start align-items-center">
+                        <span class="menu-collapsed">{{ translate('misc.menu.log_viewer') }} (veraltet)</span>
                     </div>
                 </router-link>
 

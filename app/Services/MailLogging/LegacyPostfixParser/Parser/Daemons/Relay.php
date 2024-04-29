@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Postfix\Parser\Daemons;
+namespace App\Services\MailLogging\LegacyPostfixParser\Parser\Daemons;
 
 class Relay extends Daemon
 {

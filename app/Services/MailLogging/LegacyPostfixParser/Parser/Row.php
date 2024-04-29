@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Postfix\Parser;
+namespace App\Services\MailLogging\LegacyPostfixParser\Parser;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Row
 {
-    protected $daemonNameSpace = 'App\Postfix\Parser\Daemons';
+    protected $daemonNameSpace = 'App\Services\Postfix\Parser\Daemons';
 
     public function parse(object $row, EncryptionIndex $encryptionIndex)
     {

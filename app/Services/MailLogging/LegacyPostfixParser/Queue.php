@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Postfix;
+namespace App\Services\MailLogging\LegacyPostfixParser;
 
 use App\Exceptions\ErrorException;
 use App\Models\Server;

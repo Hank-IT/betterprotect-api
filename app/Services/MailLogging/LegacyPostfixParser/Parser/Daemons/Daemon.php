@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Postfix\Parser\Daemons;
+namespace App\Services\MailLogging\LegacyPostfixParser\Parser\Daemons;
 
-use App\Postfix\Parser\EncryptionIndex;
-use Illuminate\Support\Str;
+use App\Services\MailLogging\LegacyPostfixParser\Parser\EncryptionIndex;
 
 abstract class Daemon
 {

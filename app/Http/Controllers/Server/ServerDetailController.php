@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class ServerController extends Controller
+class ServerDetailController extends Controller
 {
     public function store(Request $request)
     {

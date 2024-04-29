@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Postfix;
+namespace App\Services\MailLogging\LegacyPostfixParser;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-//use App\Postfix\Parser\Parser;
+
+//use App\Services\Postfix\Parser\Parser;
 
 class DatabasePostfixLog
 {

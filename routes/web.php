@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TaskController;
-use App\Http\Controllers\MailLogging\ServerLogController;
+use App\Http\Controllers\MailLogging\LegacyServerLogController;
 use App\Http\Controllers\ServerQueueController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\Server\PostfixController;
@@ -30,6 +30,7 @@ use App\Http\Controllers\WhoisController;
 use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\Charts\MailFlowChartController;
 use App\Http\Controllers\AccessPriorityController;
+use App\Http\Controllers\MailLogging\ServerLogController;
 
 Route::get('/', AppController::class);
 
@@ -53,7 +54,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
      *
      * Server Mail log
      */
-    Route::get('/server/log', [ServerLogController::class, 'index'])->middleware('role:readonly')->name('server.log.show');
+    Route::get('/server/log/legacy', [LegacyServerLogController::class, 'index'])->middleware('role:readonly')->name('server.log.show.legacy');
+    Route::get('/server/log', ServerLogController::class)->middleware('role:readonly')->name('server.log.show');
 
     /**
      * Server Mail Queue

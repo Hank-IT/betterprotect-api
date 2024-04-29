@@ -128,6 +128,7 @@ Vue.use(BootstrapVue);
  * Notification
  */
 import Notifications from 'vue-notification'
+import ServerLogOpensearch from "./pages/ServerLogOpensearch.vue";
 Vue.use(Notifications);
 
 /*
@@ -185,6 +186,14 @@ Vue.router = new Router({
             path: '/server-log',
             name:'server.log',
             component: ServerLog,
+            meta: {
+                auth: ['readonly', 'authorizer', 'editor', 'administrator'],
+            }
+        },
+        {
+            path: 'server.log-opensearch',
+            name: 'server.log-opensearch',
+            component: ServerLogOpensearch,
             meta: {
                 auth: ['readonly', 'authorizer', 'editor', 'administrator'],
             }
