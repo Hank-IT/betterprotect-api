@@ -26,7 +26,7 @@ class CreateClientSenderAccess
             'description' => $description,
         ]);
 
-        app(Orderer::class, ['model' => $model])->reOrder();
+        app(Orderer::class)->reOrder($model);
 
         return $model;
     }

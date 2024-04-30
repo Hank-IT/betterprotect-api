@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class GetClientSenderAccess
 {
-    public function execute(?string $search): Collection
+    public function execute(?string $search = null): Collection
     {
         $query = ClientSenderAccess::query();
 

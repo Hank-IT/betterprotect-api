@@ -6,39 +6,32 @@ use Illuminate\Database\Eloquent\Model;
 
 class Orderer
 {
-    protected $model;
-
-    public function __construct(Model $model)
+    public function moveUp(Model $model)
     {
-        $this->model = $model;
+        static::reOrder($model);
+
+        $model->where('priority', '=', $model->priority - 1)->increment('priority');
+
+        $model->decrement('priority');
+
+        static::reOrder($model);
     }
 
-    public function moveUp()
+    public function moveDown(Model $model)
     {
-        static::reOrder();
+        static::reOrder($model);
 
-        $this->model->where('priority', '=', $this->model->priority - 1)->increment('priority');
+        $model->where('priority', '=', $model->priority + 1)->decrement('priority');
 
-        $this->model->decrement('priority');
+        $model->increment('priority');
 
-        static::reOrder();
+        static::reOrder($model);
     }
 
-    public function moveDown()
-    {
-        static::reOrder();
-
-        $this->model->where('priority', '=', $this->model->priority + 1)->decrement('priority');
-
-        $this->model->increment('priority');
-
-        static::reOrder();
-    }
-
-    public function reOrder()
+    public function reOrder(Model $model)
     {
         $priority = 0;
-        $this->model->orderBy('priority')->get()->each(function(Model $model) use(&$priority) {
+        $model->orderBy('priority')->get()->each(function(Model $model) use(&$priority) {
             $model->priority = $priority;
             $model->save();
             $priority++;
