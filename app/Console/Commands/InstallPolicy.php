@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
-use App\Models\Server;
-use Illuminate\Console\Command;
 use App\Jobs\PostfixPolicyInstallation;
+use App\Services\Authentication\Models\User;
+use App\Services\Server\Models\Server;
+use Illuminate\Console\Command;
 
 class InstallPolicy extends Command
 {

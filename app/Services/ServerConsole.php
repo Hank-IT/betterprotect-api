@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Server;
+use App\Services\Server\Models\Server;
 use MrCrankHank\ConsoleAccess\Adapters\SshAdapter;
 use MrCrankHank\ConsoleAccess\ConsoleAccess;
 

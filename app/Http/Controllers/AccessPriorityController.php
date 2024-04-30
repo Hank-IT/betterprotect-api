@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Orderer;
-use App\Models\ClientSenderAccess;
+use App\Services\Rules\Models\ClientSenderAccess;
 
 class AccessPriorityController extends Controller
 {

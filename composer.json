@@ -8,37 +8,40 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.2",
         "ext-json": "*",
         "ext-ldap": "*",
         "ext-mbstring": "*",
-        "adldap2/adldap2-laravel": "^6.0",
-        "doctrine/dbal": "^2.9",
+        "directorytree/ldaprecord": "^3.6",
+        "directorytree/ldaprecord-laravel": "^3.3",
+        "doctrine/dbal": "^3.0",
         "jsmitty12/phpwhois": "^6.0",
-        "laravel/framework": "^9.0",
+        "laravel/fortify": "^1.21",
+        "laravel/framework": "^11.0",
         "laravel/helpers": "^1.1",
-        "laravel/sanctum": "^2.3",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^3.0",
-        "laravelcollective/html": "^6.0",
+        "laravel/ui": "^4.0",
         "mmucklo/email-parse": "^2.0",
         "mrcrankhank/console-access": "^2.0",
         "opensearch-project/opensearch-php": "^2.2",
         "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-csp": "^2.4",
+        "spatie/laravel-ignition": "^2.0",
         "tohidplus/laravel-vue-translation": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
         "fakerphp/faker": "^1.9.1",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^6.0",
-        "phpunit/phpunit": "^9.0"
+        "nunomaduro/collision": "^8.1",
+        "phpunit/phpunit": "^10.0"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "minimum-stability": "stable"
     },
     "extra": {
         "laravel": {

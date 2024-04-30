@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateServersTable extends Migration
 {
@@ -72,7 +72,7 @@ class UpdateServersTable extends Migration
             $table->boolean('amavis_feature_enabled')->default('0');
         });
 
-        \App\Models\Server::all()->each(function($server) {
+        \App\Services\Server\Models\Server::all()->each(function($server) {
             $server->log_db_host = $server->postfix_db_host;
             $server->log_db_name = 'Syslog';
             $server->log_db_user = $server->postfix_db_user;

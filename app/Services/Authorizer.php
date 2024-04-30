@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Exceptions\ErrorException;
+use App\Services\Authentication\Models\User;
 
 class Authorizer
 {

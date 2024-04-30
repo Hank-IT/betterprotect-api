@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
 use App\Models\LdapDirectory;
-use Illuminate\Console\Command;
+use App\Services\Authentication\Models\User;
 use App\Services\LdapRecipientQuery;
+use Illuminate\Console\Command;
 
 class QueryLdapDirectory extends Command
 {

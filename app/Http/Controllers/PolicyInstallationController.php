@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\PostfixPolicyInstallation;
-use App\Models\Server;
+use App\Services\Server\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;

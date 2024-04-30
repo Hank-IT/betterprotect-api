@@ -20,3 +20,4 @@ yarn-error.log
 ssh.key
 opensearch/config.yml
 opensearch/internal_users.yml
+coverage

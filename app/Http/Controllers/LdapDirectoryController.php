@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientSenderAccess;
-use Illuminate\Http\Request;
-use App\Models\LdapDirectory;
 use App\Exceptions\ErrorException;
+use App\Models\LdapDirectory;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class LdapDirectoryController extends Controller

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientSenderAccess;
-use App\Models\User;
-use Illuminate\Http\Request;
 use App\Exceptions\ErrorException;
+use App\Services\Authentication\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 

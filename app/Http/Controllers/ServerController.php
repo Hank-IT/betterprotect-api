@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Server;
+use App\Services\Server\Models\Server;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 

@@ -1,47 +1,38 @@
 <?php
 
+use App\Http\Controllers\AccessController;
+use App\Http\Controllers\AccessPriorityController;
+use App\Http\Controllers\ActivationController;
+use App\Http\Controllers\AppController;
+use App\Http\Controllers\AuthSettingsController;
+use App\Http\Controllers\Charts\MailFlowChartController;
+use App\Http\Controllers\LdapDirectoryController;
+use App\Http\Controllers\Legacy\ConsoleController;
+use App\Http\Controllers\Legacy\LogController;
+use App\Http\Controllers\Legacy\PostfixController;
+use App\Http\Controllers\Legacy\ServerDetailController;
+use App\Http\Controllers\MailLogging\LegacyServerLogController;
+use App\Http\Controllers\MailLogging\ServerLogController;
+use App\Http\Controllers\MilterController;
+use App\Http\Controllers\MilterExceptionController;
 use App\Http\Controllers\MilterExceptionPriorityController;
+use App\Http\Controllers\PolicyInstallationController;
+use App\Http\Controllers\RecipientController;
+use App\Http\Controllers\RecipientLdapController;
+use App\Http\Controllers\RelayDomainController;
+use App\Http\Controllers\ServerController;
+use App\Http\Controllers\ServerQueueController;
+use App\Http\Controllers\ServerSchemaController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TransportController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WhoisController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\AppController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\MailLogging\LegacyServerLogController;
-use App\Http\Controllers\ServerQueueController;
-use App\Http\Controllers\ServerController;
-use App\Http\Controllers\Server\PostfixController;
-use App\Http\Controllers\Server\ConsoleController;
-use App\Http\Controllers\Server\LogController;
-use App\Http\Controllers\Server\ServerDetailController;
-use App\Http\Controllers\ServerSchemaController;
-use App\Http\Controllers\AccessController;
-use App\Http\Controllers\PolicyInstallationController;
-use App\Http\Controllers\RecipientController;
-use App\Http\Controllers\RelayDomainController;
-use App\Http\Controllers\TransportController;
-use App\Http\Controllers\MilterExceptionController;
-use App\Http\Controllers\MilterController;
-use App\Http\Controllers\RecipientLdapController;
-use App\Http\Controllers\AuthSettingsController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\LdapDirectoryController;
-use App\Http\Controllers\WhoisController;
-use App\Http\Controllers\ActivationController;
-use App\Http\Controllers\Charts\MailFlowChartController;
-use App\Http\Controllers\AccessPriorityController;
-use App\Http\Controllers\MailLogging\ServerLogController;
-
 Route::get('/', AppController::class);
 
-// Auth
-Route::post('auth/login', [LoginController::class, 'login'])->name('auth.login');
-
 Route::group(['middleware' => 'auth:sanctum'], function(){
-    /* Auth */
-    Route::post('auth/logout', [LoginController::class, 'logout'])->name('auth.logout');
-    Route::get('auth/user', [LoginController::class, 'user'])->name('auth.user');
-
     /* Websockets */
     Broadcast::routes();
 
@@ -70,29 +61,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/server', [ServerController::class, 'index'])->middleware('role:readonly')->name('server.index');
     Route::delete('/server/{server}', [ServerController::class, 'destroy'])->middleware('role:editor')->name('server.destroy');
 
-    /**
-     * Server Wizard
-     */
-    Route::post('/server-wizard', [ServerDetailController::class, 'store'])->middleware('role:editor')->name('server-wizard.store');
-    Route::post('/server-wizard/{server}/postfix', [PostfixController::class, 'store'])->middleware('role:editor')->name('server-wizard.postfix.store');
-    Route::post('/server-wizard/{server}/console', [ConsoleController::class, 'store'])->middleware('role:editor')->name('server-wizard.console.store');
-    Route::post('/server-wizard/{server}/log', [LogController::class, 'store'])->middleware('role:editor')->name('server-wizard.log.store');
-
-    /**
-     * Server Update
-     */
-    Route::patch('/server/{server}', [ServerDetailController::class, 'update'])->middleware('role:editor')->name('server-wizard.update');
-    Route::patch('/server/{server}/postfix', [PostfixController::class, 'update'])->middleware('role:editor')->name('server-wizard.postfix.update');
-    Route::patch('/server/{server}/console', [ConsoleController::class, 'update'])->middleware('role:editor')->name('server-wizard.console.update');
-    Route::patch('/server/{server}/log', [LogController::class, 'update'])->middleware('role:editor')->name('server-wizard.log.update');
-
-    /**
-     * Server Show
-     */
-    Route::get('/server/{server}', [ServerDetailController::class, 'show'])->middleware('role:readonly')->name('server-wizard.show');
-    Route::get('/server/{server}/postfix', [PostfixController::class, 'show'])->middleware('role:readonly')->name('server-wizard.postfix.show');
-    Route::get('/server/{server}/console', [ConsoleController::class, 'show'])->middleware('role:readonly')->name('server-wizard.console.show');
-    Route::get('/server/{server}/log', [LogController::class, 'show'])->middleware('role:readonly')->name('server-wizard.log.show');
 
     /**
      * Server Database Schema
@@ -103,11 +71,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     /**
      * ClientSender Access
      */
-    Route::get('/access', [AccessController::class, 'index'])->middleware('role:readonly')->name('access.index');
-    Route::post('/access', [AccessController::class, 'store'])->middleware('role:authorizer')->name('access.store');
     Route::post('/access/{clientSenderAccess}/move-up', [AccessPriorityController::class, 'moveUp'])->middleware('role:authorizer')->name('access.moveUp');
     Route::post('/access/{clientSenderAccess}/move-down', [AccessPriorityController::class, 'moveDown'])->middleware('role:authorizer')->name('access.moveDown');
-    Route::delete('/access/{access}', [AccessController::class, 'destroy'])->middleware('role:authorizer')->name('access.destroy');
 
     /**
      * Policy Push

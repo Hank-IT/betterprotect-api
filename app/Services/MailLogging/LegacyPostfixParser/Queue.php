@@ -3,7 +3,7 @@
 namespace App\Services\MailLogging\LegacyPostfixParser;
 
 use App\Exceptions\ErrorException;
-use App\Models\Server;
+use App\Services\Server\Models\Server;
 
 class Queue
 {

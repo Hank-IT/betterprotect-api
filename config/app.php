@@ -167,8 +167,7 @@ return [
         /*
          * Package Service Providers...
          */
-        \Adldap\Laravel\AdldapServiceProvider::class,
-        \Adldap\Laravel\AdldapAuthServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class,
 
         /*
          * Application Service Providers...

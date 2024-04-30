@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Services\Database\LogDatabase;
-use App\Services\Database\PostfixDatabase;
+use App\Services\Server\Database\LogDatabase;
+use App\Services\Server\Database\PostfixDatabase;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 

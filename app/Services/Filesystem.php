@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Server;
+use App\Services\Server\Models\Server;
+use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 
 class Filesystem
 {

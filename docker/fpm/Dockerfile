@@ -8,7 +8,7 @@ RUN composer install --optimize-autoloader \
 				 --prefer-dist \
                  --ignore-platform-reqs
 
-FROM php:8.0-fpm-alpine as artisan
+FROM php:8.2-fpm-alpine as artisan
 
 WORKDIR /app
 
@@ -46,7 +46,7 @@ RUN npm ci && \
     rm -rf .git && \
     rm -rf tests
 
-FROM php:8.0-fpm-alpine as production
+FROM php:8.2-fpm-alpine as production
 ARG FPM_MAX_CHILDREN=96
 ARG FPM_START_SERVERS=48
 ARG FPM_MIN_SPARE_SERVERS=24

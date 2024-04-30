@@ -2,8 +2,7 @@
 
 namespace Controllers\MailLogging;
 
-use App\Models\User;
-use Carbon\Carbon;
+use App\Services\Authentication\Models\User;
 use Tests\TestCase;
 
 class ServerLogControllerTest extends TestCase

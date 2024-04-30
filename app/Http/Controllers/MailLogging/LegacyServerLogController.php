@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\MailLogging;
 
 use App\Http\Controllers\Controller;
-use App\Models\Server;
 use App\Services\MailLogging\LegacyPostfixParser\DatabasePostfixLog;
+use App\Services\Server\Models\Server;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;

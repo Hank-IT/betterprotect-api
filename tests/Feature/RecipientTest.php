@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\RelayRecipient;
-use App\Models\User;
+use App\Services\Authentication\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
