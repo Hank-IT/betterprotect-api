@@ -2,17 +2,17 @@
 
 namespace App\Jobs;
 
+use App\Models\Task;
+use App\Services\LdapEmailSanitizer;
+use App\Services\Recipients\Models\RelayRecipient;
 use Carbon\Carbon;
 use Email\Parse;
-use App\Models\Task;
 use Illuminate\Bus\Queueable;
-use App\Models\RelayRecipient;
-use Illuminate\Support\Facades\Log;
-use App\Services\LdapEmailSanitizer;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class QueryLdapRecipients implements ShouldQueue
 {

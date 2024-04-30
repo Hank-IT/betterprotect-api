@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\RelayRecipient;
+use App\Services\Recipients\Models\RelayRecipient;
 use App\Services\Rules\Models\ClientSenderAccess;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;

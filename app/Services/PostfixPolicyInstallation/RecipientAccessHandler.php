@@ -2,7 +2,7 @@
 
 namespace App\Services\PostfixPolicyInstallation;
 
-use App\Models\RelayRecipient;
+use App\Services\Recipients\Models\RelayRecipient;
 
 class RecipientAccessHandler extends AbstractHandler
 {

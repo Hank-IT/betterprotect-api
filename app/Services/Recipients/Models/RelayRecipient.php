@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Services\Recipients\Models;
 
-use App\Support\Activatable;
 use App\Concerns\SerializesDate;
+use App\Support\Activatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,11 +11,7 @@ class RelayRecipient extends Model
 {
     use Activatable, SerializesDate, HasFactory;
 
-    protected $fillable = [
-        'data_source',
-        'payload',
-        'action',
-    ];
+    protected $guarded = [];
 
     public function setActionAttribute($value)
     {

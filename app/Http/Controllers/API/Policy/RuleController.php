@@ -31,8 +31,7 @@ class RuleController extends Controller
         ValidateClient $validateClient,
         ValidateSender $validateSender,
         CreateClientSenderAccess $createClientSenderAccess,
-    )
-    {
+    ) {
         $data = $request->validate([
             'client_type' => ['required', 'string', Rule::in(['*', 'client_reverse_hostname', 'client_hostname', 'client_ipv4', 'client_ipv6', 'client_ipv4_net'])],
             'client_payload' => ['required', 'string'],

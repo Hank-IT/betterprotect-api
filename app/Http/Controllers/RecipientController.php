@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Recipients\Models\RelayRecipient;
 use Illuminate\Http\Request;
-use App\Models\RelayRecipient;
 use Illuminate\Validation\Rule;
 
 class RecipientController extends Controller
