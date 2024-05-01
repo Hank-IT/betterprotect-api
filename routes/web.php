@@ -1,23 +1,17 @@
 <?php
 
-use App\Http\Controllers\AccessController;
 use App\Http\Controllers\AccessPriorityController;
 use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthSettingsController;
 use App\Http\Controllers\Charts\MailFlowChartController;
 use App\Http\Controllers\LdapDirectoryController;
-use App\Http\Controllers\Legacy\ConsoleController;
-use App\Http\Controllers\Legacy\LogController;
-use App\Http\Controllers\Legacy\PostfixController;
-use App\Http\Controllers\Legacy\ServerDetailController;
 use App\Http\Controllers\MailLogging\LegacyServerLogController;
 use App\Http\Controllers\MailLogging\ServerLogController;
 use App\Http\Controllers\MilterController;
 use App\Http\Controllers\MilterExceptionController;
 use App\Http\Controllers\MilterExceptionPriorityController;
 use App\Http\Controllers\PolicyInstallationController;
-use App\Http\Controllers\RecipientController;
 use App\Http\Controllers\RecipientLdapController;
 use App\Http\Controllers\RelayDomainController;
 use App\Http\Controllers\ServerController;
@@ -78,13 +72,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
      * Policy Push
      */
     Route::post('/policy', [PolicyInstallationController::class, 'store'])->middleware('role:authorizer')->name('policy.store');
-
-    /**
-     * RecipientAccess
-     */
-    Route::get('/recipient', [RecipientController::class, 'index'])->middleware('role:readonly')->name('recipient.index');
-    Route::post('/recipient', [RecipientController::class, 'store'])->middleware('role:editor')->name('recipient.store');
-    Route::delete('/recipient/{recipient}', [RecipientController::class, 'destroy'])->middleware('role:editor')->name('recipient.destroy');
 
     /**
      * Relay Domains

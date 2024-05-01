@@ -22,7 +22,7 @@ class RecipientController extends Controller
         ]);
 
         return RelayRecipientResource::collection(
-            $paginateRecipients->execute($data['page_size'], $data['page_number'], $data['search'] ?? null)
+            $paginateRecipients->execute($data['page_number'], $data['page_size'], $data['search'] ?? null)
         );
     }
 

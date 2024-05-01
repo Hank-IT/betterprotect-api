@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Services\Recipients\Models\RelayRecipient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class RelayRecipientFactory extends Factory
 {
+    protected $model = RelayRecipient::class;
+
     /**
      * Define the model's default state.
      *
