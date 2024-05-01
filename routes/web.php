@@ -14,11 +14,9 @@ use App\Http\Controllers\MilterExceptionPriorityController;
 use App\Http\Controllers\PolicyInstallationController;
 use App\Http\Controllers\RecipientLdapController;
 use App\Http\Controllers\RelayDomainController;
-use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ServerQueueController;
 use App\Http\Controllers\ServerSchemaController;
 use App\Http\Controllers\TaskController;
-use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhoisController;
 use Illuminate\Support\Facades\Broadcast;
@@ -50,13 +48,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::delete('/server/{server}/queue', [ServerQueueController::class, 'destroy'])->middleware('role:editor')->name('server.queue.destroy');
 
     /**
-     * Server
-     */
-    Route::get('/server', [ServerController::class, 'index'])->middleware('role:readonly')->name('server.index');
-    Route::delete('/server/{server}', [ServerController::class, 'destroy'])->middleware('role:editor')->name('server.destroy');
-
-
-    /**
      * Server Database Schema
      */
     Route::post('/server/{server}/schema', [ServerSchemaController::class, 'store'])->middleware('role:editor')->name('server.schema.store');
@@ -79,13 +70,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/relay-domain', [RelayDomainController::class, 'index'])->middleware('role:readonly')->name('relay-domain.index');
     Route::post('/relay-domain', [RelayDomainController::class, 'store'])->middleware('role:editor')->name('relay-domain.store');
     Route::delete('/relay-domain/{relayDomain}', [RelayDomainController::class, 'destroy'])->middleware('role:editor')->name('relay-domain.destroy');
-
-    /**
-     * Transport
-     */
-    Route::get('/transport', [TransportController::class, 'index'])->middleware('role:readonly')->name('transport.index');
-    Route::post('/transport', [TransportController::class, 'store'])->middleware('role:editor')->name('transport.store');
-    Route::delete('/transport/{transport}', [TransportController::class, 'destroy'])->middleware('role:editor')->name('transport.destroy');
 
     /**
      * Milter Exceptions

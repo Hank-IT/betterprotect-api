@@ -46,6 +46,7 @@ class RecipientController extends Controller
 
         $models = RelayRecipient::find($data['ids']);
 
+        // ToDo: Refactor this to delete all models using a single query
         foreach($models as $model) {
             $deleteRelayRecipient->execute($model);
         }

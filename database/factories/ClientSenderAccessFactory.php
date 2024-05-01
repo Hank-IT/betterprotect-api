@@ -28,8 +28,8 @@ class ClientSenderAccessFactory extends Factory
             'client_payload' => $this->getClientPayload($clientType),
             'sender_type' => $senderType,
             'sender_payload' => $this->getSenderPayload($senderType),
-            'message' => ['', fake()->text][fake()->numberBetween(0, 1)],
-            'description' =>  ['', fake()->text][fake()->numberBetween(0, 1)],
+            'message' => ['', fake()->word][fake()->numberBetween(0, 1)],
+            'description' =>  ['', fake()->word][fake()->numberBetween(0, 1)],
             'action' =>  ['ok', 'reject'][fake()->numberBetween(0, 1)],
         ];
     }

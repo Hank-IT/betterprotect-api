@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Controllers\API;
+namespace Tests\Feature\Controllers\API\Server;
 
 use App\Services\Authentication\Models\User;
 use App\Services\Server\Actions\CreateServer;

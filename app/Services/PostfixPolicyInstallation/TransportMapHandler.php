@@ -2,7 +2,7 @@
 
 namespace App\Services\PostfixPolicyInstallation;
 
-use App\Models\Transport;
+use App\Services\Transport\Models\Transport;
 
 class TransportMapHandler extends AbstractHandler
 {

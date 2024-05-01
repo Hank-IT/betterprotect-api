@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Transport;
+use App\Services\Transport\Models\Transport;
 use Illuminate\Console\Command;
 
 class CleanTransportRulesByDataSource extends Command
