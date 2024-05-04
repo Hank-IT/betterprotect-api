@@ -2,11 +2,14 @@
 
 namespace App\Services\Rules\Actions;
 
-use App\Services\Orderer;
+use App\Services\Order\Actions\FixItemOrder;
+use App\Services\Order\Actions\OrderItems;
 use App\Services\Rules\Models\ClientSenderAccess;
 
 class CreateClientSenderAccess
 {
+    public function __construct(protected FixItemOrder $fixItemOrder) {}
+
     public function execute(
         string $clientType,
         string $clientPayload,
@@ -26,7 +29,7 @@ class CreateClientSenderAccess
             'description' => $description,
         ]);
 
-        app(Orderer::class)->reOrder($model);
+        $this->fixItemOrder->execute($model);
 
         return $model;
     }

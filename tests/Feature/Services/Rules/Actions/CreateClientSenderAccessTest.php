@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Services\Rules\Actions;
 
-use Mockery;
-use App\Services\Orderer;
+use App\Services\Order\Actions\OrderItems;
 use App\Services\Rules\Actions\CreateClientSenderAccess;
 use App\Services\Rules\Models\ClientSenderAccess;
+use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
@@ -15,7 +15,7 @@ class CreateClientSenderAccessTest extends TestCase
     {
         $props = ClientSenderAccess::factory()->make();
 
-        $this->mock(Orderer::class, function(MockInterface $mock) {
+        $this->mock(OrderItems::class, function(MockInterface $mock) {
             $mock->shouldReceive('reOrder')->once()->withArgs([
                 Mockery::on(function($model) {
                     return $model instanceof ClientSenderAccess;

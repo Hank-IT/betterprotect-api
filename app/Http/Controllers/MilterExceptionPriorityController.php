@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MilterException;
-use App\Services\Orderer;
+use App\Services\Milter\Models\MilterException;
+use App\Services\Order\Actions\OrderItems;
 
 class MilterExceptionPriorityController extends Controller
 {
     public function moveUp(MilterException $exception)
     {
-        app(Orderer::class, ['model' => $exception])->moveUp();
+        app(OrderItems::class, ['model' => $exception])->moveUp();
 
         return response()->json([
             'status' => 'success',
@@ -20,7 +20,7 @@ class MilterExceptionPriorityController extends Controller
 
     public function moveDown(MilterException $exception)
     {
-        app(Orderer::class, ['model' => $exception])->moveDown();
+        app(OrderItems::class, ['model' => $exception])->moveDown();
 
         return response()->json([
             'status' => 'success',

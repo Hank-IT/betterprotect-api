@@ -8,7 +8,6 @@ use App\Http\Controllers\Charts\MailFlowChartController;
 use App\Http\Controllers\LdapDirectoryController;
 use App\Http\Controllers\MailLogging\LegacyServerLogController;
 use App\Http\Controllers\MailLogging\ServerLogController;
-use App\Http\Controllers\MilterController;
 use App\Http\Controllers\MilterExceptionController;
 use App\Http\Controllers\MilterExceptionPriorityController;
 use App\Http\Controllers\PolicyInstallationController;
@@ -74,18 +73,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     /**
      * Milter Exceptions
      */
-    Route::get('/milter/exception', [MilterExceptionController::class, 'index'])->middleware('role:authorizer')->name('milter.exception.index');
-    Route::post('/milter/exception', [MilterExceptionController::class, 'store'])->middleware('role:authorizer')->name('milter.exception.store');
-    Route::delete('/milter/exception/{exception}', [MilterExceptionController::class, 'destroy'])->middleware('role:authorizer')->name('milter.exception.destroy');
     Route::post('/milter/exception/{exception}/move-up', [MilterExceptionPriorityController::class, 'moveUp'])->middleware('role:authorizer')->name('milter.exception.moveUp');
     Route::post('/milter/exception/{exception}/move-down', [MilterExceptionPriorityController::class, 'moveDown'])->middleware('role:authorizer')->name('milter.exception.moveDown');
-
-    /**
-     * Milter
-     */
-    Route::get('/milter', [MilterController::class, 'index'])->middleware('role:authorizer')->name('milter.index');
-    Route::post('/milter', [MilterController::class, 'store'])->middleware('role:authorizer')->name('milter.store');
-    Route::delete('/milter/{milter}', [MilterController::class, 'destroy'])->middleware('role:authorizer')->name('milter.destroy');
 
     /**
      * RecipientAccessLdap

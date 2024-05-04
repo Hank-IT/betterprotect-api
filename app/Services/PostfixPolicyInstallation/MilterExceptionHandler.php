@@ -3,7 +3,7 @@
 namespace App\Services\PostfixPolicyInstallation;
 
 use App\Exceptions\ErrorException;
-use App\Models\MilterException;
+use App\Services\Milter\Models\MilterException;
 use App\Support\IPv4;
 
 class MilterExceptionHandler extends AbstractHandler

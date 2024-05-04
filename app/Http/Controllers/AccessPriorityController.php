@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Orderer;
+use App\Services\Order\Actions\OrderItems;
 use App\Services\Rules\Models\ClientSenderAccess;
 
 class AccessPriorityController extends Controller
 {
     public function moveUp(ClientSenderAccess $clientSenderAccess)
     {
-        app(Orderer::class, ['model' => $clientSenderAccess])->moveUp();
+        app(OrderItems::class, ['model' => $clientSenderAccess])->moveUp();
 
         return response()->json([
             'status' => 'success',
@@ -20,7 +20,7 @@ class AccessPriorityController extends Controller
 
     public function moveDown(ClientSenderAccess $clientSenderAccess)
     {
-        app(Orderer::class, ['model' => $clientSenderAccess])->moveDown();
+        app(OrderItems::class, ['model' => $clientSenderAccess])->moveDown();
 
         return response()->json([
             'status' => 'success',
