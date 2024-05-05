@@ -32,7 +32,7 @@ class ValidateMilterExceptionClient
                 }
 
                 $bits = explode('/', $clientPayload);
-                if ($bits[1] < 24) {
+                if (! isset($bits[1]) || $bits[1] < 24) {
                     throw ValidationException::withMessages([
                         'client_payload' => 'Das IPv4 Netz muss kleiner /24 sein.'
                     ]);

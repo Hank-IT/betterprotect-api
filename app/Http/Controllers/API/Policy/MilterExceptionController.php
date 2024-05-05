@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Policy;
 
 use App\Http\Controllers\Controller;
 use App\Services\Milter\Actions\CreateMilterException;
+use App\Services\Milter\Actions\CreateMilterExceptionForMilter;
 use App\Services\Milter\Actions\DeleteMilterException;
 use App\Services\Milter\Actions\SyncMilterExceptionsWithMilters;
 use App\Services\Milter\Actions\ValidateMilterExceptionClient;
@@ -25,9 +26,7 @@ class MilterExceptionController extends Controller
     public function store(
         Request                         $request,
         ValidateMilterExceptionClient   $validateMilterExceptionClient,
-        CreateMilterException           $createMilterException,
-        SyncMilterExceptionsWithMilters $syncMilterExceptionsWIthMilters,
-
+        CreateMilterExceptionForMilter $createMilterExceptionForMilter,
     ) {
         $data = $request->validate([
             'client_type' => ['required', 'string', Rule::in(['client_ipv4', 'client_ipv6', 'client_ipv4_net'])],
@@ -39,15 +38,12 @@ class MilterExceptionController extends Controller
 
         $validateMilterExceptionClient->execute($data['client_type'], $data['client_payload']);
 
-        $model = $createMilterException->execute(
+        $model = $createMilterExceptionForMilter->execute(
             $data['client_type'],
             $data['client_payload'],
             $data['description'],
+            $data['milter_id'] ?? [],
         );
-
-        app(OrderItems::class, ['model' => $model])->reOrder();
-
-        $model->milters()->sync($data['milter_id'] ?? []);
 
         return new MilterExceptionResource($model);
     }

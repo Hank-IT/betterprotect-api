@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature\Services\Rules\Actions;
+namespace Services\Milter\Actions;
 
-use App\Services\Rules\Actions\ValidateClient;
+use App\Services\Milter\Actions\ValidateMilterExceptionClient;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
-class ValidateClientTest extends TestCase
+class ValidateMilterExceptionClientTest extends TestCase
 {
     public static function dataProvider()
     {
@@ -18,7 +18,7 @@ class ValidateClientTest extends TestCase
             ],
             [
                 'client_ipv4',
-                '127.0.0.0/24',
+                '127.0.0.256',
                 ValidationException::class,
             ],
             [
@@ -33,14 +33,19 @@ class ValidateClientTest extends TestCase
             ],
             [
                 'client_ipv4_net',
-                '127.0.0.0/24',
+                '192.168.0.0/24',
                 null,
             ],
             [
                 'client_ipv4_net',
-                '127.0.0.1',
+                '10.0.0.0/8',
                 ValidationException::class,
             ],
+            [
+                'client_ipv4_net',
+                '192.168.0.1',
+                ValidationException::class,
+            ]
         ];
     }
 
@@ -53,8 +58,6 @@ class ValidateClientTest extends TestCase
             ? $this->expectException($exception)
             : $this->addToAssertionCount(1);
 
-        $action = app(ValidateClient::class);
-
-        $action->execute($clientType, $clientPayload, $exception);
+        app(ValidateMilterExceptionClient::class)->execute($clientType, $clientPayload);
     }
 }

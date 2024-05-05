@@ -12,8 +12,8 @@ class CreateMilterException
         ?string $description = null,
     ): MilterException {
         return MilterException::create([
-            'clientType' => $clientType,
-            'clientPayload' => $clientPayload,
+            'client_type' => $clientType,
+            'client_payload' => $clientPayload,
             'description' => $description,
         ]);
     }

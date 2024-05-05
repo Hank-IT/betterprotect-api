@@ -19,6 +19,16 @@ class CreateMilterExceptionForMilter
         array $milterIds,
         ?string $description = null,
     ): MilterException {
+        $model = $this->createMilterException->execute(
+            $clientType,
+            $clientPayload,
+            $description,
+        );
 
+        $this->fixItemOrder->execute($model);
+
+        $this->syncMilterExceptionsWIthMilters->execute($model, $milterIds);
+
+        return $model;
     }
 }
