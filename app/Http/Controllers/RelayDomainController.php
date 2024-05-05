@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RelayDomain;
+use App\Services\RelayDomains\Models\RelayDomain;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

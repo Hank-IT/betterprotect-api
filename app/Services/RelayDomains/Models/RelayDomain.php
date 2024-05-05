@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Services\RelayDomains\Models;
 
-use App\Support\Activatable;
 use App\Concerns\SerializesDate;
+use App\Support\Activatable;
 use Illuminate\Database\Eloquent\Model;
 
 class RelayDomain extends Model
 {
     use Activatable, SerializesDate;
 
-    protected $fillable = ['domain'];
+    protected $guarded = [];
 }

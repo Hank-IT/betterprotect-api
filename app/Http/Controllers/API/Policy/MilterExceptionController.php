@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\API\Policy;
 
 use App\Http\Controllers\Controller;
-use App\Services\Milter\Actions\CreateMilterException;
 use App\Services\Milter\Actions\CreateMilterExceptionForMilter;
 use App\Services\Milter\Actions\DeleteMilterException;
-use App\Services\Milter\Actions\SyncMilterExceptionsWithMilters;
 use App\Services\Milter\Actions\ValidateMilterExceptionClient;
 use App\Services\Milter\Models\MilterException;
 use App\Services\Milter\Resources\MilterExceptionResource;
+use App\Services\Order\Actions\FixItemOrder;
 use App\Services\Order\Actions\OrderItems;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -41,18 +40,21 @@ class MilterExceptionController extends Controller
         $model = $createMilterExceptionForMilter->execute(
             $data['client_type'],
             $data['client_payload'],
-            $data['description'],
             $data['milter_id'] ?? [],
+            $data['description'],
         );
 
         return new MilterExceptionResource($model);
     }
 
-    public function destroy(DeleteMilterException $deleteMilterException, MilterException $milterException)
-    {
+    public function destroy(
+        DeleteMilterException $deleteMilterException,
+        MilterException $milterException,
+        FixItemOrder $fixItemOrder,
+    ) {
         $deleteMilterException->execute($milterException);
 
-        app(OrderItems::class, ['model' => $milterException])->reOrder();
+        $fixItemOrder->execute($milterException);
 
         return response(status: 200);
     }

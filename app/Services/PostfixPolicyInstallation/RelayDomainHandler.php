@@ -2,7 +2,7 @@
 
 namespace App\Services\PostfixPolicyInstallation;
 
-use App\Models\RelayDomain;
+use App\Services\RelayDomains\Models\RelayDomain;
 
 class RelayDomainHandler extends AbstractHandler
 {

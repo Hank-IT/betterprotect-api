@@ -17,4 +17,9 @@ class Milter extends Model
     {
         return MilterFactory::new();
     }
+
+    public function milterExceptions()
+    {
+        return $this->hasMany(MilterException::class);
+    }
 }

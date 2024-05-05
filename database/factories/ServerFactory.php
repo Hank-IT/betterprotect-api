@@ -18,7 +18,7 @@ class ServerFactory extends Factory
     public function definition()
     {
         return [
-            'hostname' => fake()->domainName,
+            'hostname' => fake()->unique()->domainName,
 
             'postfix_db_host' => fake()->domainName,
             'postfix_db_name' => fake()->name,

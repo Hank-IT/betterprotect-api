@@ -19,7 +19,7 @@ class ServerControllerTest extends TestCase
 
         $this->be($user);
 
-         Server::factory()->count(2)->create();
+        Server::factory()->count(2)->create();
 
         $this->getJson(route('api.v1.server.index'))->assertSuccessful();
     }
