@@ -2,18 +2,23 @@
 
 namespace App\Services\Milter\Models;
 
-use App\Concerns\SerializesDate;
+use App\Services\Activation\Concerns\IsActivatable;
+use App\Services\Activation\Contracts\Activatable;
+use App\Services\Order\Concerns\HasOrder;
 use App\Services\Order\Contracts\Orderable;
-use App\Support\Activatable;
 use Database\Factories\MilterExceptionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MilterException extends Model implements Orderable
+class MilterException extends Model implements Orderable, Activatable
 {
-    use Activatable, SerializesDate, HasFactory;
+    use HasFactory, IsActivatable, HasOrder;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
 
     public function milters()
     {
@@ -23,15 +28,5 @@ class MilterException extends Model implements Orderable
     protected static function newFactory()
     {
         return MilterExceptionFactory::new();
-    }
-
-    public function getOrderColumn(): string
-    {
-        return 'priority';
-    }
-
-    public function getOrderColumnValue(): int
-    {
-        return $this->priority;
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\API\Policy\MilterController;
 use App\Http\Controllers\API\Policy\MilterExceptionController;
 use App\Http\Controllers\API\Policy\RelayDomainController;
 use App\Http\Controllers\API\Policy\OrderableController;
+use App\Http\Controllers\API\Policy\ActivatableController;
 
 Route::get('/v1/servers', [ServerController::class, 'index'])->name('api.v1.server.index')->middleware('role:readonly');
 Route::get('/v1/servers/{server}', [ServerController::class, 'show'])->name('api.v1.server.show')->middleware('role:readonly');
@@ -40,5 +41,6 @@ Route::get('v1//relay-domain', [RelayDomainController::class, 'index'])->middlew
 Route::post('v1//relay-domain', [RelayDomainController::class, 'store'])->middleware('role:editor')->name('api.v1.relay-domain.store');
 Route::delete('v1//relay-domain/{relayDomain}', [RelayDomainController::class, 'destroy'])->middleware('role:editor')->name('api.v1.relay-domain.destroy');
 
-Route::post('v1/order/{orderableEntitiesEnum}/{id}/{mode}', OrderableController::class)->middleware('role:editor')->name('api.v1.order.store');
+Route::patch('v1/order/{orderableEntitiesEnum}/{id}/{mode}', OrderableController::class)->middleware('role:editor')->name('api.v1.order.store');
 
+Route::patch('v1/active/{activatableEntitiesEnum}/{id}', ActivatableController::class)->middleware('role:editor')->name('api.v1.activation.update');

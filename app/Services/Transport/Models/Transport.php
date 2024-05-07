@@ -2,17 +2,21 @@
 
 namespace App\Services\Transport\Models;
 
-use App\Concerns\SerializesDate;
-use App\Support\Activatable;
+use App\Services\Activation\Contracts\Activatable;
+use App\Services\Activation\Concerns\IsActivatable;
 use Database\Factories\TransportFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Transport extends Model
+class Transport extends Model implements Activatable
 {
-    use Activatable, SerializesDate, HasFactory;
+    use HasFactory, IsActivatable;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
 
     protected static function newFactory()
     {

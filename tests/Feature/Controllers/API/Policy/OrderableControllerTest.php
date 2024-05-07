@@ -92,7 +92,7 @@ class OrderableControllerTest extends TestCase
             });
         }
 
-        $this->postJson(route('api.v1.order.store', [
+        $this->patchJson(route('api.v1.order.store', [
             'orderableEntitiesEnum' => $type,
             'mode' => $mode,
             'id' => $model->getKey(),
@@ -107,7 +107,7 @@ class OrderableControllerTest extends TestCase
 
         $model = ClientSenderAccess::factory()->create();
 
-        $this->postJson(route('api.v1.order.store', [
+        $this->patchJson(route('api.v1.order.store', [
             'orderableEntitiesEnum' => 'client-sender-access',
             'mode' => 'fix',
             'id' => $model->getKey(),

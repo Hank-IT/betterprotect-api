@@ -3,16 +3,21 @@
 namespace App\Services\RelayDomains\Models;
 
 use App\Concerns\SerializesDate;
-use App\Support\Activatable;
+use App\Services\Activation\Concerns\IsActivatable;
 use Database\Factories\RelayDomainFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\Activation\Contracts\Activatable;
 
-class RelayDomain extends Model
+class RelayDomain extends Model implements Activatable
 {
-    use Activatable, SerializesDate, HasFactory;
+    use SerializesDate, HasFactory, IsActivatable;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
 
     public static function newFactory()
     {

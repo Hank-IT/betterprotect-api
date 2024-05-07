@@ -2,33 +2,28 @@
 
 namespace App\Services\Rules\Models;
 
-use App\Concerns\SerializesDate;
+use App\Services\Activation\Concerns\IsActivatable;
+use App\Services\Order\Concerns\HasOrder;
 use App\Services\Order\Contracts\Orderable;
-use App\Support\Activatable;
 use Database\Factories\ClientSenderAccessFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\Activation\Contracts\Activatable;
 
-class ClientSenderAccess extends Model implements Orderable
+class ClientSenderAccess extends Model implements Orderable, Activatable
 {
-    use Activatable, SerializesDate, HasFactory;
+    use HasFactory, IsActivatable, HasOrder;
 
     protected $table = 'client_sender_access';
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
 
     protected $guarded = [];
 
     protected static function newFactory()
     {
         return ClientSenderAccessFactory::new();
-    }
-
-    public function getOrderColumn(): string
-    {
-        return 'priority';
-    }
-
-    public function getOrderColumnValue(): int
-    {
-        return $this->priority;
     }
 }

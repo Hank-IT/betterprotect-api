@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\AuthSettingsController;
 use App\Http\Controllers\Charts\MailFlowChartController;
 use App\Http\Controllers\LdapDirectoryController;
@@ -86,12 +85,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
      * Whois
      */
     Route::post('/whois', WhoisController::class)->middleware('role:readonly')->name('whois.show');
-
-    /**
-     * Activation
-     */
-    Route::post('/activation/{id}', [ActivationController::class, 'store'])->middleware('role:editor')->name('activation.store');
-    Route::patch('/activation/{id}', [ActivationController::class, 'update'])->middleware('role:editor')->name('activation.update');
 
     /**
      * Charts

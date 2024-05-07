@@ -3,8 +3,6 @@
 namespace App\Services\Order\Enums;
 
 use App\Services\Milter\Models\MilterException;
-use App\Services\Order\Actions\MoveItemDown;
-use App\Services\Order\Actions\MoveItemUp;
 use App\Services\Order\Contracts\Orderable;
 use App\Services\Rules\Models\ClientSenderAccess;
 
