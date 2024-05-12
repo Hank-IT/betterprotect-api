@@ -13,11 +13,17 @@ class RecipientLdapController extends Controller
 {
     public function __invoke(LdapDirectory $ldapDirectory)
     {
+        $configuredDomains = config('betterprotect.ldap_query_ignored_domains');
+
+        $domains = is_null($configuredDomains)
+            ? []
+            : explode(',', Str::replace(' ', '', $configuredDomains));
+
         RefreshLdapRecipients::dispatch(
             (string) Str::uuid(),
             'ldap',
             Auth::user()->username,
-            [], // ToDo: provide ignored domains
+            $domains,
         );
 
         return response(status: Response::HTTP_ACCEPTED);

@@ -15,4 +15,14 @@ class Task extends Model
     public $incrementing = false;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'started_at' => 'datetime',
+        'ended_at' => 'datetime',
+    ];
+
+    public function taskProgresses()
+    {
+        return $this->hasMany(TaskProgress::class);
+    }
 }

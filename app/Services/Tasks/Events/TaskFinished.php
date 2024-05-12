@@ -2,7 +2,6 @@
 
 namespace App\Services\Tasks\Events;
 
-use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -19,6 +18,7 @@ class TaskFinished
     public function __construct(
         public string $id,
         public string $description,
+        public Carbon $endedAt,
     ) {}
 
     public function broadcastOn()

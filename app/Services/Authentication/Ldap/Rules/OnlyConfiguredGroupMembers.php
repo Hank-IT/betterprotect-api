@@ -15,7 +15,7 @@ class OnlyConfiguredGroupMembers implements Rule
     public function passes(LdapRecord $user, Eloquent $model = null): bool
     {
         return $user->groups()->exists(
-            Group::findByGuid(config('auth.ldap_login_group'))
+            Group::findByGuid(config('betterprotect.ldap_login_group'))
         );
     }
 }

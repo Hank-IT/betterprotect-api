@@ -59,7 +59,8 @@ class RefreshLdapRecipients implements ShouldQueue
         } catch(Exception $exception) {
             TaskFailed::dispatch(
                 $this->uniqueTaskId,
-                'An error occurred while querying the ldap for email addresses. Message: ' . $exception->getMessage()
+                'An error occurred while querying the ldap for email addresses. Message: ' . $exception->getMessage(),
+                Carbon::now(),
             );
 
             throw $exception;
@@ -83,7 +84,8 @@ class RefreshLdapRecipients implements ShouldQueue
         } catch(Exception $exception) {
             TaskFailed::dispatch(
                 $this->uniqueTaskId,
-                'An error occurred while inserting the addresses into the database. Message: ' . $exception->getMessage()
+                'An error occurred while inserting the addresses into the database. Message: ' . $exception->getMessage(),
+                Carbon::now(),
             );
 
             throw $exception;
@@ -114,7 +116,8 @@ class RefreshLdapRecipients implements ShouldQueue
         } catch(Exception $exception) {
             TaskFailed::dispatch(
                 $this->uniqueTaskId,
-                'Failed to expunge obsolete records from the database. Message: ' . $exception->getMessage()
+                'Failed to expunge obsolete records from the database. Message: ' . $exception->getMessage(),
+                Carbon::now(),
             );
 
             throw $exception;
@@ -122,7 +125,8 @@ class RefreshLdapRecipients implements ShouldQueue
 
         TaskFinished::dispatch(
             $this->uniqueTaskId,
-            'Successfully refreshed email addresses from ldap'
+            'Successfully refreshed email addresses from ldap.',
+            Carbon::now(),
         );
     }
 }

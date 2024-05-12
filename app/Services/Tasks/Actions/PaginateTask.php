@@ -9,6 +9,8 @@ class PaginateTask
 {
     public function execute(int $pageNumber, int $pageSize): LengthAwarePaginator
     {
-        return Task::query()->orderByDesc('startDate')->paginate($pageSize, ['*'], $pageNumber);
+        return Task::query()
+            ->with('taskProgresses')
+            ->orderByDesc('startDate')->paginate($pageSize, ['*'], $pageNumber);
     }
 }

@@ -10,11 +10,11 @@ class TaskResource extends JsonResource
     {
         return [
             'id' => $this->getKey(),
-            'message' => $this->message,
             'username' => $this->username,
             'task' => $this->task,
-            'start_date' => $this->startDate,
-            'end_date' => $this->endDate,
+            'started_at' => $this->started_at,
+            'ended_at' => $this->ended_at,
+            'progress' => TaskProgressResource::collection($this->taskProgresses),
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

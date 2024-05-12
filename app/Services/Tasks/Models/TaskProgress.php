@@ -10,6 +10,4 @@ class TaskProgress extends Model
     use HasUuids;
 
     protected $guarded = [];
-
-
 }

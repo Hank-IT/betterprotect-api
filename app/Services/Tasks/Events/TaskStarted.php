@@ -2,7 +2,6 @@
 
 namespace App\Services\Tasks\Events;
 
-use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;

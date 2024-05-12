@@ -83,11 +83,6 @@ return [
     ],
 
     /*
-     * GUID of a group in which membership is required for authentication
-     */
-    'ldap_login_group' => env('LDAP_LOGIN_GROUP_GUID'),
-
-    /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
     |--------------------------------------------------------------------------
