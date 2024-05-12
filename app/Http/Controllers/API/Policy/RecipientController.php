@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Policy;
 
 use App\Http\Controllers\Controller;
-use App\Services\Recipients\Actions\CreateRelayRecipient;
+use App\Services\Recipients\Actions\FirstOrCreateRelayRecipient;
 use App\Services\Recipients\Actions\DeleteRelayRecipient;
 use App\Services\Recipients\Actions\PaginateRecipients;
 use App\Services\Recipients\Models\RelayRecipient;
@@ -26,7 +26,7 @@ class RecipientController extends Controller
         );
     }
 
-    public function store(Request $request, CreateRelayRecipient $createRelayRecipient)
+    public function store(Request $request, FirstOrCreateRelayRecipient $createRelayRecipient)
     {
         $data = $request->validate([
             'payload' => ['required', 'string', Rule::unique('relay_recipients')],

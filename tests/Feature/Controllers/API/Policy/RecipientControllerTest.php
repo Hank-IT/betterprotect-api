@@ -3,7 +3,7 @@
 namespace Tests\Feature\Controllers\API\Policy;
 
 use App\Services\Authentication\Models\User;
-use App\Services\Recipients\Actions\CreateRelayRecipient;
+use App\Services\Recipients\Actions\FirstOrCreateRelayRecipient;
 use App\Services\Recipients\Actions\DeleteRelayRecipient;
 use App\Services\Recipients\Actions\PaginateRecipients;
 use App\Services\Recipients\Models\RelayRecipient;
@@ -48,7 +48,7 @@ class RecipientControllerTest extends TestCase
 
         $email = fake()->email;
 
-        $this->mock(CreateRelayRecipient::class, function(MockInterface $mock) use($recipient, $email) {
+        $this->mock(FirstOrCreateRelayRecipient::class, function(MockInterface $mock) use($recipient, $email) {
             $mock->shouldReceive('execute')->once()->withArgs([
                 $email,
                 'local',

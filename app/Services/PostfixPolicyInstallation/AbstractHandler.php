@@ -2,7 +2,7 @@
 
 namespace App\Services\PostfixPolicyInstallation;
 
-use App\Models\Task;
+use App\Services\Tasks\Models\Task;
 use Illuminate\Database\ConnectionInterface;
 
 abstract class AbstractHandler

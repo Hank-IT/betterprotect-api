@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\Task;
 use App\Services\Server\Models\Server;
+use App\Services\Tasks\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -16,16 +16,6 @@ class PostfixPolicyInstallation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * @var Server Server
-     */
-    protected $server;
-
-    /**
-     * @var Authenticatable
-     */
-    protected $user;
-
     protected $handler = [
         \App\Services\PostfixPolicyInstallation\ClientSenderAccessHandler::class,
         \App\Services\PostfixPolicyInstallation\RecipientAccessHandler::class,
@@ -34,12 +24,7 @@ class PostfixPolicyInstallation implements ShouldQueue
         \App\Services\PostfixPolicyInstallation\MilterExceptionHandler::class,
     ];
 
-    public function __construct(Server $server, Authenticatable $user)
-    {
-        $this->server = $server;
-
-        $this->user = $user;
-    }
+    public function __construct(protected Server $server, protected Authenticatable $user) {}
 
     public function handle()
     {

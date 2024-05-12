@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Services\Recipients\Actions;
 
-use App\Services\Recipients\Actions\CreateRelayRecipient;
+use App\Services\Recipients\Actions\FirstOrCreateRelayRecipient;
 use App\Services\Recipients\Models\RelayRecipient;
 use Tests\TestCase;
 
@@ -12,7 +12,7 @@ class CreateRelayRecipientTest extends TestCase
     {
         $recipient = RelayRecipient::factory()->make();
 
-        $model = app(CreateRelayRecipient::class)->execute($recipient->payload, $recipient->data_source);
+        $model = app(FirstOrCreateRelayRecipient::class)->execute($recipient->payload, $recipient->data_source);
 
         $this->assertModelExists($model);
 

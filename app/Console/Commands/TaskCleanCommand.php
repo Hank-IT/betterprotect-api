@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Services\Tasks\Models\Task;
 use Carbon\Carbon;
-use App\Models\Task;
 use Illuminate\Console\Command;
 
 class TaskCleanCommand extends Command

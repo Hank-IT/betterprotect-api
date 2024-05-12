@@ -4,11 +4,11 @@ namespace App\Services\Recipients\Actions;
 
 use App\Services\Recipients\Models\RelayRecipient;
 
-class CreateRelayRecipient
+class FirstOrCreateRelayRecipient
 {
-    public function execute(string $payload, string $dataSource)
+    public function execute(string $payload, string $dataSource): RelayRecipient
     {
-        return RelayRecipient::create([
+        return RelayRecipient::firstOrCreate([
             'data_source' => $dataSource,
             'payload' => $payload,
             'action' => 'OK',

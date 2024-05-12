@@ -2,16 +2,17 @@
 
 namespace App\Services\Authentication\Models;
 
-use App\Concerns\SerializesDate;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
+use LdapRecord\Laravel\Auth\LdapAuthenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements LdapAuthenticatable
 {
-    use Notifiable, SerializesDate, HasFactory, HasApiTokens;
+    use Notifiable, HasFactory, HasApiTokens, AuthenticatesWithLdap;
 
     /**
      * The attributes that are mass assignable.

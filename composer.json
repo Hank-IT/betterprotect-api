@@ -21,7 +21,6 @@
         "laravel/helpers": "^1.1",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^4.0",
         "mmucklo/email-parse": "^2.0",
         "mrcrankhank/console-access": "^2.0",
         "opensearch-project/opensearch-php": "^2.2",

@@ -1,15 +1,14 @@
 <?php
 
+use App\Http\Controllers\API\Policy\RecipientLdapController;
 use App\Http\Controllers\AuthSettingsController;
 use App\Http\Controllers\Charts\MailFlowChartController;
 use App\Http\Controllers\LdapDirectoryController;
 use App\Http\Controllers\MailLogging\LegacyServerLogController;
 use App\Http\Controllers\MailLogging\ServerLogController;
 use App\Http\Controllers\PolicyInstallationController;
-use App\Http\Controllers\RecipientLdapController;
 use App\Http\Controllers\ServerQueueController;
 use App\Http\Controllers\ServerSchemaController;
-use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhoisController;
 use Illuminate\Support\Facades\Broadcast;
@@ -18,11 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth:sanctum'], function(){
     /* Websockets */
     Broadcast::routes();
-
-    /**
-     * Tasks
-     */
-    Route::get('/task', [TaskController::class, 'index'])->middleware('role:readonly')->name('task.index');
 
     /**
      *
@@ -48,12 +42,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
      * Policy Push
      */
     Route::post('/policy', [PolicyInstallationController::class, 'store'])->middleware('role:authorizer')->name('policy.store');
-
-
-    /**
-     * RecipientAccessLdap
-     */
-    Route::post('/recipient/ldap/{ldapDirectory}', RecipientLdapController::class)->middleware('role:editor')->name('recipient.ldap');
 
     /**
      * Settings

@@ -66,15 +66,26 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => \App\Services\Authentication\Models\User::class,
+            'driver' => 'ldap',
+            'model' => LdapRecord\Models\ActiveDirectory\User::class,
+            'rules' => [
+                App\Services\Authentication\Ldap\Rules\OnlyConfiguredGroupMembers::class,
+            ],
+            'database' => [
+                'model' => App\Services\Authentication\Models\User::class,
+                'sync_passwords' => false,
+                'sync_attributes' => [
+                    'username' => 'samaccountname',
+                    'email' => 'mail',
+                ],
+            ],
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
+
+    /*
+     * GUID of a group in which membership is required for authentication
+     */
+    'ldap_login_group' => env('LDAP_LOGIN_GROUP_GUID'),
 
     /*
     |--------------------------------------------------------------------------
