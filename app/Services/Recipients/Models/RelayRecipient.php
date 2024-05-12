@@ -2,7 +2,6 @@
 
 namespace App\Services\Recipients\Models;
 
-use App\Concerns\SerializesDate;
 use App\Services\Activation\Concerns\IsActivatable;
 use App\Services\Activation\Contracts\Activatable;
 use Database\Factories\RelayRecipientFactory;
@@ -11,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RelayRecipient extends Model implements Activatable
 {
-    use SerializesDate, HasFactory, IsActivatable;
+    use HasFactory, IsActivatable;
 
     protected $guarded = [];
 

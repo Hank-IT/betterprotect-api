@@ -2,14 +2,13 @@
 
 namespace App\Services\Milter\Models;
 
-use App\Concerns\SerializesDate;
 use Database\Factories\MilterFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Milter extends Model
 {
-    use SerializesDate, HasFactory;
+    use HasFactory;
 
     protected $guarded = [];
 

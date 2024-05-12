@@ -2,7 +2,6 @@
 
 namespace App\Services\Server\Models;
 
-use App\Concerns\SerializesDate;
 use App\Services\Filesystem;
 use App\Services\Server\Database\LogDatabase;
 use App\Services\Server\Database\PostfixDatabase;
@@ -15,7 +14,7 @@ use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
 
 class Server extends Model
 {
-    use SerializesDate, HasFactory;
+    use HasFactory;
 
     protected $guarded = [];
 

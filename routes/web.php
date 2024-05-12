@@ -1,9 +1,6 @@
 <?php
 
-use App\Http\Controllers\API\Policy\RecipientLdapController;
-use App\Http\Controllers\AuthSettingsController;
 use App\Http\Controllers\Charts\MailFlowChartController;
-use App\Http\Controllers\LdapDirectoryController;
 use App\Http\Controllers\MailLogging\LegacyServerLogController;
 use App\Http\Controllers\MailLogging\ServerLogController;
 use App\Http\Controllers\PolicyInstallationController;
@@ -44,14 +41,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('/policy', [PolicyInstallationController::class, 'store'])->middleware('role:authorizer')->name('policy.store');
 
     /**
-     * Settings
-     */
-    Route::post('/settings/auth/ldap', [AuthSettingsController::class, 'ldap'])->middleware('role:administrator')->name('settings.auth.ldap');
-    Route::get('/settings/auth/ldap', [AuthSettingsController::class, 'activeLdap'])->middleware('role:administrator')->name('settings.auth.ldap-active');
-    Route::post('/settings/auth/fallback', [AuthSettingsController::class, 'authFallback'])->middleware('role:administrator')->name('settings.auth.fallback');
-    Route::get('/settings/auth/fallback', [AuthSettingsController::class, 'authFallbackActive'])->middleware('role:administrator')->name('settings.auth.fallback-active');
-
-    /**
      * User
      */
     Route::get('/user', [UserController::class, 'index'])->middleware('role:administrator')->name('user.index');
@@ -59,15 +48,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/user/{user}', [UserController::class, 'show'])->middleware('role:administrator')->name('user.show');
     Route::patch('/user/{user}', [UserController::class, 'update'])->middleware('role:administrator')->name('user.update');
     Route::delete('/user/{user}', [UserController::class, 'destroy'])->middleware('role:administrator')->name('user.destroy');
-
-    /**
-     * Ldap
-     */
-    Route::get('/ldap', [LdapDirectoryController::class, 'index'])->middleware('role:administrator')->name('ldap.index');
-    Route::post('/ldap', [LdapDirectoryController::class, 'store'])->middleware('role:administrator')->name('ldap.store');
-    Route::get('/ldap/{ldapDirectory}', [LdapDirectoryController::class, 'show'])->middleware('role:administrator')->name('ldap.show');
-    Route::patch('/ldap/{ldapDirectory}', [LdapDirectoryController::class,', update'])->middleware('role:administrator')->name('ldap.update');
-    Route::delete('/ldap/{ldapDirectory}', [LdapDirectoryController::class, 'destroy'])->middleware('role:administrator')->name('ldap.destroy');
 
     /**
      * Whois
