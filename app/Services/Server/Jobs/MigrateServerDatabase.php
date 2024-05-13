@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Services\Server\Jobs;
 
 use App\Services\Server\Models\Server;
 use App\Services\Tasks\Actions\CreateTask;

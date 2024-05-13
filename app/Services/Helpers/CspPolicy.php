@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Support;
+namespace App\Services\Helpers;
 
-use Spatie\Csp\Keyword;
 use Spatie\Csp\Directive;
+use Spatie\Csp\Keyword;
 use Spatie\Csp\Policies\Policy;
 
 class CspPolicy extends Policy

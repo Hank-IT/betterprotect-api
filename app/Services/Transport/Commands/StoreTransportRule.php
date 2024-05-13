@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Services\Transport\Commands;
 
 use App\Services\Transport\Models\Transport;
 use Illuminate\Console\Command;

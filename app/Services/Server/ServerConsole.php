@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Server;
 
 use App\Services\Server\Models\Server;
 use MrCrankHank\ConsoleAccess\Adapters\SshAdapter;

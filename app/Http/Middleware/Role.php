@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Authorizer;
+use App\Services\Authentication\Authorizer;
 use Closure;
 use Illuminate\Auth\Access\AuthorizationException;
 

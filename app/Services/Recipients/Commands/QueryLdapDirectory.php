@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Services\Recipients\Commands;
 
 use App\Models\LdapDirectory;
 use App\Services\Authentication\Models\User;

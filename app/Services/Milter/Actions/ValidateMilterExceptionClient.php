@@ -2,7 +2,7 @@
 
 namespace App\Services\Milter\Actions;
 
-use App\Support\IPv4;
+use App\Services\Helpers\IPv4;
 use Illuminate\Validation\ValidationException;
 
 class ValidateMilterExceptionClient

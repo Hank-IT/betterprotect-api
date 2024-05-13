@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Services\Server\Commands;
 
-use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Database\Console\Migrations\BaseCommand;
+use Illuminate\Database\Migrations\Migrator;
 
 /**
  * Class MigrateCheckCommand

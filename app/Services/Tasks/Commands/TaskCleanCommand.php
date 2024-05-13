@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Services\Tasks\Commands;
 
 use App\Services\Tasks\Models\Task;
 use Carbon\Carbon;

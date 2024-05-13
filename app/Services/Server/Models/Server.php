@@ -2,9 +2,9 @@
 
 namespace App\Services\Server\Models;
 
-use App\Services\Filesystem;
 use App\Services\Server\dtos\DatabaseDetails;
-use App\Services\ServerConsole;
+use App\Services\Server\Filesystem;
+use App\Services\Server\ServerConsole;
 use Database\Factories\ServerFactory;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Services\BetterprotectPolicy\Commands;
 
 use App\Services\Authentication\Models\User;
 use App\Services\BetterprotectPolicy\Jobs\BetterprotectPolicyInstallation;

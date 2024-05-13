@@ -13,13 +13,13 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\TaskCleanCommand::class,
+        \App\Services\Tasks\Commands\TaskCleanCommand::class,
         \App\Services\Authentication\Commands\CreateUser::class,
-        \App\Console\Commands\MigrateCheckCommand::class,
-        \App\Console\Commands\InstallPolicy::class,
-        \App\Console\Commands\StoreTransportRule::class,
-        \App\Console\Commands\CleanTransportRulesByDataSource::class,
-        \App\Console\Commands\QueryLdapDirectory::class,
+        \App\Services\Server\Commands\MigrateCheckCommand::class,
+        \App\Services\BetterprotectPolicy\Commands\InstallPolicy::class,
+        \App\Services\Transport\Commands\StoreTransportRule::class,
+        \App\Services\Transport\Commands\CleanTransportRulesByDataSource::class,
+        \App\Services\Recipients\Commands\QueryLdapDirectory::class,
     ];
 
     /**

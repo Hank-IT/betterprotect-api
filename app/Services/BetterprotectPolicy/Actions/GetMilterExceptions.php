@@ -4,7 +4,7 @@ namespace App\Services\BetterprotectPolicy\Actions;
 
 use App\Exceptions\ErrorException;
 use App\Services\BetterprotectPolicy\Repositories\MilterExceptionRepository;
-use App\Support\IPv4;
+use App\Services\Helpers\IPv4;
 
 class GetMilterExceptions
 {
