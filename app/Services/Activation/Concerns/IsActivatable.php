@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Services\Activation\Concerns;
+use Illuminate\Database\Eloquent\Builder;
+
 trait IsActivatable
 {
     public function setActive(bool $state): void
@@ -11,5 +13,10 @@ trait IsActivatable
     public function isActive(): bool
     {
         return $this->active;
+    }
+
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('active', '=', true);
     }
 }

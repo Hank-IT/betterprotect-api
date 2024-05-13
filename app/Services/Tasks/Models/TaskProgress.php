@@ -9,5 +9,7 @@ class TaskProgress extends Model
 {
     use HasUuids;
 
+    protected $table = 'task_progresses';
+
     protected $guarded = [];
 }

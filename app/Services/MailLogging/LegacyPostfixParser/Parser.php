@@ -2,7 +2,7 @@
 
 namespace App\Services\MailLogging\LegacyPostfixParser;
 
-use App\Services\PostfixPolicyInstallation\ClientSenderAccessHandler;
+use App\Services\BetterprotectPolicy\Handler\ClientSenderAccessHandler;
 use Illuminate\Support\Str;
 
 class Parser

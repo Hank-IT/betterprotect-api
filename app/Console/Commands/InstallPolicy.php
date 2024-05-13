@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\PostfixPolicyInstallation;
 use App\Services\Authentication\Models\User;
+use App\Services\BetterprotectPolicy\Jobs\BetterprotectPolicyInstallation;
 use App\Services\Server\Models\Server;
 use Illuminate\Console\Command;
 
@@ -40,7 +40,7 @@ class InstallPolicy extends Command
             }
         }
 
-        PostfixPolicyInstallation::dispatchNow($serverModel, new User(['username' => 'System']));
+        BetterprotectPolicyInstallation::dispatchNow($serverModel, new User(['username' => 'System']));
 
         return true;
     }

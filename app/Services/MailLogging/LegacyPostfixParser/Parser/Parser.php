@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\MailLogging\LegacyPostfixParser\Parser;
 
-use App\Services\PostfixPolicyInstallation\ClientSenderAccessHandler;
+use App\Services\BetterprotectPolicy\Handler\ClientSenderAccessHandler;
 use Illuminate\Support\Str;
 
 class Parser

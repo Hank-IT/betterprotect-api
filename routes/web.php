@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\API\BetterprotectPolicyController;
 use App\Http\Controllers\Charts\MailFlowChartController;
 use App\Http\Controllers\MailLogging\LegacyServerLogController;
 use App\Http\Controllers\MailLogging\ServerLogController;
-use App\Http\Controllers\PolicyInstallationController;
 use App\Http\Controllers\ServerQueueController;
 use App\Http\Controllers\ServerSchemaController;
 use App\Http\Controllers\UserController;
@@ -38,7 +38,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     /**
      * Policy Push
      */
-    Route::post('/policy', [PolicyInstallationController::class, 'store'])->middleware('role:authorizer')->name('policy.store');
+    Route::post('/policy', [BetterprotectPolicyController::class, 'store'])->middleware('role:authorizer')->name('policy.store');
 
     /**
      * User

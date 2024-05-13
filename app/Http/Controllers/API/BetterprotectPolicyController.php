@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Jobs\PostfixPolicyInstallation;
+use App\Http\Controllers\Controller;
+use App\Services\BetterprotectPolicy\Jobs\BetterprotectPolicyInstallation;
 use App\Services\Server\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class PolicyInstallationController extends Controller
+class BetterprotectPolicyController extends Controller
 {
     public function store(Request $request)
     {
@@ -16,7 +17,7 @@ class PolicyInstallationController extends Controller
             'server_id' => 'required|integer|exists:servers,id'
         ]);
 
-        PostfixPolicyInstallation::dispatch(Server::findOrFail($request->server_id), Auth::user(), 'postfix_db')
+        BetterprotectPolicyInstallation::dispatch(Server::findOrFail($request->server_id), Auth::user(), 'postfix_db')
             ->onQueue('task');
 
         return response()->json([
