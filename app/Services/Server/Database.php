@@ -1,25 +1,21 @@
 <?php
 
-namespace App\Services\Server\Database;
+namespace App\Services\Server;
 
-use App\Services\Server\Models\Server;
+use App\Services\Server\dtos\DatabaseDetails;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-abstract class Database
+class Database
 {
-    protected $server;
-
     protected $output;
 
-    public function __construct(Server $server)
+    public function __construct(protected string $name, protected DatabaseDetails $databaseDetails)
     {
-        $this->server = $server;
-
-        Config::set('database.connections.' . $this->name(), $this->config());
+        Config::set('database.connections.' . $this->name, $this->config());
     }
 
     public function migrate()
@@ -74,17 +70,34 @@ abstract class Database
 
     public function getConnection(): ConnectionInterface
     {
-        return DB::connection($this->name());
+        return DB::connection($this->getConnectionString());
     }
 
     public function getConnectionString()
     {
-        return  $this->name();
+        return str_replace('.', '_', $this->databaseDetails->getHostname()) . '_' . $this->name;
     }
 
-    protected abstract function getMigrationPath();
+    protected function config()
+    {
+        return [
+            'driver' => 'mysql',
+            'host' => $this->databaseDetails->getHostname(),
+            'port' => $this->databaseDetails->getPort(),
+            'database' => $this->databaseDetails->getDatabase(),
+            'username' => $this->databaseDetails->getUsername(),
+            'password' => $this->databaseDetails->getPassword(),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ];
+    }
 
-    protected abstract function config();
-
-    protected abstract function name();
+    protected function getMigrationPath()
+    {
+        return 'database' . DIRECTORY_SEPARATOR . $this->name . '-migrations';
+    }
 }

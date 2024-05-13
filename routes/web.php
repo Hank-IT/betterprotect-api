@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\API\BetterprotectPolicyController;
 use App\Http\Controllers\Charts\MailFlowChartController;
 use App\Http\Controllers\MailLogging\LegacyServerLogController;
 use App\Http\Controllers\MailLogging\ServerLogController;
@@ -34,11 +33,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
      */
     Route::post('/server/{server}/schema', [ServerSchemaController::class, 'store'])->middleware('role:editor')->name('server.schema.store');
     Route::get('/server/{server}/schema', [ServerSchemaController::class, 'show'])->middleware('role:readonly')->name('server.schema.show');
-
-    /**
-     * Policy Push
-     */
-    Route::post('/policy', [BetterprotectPolicyController::class, 'store'])->middleware('role:authorizer')->name('policy.store');
 
     /**
      * User

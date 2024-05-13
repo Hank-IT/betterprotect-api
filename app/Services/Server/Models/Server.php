@@ -3,8 +3,7 @@
 namespace App\Services\Server\Models;
 
 use App\Services\Filesystem;
-use App\Services\Server\Database\LogDatabase;
-use App\Services\Server\Database\PostfixDatabase;
+use App\Services\Server\dtos\DatabaseDetails;
 use App\Services\ServerConsole;
 use Database\Factories\ServerFactory;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
@@ -33,29 +32,31 @@ class Server extends Model
         return app(ServerConsole::class, ['server' => $this]);
     }
 
-    public function postfixDatabase()
+    public function postfixDatabaseDetails(): DatabaseDetails
     {
-        return app(PostfixDatabase::class, ['server' => $this]);
+        return new DatabaseDetails([
+            'hostname' => $this->postfix_db_host,
+            'database' => $this->postfix_db_name,
+            'username' => $this->postfix_db_user,
+            'password' => decrypt($this->postfix_db_password),
+            'port' => $this->postfix_db_port,
+        ]);
     }
 
-    public function logDatabase()
+    public function logDatabaseDetails(): DatabaseDetails
     {
-        return app(LogDatabase::class, ['server' => $this]);
+        return new DatabaseDetails([
+            'hostname' => $this->log_db_host,
+            'database' => $this->log_db_name,
+            'username' => $this->log_db_user,
+            'password' => decrypt($this->log_db_password),
+            'port' => $this->log_db_port,
+        ]);
     }
 
     public function filesystem(): FilesystemContract
     {
         return app(Filesystem::class)->getFilesystem();
-    }
-
-    public function getPostfixDBPasswordAttribute()
-    {
-        return decrypt($this->attributes['postfix_db_password']);
-    }
-
-    public function getLogDBPasswordAttribute()
-    {
-        return decrypt($this->attributes['log_db_password']);
     }
 
     public function getSshPrivateKeyAttribute()

@@ -3,6 +3,7 @@
 namespace App\Services\BetterprotectPolicy\Jobs;
 
 use App\Services\BetterprotectPolicy\Actions\InstallPolicy;
+use App\Services\Server\Database;
 use App\Services\Server\Database\PostfixDatabase;
 use App\Services\Server\Models\Server;
 use App\Services\Tasks\Events\TaskCreated;
@@ -21,7 +22,7 @@ class BetterprotectPolicyInstallation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $handler = [
+    protected array $handler = [
         \App\Services\BetterprotectPolicy\Handler\ClientSenderAccessHandler::class,
         \App\Services\BetterprotectPolicy\Handler\RecipientAccessHandler::class,
         \App\Services\BetterprotectPolicy\Handler\TransportMapHandler::class,
@@ -37,7 +38,7 @@ class BetterprotectPolicyInstallation implements ShouldQueue
         TaskCreated::dispatch($this->uniqueTaskId, 'install-policy', $dispatchingUserName);
     }
 
-    public function handle(InstallPolicy $installPolicy)
+    public function handle(InstallPolicy $installPolicy): void
     {
         if ($this->attempts() >= 1) {
             $this->delete();
@@ -47,7 +48,9 @@ class BetterprotectPolicyInstallation implements ShouldQueue
 
         TaskProgress::dispatch($this->uniqueTaskId, sprintf('Policy is installing on server %s', $this->server->hostname));
 
-        if ((new PostfixDatabase($this->server))->needsMigrate()) {
+        $serverDatabase = new Database('postfix', $this->server->postfixDatabaseDetails());
+
+        if ($serverDatabase->needsMigrate()) {
             TaskFailed::dispatch(
                 $this->uniqueTaskId,
                 sprintf('Database on server %s needs migration before policy installation.', $this->server->hostname),
@@ -64,6 +67,5 @@ class BetterprotectPolicyInstallation implements ShouldQueue
         $this->server->save();
 
         TaskFinished::dispatch($this->uniqueTaskId, sprintf('Policy successfully installed on %s', $this->server->hostname), Carbon::now());
-
     }
 }
