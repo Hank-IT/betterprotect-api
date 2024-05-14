@@ -26,6 +26,7 @@ class MilterExceptionFactory extends Factory
             'client_payload' => $this->getPayloadForType($clientType),
             'description' => fake()->text,
             'active' => fake()->numberBetween(0, 1),
+            'priority' => fake()->numberBetween(1, 400),
         ];
     }
 

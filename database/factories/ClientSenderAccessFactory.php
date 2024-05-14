@@ -31,6 +31,7 @@ class ClientSenderAccessFactory extends Factory
             'message' => ['', fake()->word][fake()->numberBetween(0, 1)],
             'description' =>  ['', fake()->word][fake()->numberBetween(0, 1)],
             'action' =>  ['ok', 'reject'][fake()->numberBetween(0, 1)],
+            'priority' => fake()->numberBetween(1, 500),
         ];
     }
 

@@ -4,6 +4,7 @@ namespace App\Services\Authentication\Commands;
 
 use App\Services\Authentication\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
 
 class CreateUser extends Command
 {
@@ -34,7 +35,7 @@ class CreateUser extends Command
 
         User::create([
             'username' => $username,
-            'password' => $password,
+            'password' => Hash::make($password),
             'role' => 'administrator',
         ]);
 

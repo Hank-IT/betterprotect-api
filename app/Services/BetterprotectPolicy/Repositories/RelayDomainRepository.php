@@ -9,6 +9,6 @@ class RelayDomainRepository
 {
     public function get(): Collection
     {
-        return RelayDomain::where('active', '=', 1)->get('domain');
+        return RelayDomain::query()->active()->get('domain');
     }
 }

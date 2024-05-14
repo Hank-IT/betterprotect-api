@@ -10,6 +10,6 @@ class GetRelayDomains
 
     public function execute(): array
     {
-        $this->relayDomainRepository->get()->toArray();
+        return $this->relayDomainRepository->get()->toArray();
     }
 }

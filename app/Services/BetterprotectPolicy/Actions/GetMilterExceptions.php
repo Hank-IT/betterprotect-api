@@ -2,15 +2,18 @@
 
 namespace App\Services\BetterprotectPolicy\Actions;
 
-use App\Exceptions\ErrorException;
+use Exception;
 use App\Services\BetterprotectPolicy\Repositories\MilterExceptionRepository;
-use App\Services\Helpers\IPv4;
+use App\Services\Helpers\Actions\ConvertIpv4CidrToRange;
 
 class GetMilterExceptions
 {
-    public function __construct(protected MilterExceptionRepository $milterExceptionRepository) {}
+    public function __construct(
+        protected MilterExceptionRepository $milterExceptionRepository,
+        protected ConvertIpv4CidrToRange $convertIpv4CidrToRange,
+    ) {}
 
-    public function execute()
+    public function execute(): array
     {
         return $this->milterExceptionRepository->get()->map(function ($exception) {
             $data = [];
@@ -24,9 +27,9 @@ class GetMilterExceptions
                     }
                     break;
                 case 'client_ipv4_net':
-                    $exceptionIPs = IPv4::cidr2range($exception->client_payload);
+                    $exceptionIPs = $this->convertIpv4CidrToRange->execute($exception->client_payload);
 
-                    foreach ($exceptionIPs as $index => $ip) {
+                    foreach ($exceptionIPs as $ip) {
                         if ($exception->milters->isEmpty()) {
                             $data[] = ['payload' => $ip, 'definition' => 'DISABLE', 'priority' => $exception->priority];
                         } else {
@@ -37,7 +40,7 @@ class GetMilterExceptions
                     }
                     break;
                 default:
-                    throw new ErrorException;
+                    throw new Exception;
             }
 
             return $data;

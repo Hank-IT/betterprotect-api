@@ -40,7 +40,7 @@ class InstallPolicy extends Command
             }
         }
 
-        BetterprotectPolicyInstallation::dispatchNow($serverModel, new User(['username' => 'System']));
+        BetterprotectPolicyInstallation::dispatchSync($serverModel, new User(['username' => 'System']));
 
         return true;
     }
