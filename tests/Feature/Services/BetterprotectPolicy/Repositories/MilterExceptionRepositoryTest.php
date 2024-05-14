@@ -2,10 +2,8 @@
 
 namespace Services\BetterprotectPolicy\Repositories;
 
-use App\Services\BetterprotectPolicy\Repositories\ClientSenderAccessRepository;
 use App\Services\BetterprotectPolicy\Repositories\MilterExceptionRepository;
 use App\Services\Milter\Models\MilterException;
-use App\Services\Rules\Models\ClientSenderAccess;
 use Tests\TestCase;
 
 class MilterExceptionRepositoryTest extends TestCase
