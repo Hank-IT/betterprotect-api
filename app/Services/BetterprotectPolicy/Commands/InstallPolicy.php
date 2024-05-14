@@ -6,6 +6,7 @@ use App\Services\Authentication\Models\User;
 use App\Services\BetterprotectPolicy\Jobs\BetterprotectPolicyInstallation;
 use App\Services\Server\Models\Server;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class InstallPolicy extends Command
 {
@@ -40,7 +41,7 @@ class InstallPolicy extends Command
             }
         }
 
-        BetterprotectPolicyInstallation::dispatchSync($serverModel, new User(['username' => 'System']));
+        BetterprotectPolicyInstallation::dispatchSync($serverModel, (string) Str::uuid(), 'System');
 
         return true;
     }

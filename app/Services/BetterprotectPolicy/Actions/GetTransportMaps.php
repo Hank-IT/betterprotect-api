@@ -2,13 +2,14 @@
 
 namespace App\Services\BetterprotectPolicy\Actions;
 
+use App\Services\BetterprotectPolicy\Contracts\BetterprotectPolicyDataRetriever;
 use App\Services\BetterprotectPolicy\Repositories\TransportMapRepository;
 
-class GetTransportMaps
+class GetTransportMaps implements BetterprotectPolicyDataRetriever
 {
     public function __construct(protected TransportMapRepository $transportMapRepository) {}
 
-    public function execute()
+    public function execute(): array
     {
         // ToDo: Empty nexthop
 

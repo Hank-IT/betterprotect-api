@@ -2,10 +2,11 @@
 
 namespace App\Services\BetterprotectPolicy\Actions;
 
+use App\Services\BetterprotectPolicy\Contracts\BetterprotectPolicyDataRetriever;
 use App\Services\BetterprotectPolicy\Enums\PolicyDecisions;
 use App\Services\BetterprotectPolicy\Repositories\ClientSenderAccessRepository;
 
-class GetClientSenderAccess
+class GetClientSenderAccess implements BetterprotectPolicyDataRetriever
 {
     public function __construct(protected ClientSenderAccessRepository $clientSenderAccessRepository) {}
 

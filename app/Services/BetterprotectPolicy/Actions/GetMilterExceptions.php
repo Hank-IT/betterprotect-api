@@ -2,11 +2,12 @@
 
 namespace App\Services\BetterprotectPolicy\Actions;
 
+use App\Services\BetterprotectPolicy\Contracts\BetterprotectPolicyDataRetriever;
 use Exception;
 use App\Services\BetterprotectPolicy\Repositories\MilterExceptionRepository;
 use App\Services\Helpers\Actions\ConvertIpv4CidrToRange;
 
-class GetMilterExceptions
+class GetMilterExceptions implements BetterprotectPolicyDataRetriever
 {
     public function __construct(
         protected MilterExceptionRepository $milterExceptionRepository,
