@@ -13,6 +13,7 @@ use App\Http\Controllers\API\Policy\ActivatableController;
 use App\Http\Controllers\API\TaskController;
 use App\Http\Controllers\API\Policy\RecipientLdapController;
 use App\Http\Controllers\API\BetterprotectPolicyController;
+use App\Http\Controllers\API\Server\ServerSchemaController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/v1/servers', [ServerController::class, 'index'])->name('api.v1.server.index')->middleware('role:readonly');
@@ -21,7 +22,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/v1/servers/{server}', [ServerController::class, 'update'])->name('api.v1.server.update')->middleware('role:administrator');
     Route::delete('/v1/servers/{server}', [ServerController::class, 'destroy'])->name('api.v1.server.destroy')->middleware('role:administrator');
 
-    Route::post('/v1/policy/installation', [BetterprotectPolicyController::class, 'store'])->middleware('role:authorizer')->name('api.v1.policy.installation');
+    Route::get('/server/{server}/schema', [ServerSchemaController::class, 'show'])->name('api.v1.server.schema.check')->middleware('role:readonly');
+    Route::post('/server/{server}/schema', [ServerSchemaController::class, 'store'])->name('api.v1.server.schema.migrate')->middleware('role:editor');
+
+    Route::post('/v1/policy/{server}/installation', [BetterprotectPolicyController::class, 'store'])->middleware('role:authorizer')->name('api.v1.policy.installation');
 
     Route::get('/v1/policy/rules', [RuleController::class, 'index'])->name('api.v1.rule.index')->middleware('role:readonly');
     Route::post('/v1/policy/rules', [RuleController::class, 'store'])->name('api.v1.rule.store')->middleware('role:authorizer');

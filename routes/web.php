@@ -4,7 +4,6 @@ use App\Http\Controllers\Charts\MailFlowChartController;
 use App\Http\Controllers\MailLogging\LegacyServerLogController;
 use App\Http\Controllers\MailLogging\ServerLogController;
 use App\Http\Controllers\ServerQueueController;
-use App\Http\Controllers\ServerSchemaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhoisController;
 use Illuminate\Support\Facades\Broadcast;
@@ -27,12 +26,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/server/queue', [ServerQueueController::class, 'index'])->middleware('role:readonly')->name('server.queue.show');
     Route::post('/server/queue', [ServerQueueController::class, 'store'])->middleware('role:editor')->name('server.queue.store');
     Route::delete('/server/{server}/queue', [ServerQueueController::class, 'destroy'])->middleware('role:editor')->name('server.queue.destroy');
-
-    /**
-     * Server Database Schema
-     */
-    Route::post('/server/{server}/schema', [ServerSchemaController::class, 'store'])->middleware('role:editor')->name('server.schema.store');
-    Route::get('/server/{server}/schema', [ServerSchemaController::class, 'show'])->middleware('role:readonly')->name('server.schema.show');
 
     /**
      * User

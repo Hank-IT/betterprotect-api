@@ -69,5 +69,22 @@ class TransportControllerTest extends TestCase
         ])->assertSuccessful()->assertJsonPath('data.id', $transport->getKey());
     }
 
+    public function testDestroy()
+    {
+        $user = User::factory()->create();
 
+        $this->be($user);
+
+        $deletableTransport1 = Transport::factory()->create();
+        $deletableTransport2 = Transport::factory()->create();
+        $retainedTransport = Transport::factory()->create();
+
+        $this->deleteJson(route('api.v1.transports.destroy'), [
+            'ids' => [$deletableTransport1->getKey(), $deletableTransport2->getKey()],
+        ]);
+
+        $this->assertModelMissing($deletableTransport1);
+        $this->assertModelMissing($deletableTransport2);
+        $this->assertModelExists($retainedTransport);
+    }
 }
