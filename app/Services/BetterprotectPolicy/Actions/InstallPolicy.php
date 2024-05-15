@@ -25,7 +25,7 @@ class InstallPolicy
 
         TaskProgress::dispatch($uniqueTaskId, sprintf('Policy is installing on server %s', $server->hostname));
 
-        $database = $this->databaseFactory->make('postfix', $server->postfixDatabaseDetails());
+        $database = $this->databaseFactory->make('postfix', $server->getDatabaseDetails('postfix'));
 
         if ($database->needsMigrate()) {
             TaskFailed::dispatch(

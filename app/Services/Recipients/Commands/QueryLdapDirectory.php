@@ -2,10 +2,10 @@
 
 namespace App\Services\Recipients\Commands;
 
-use App\Models\LdapDirectory;
-use App\Services\Authentication\Models\User;
-use App\Services\LdapRecipientQuery;
+use App\Services\Recipients\Actions\GetIgnoredLdapDomains;
+use App\Services\Recipients\Jobs\RefreshLdapRecipients;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class QueryLdapDirectory extends Command
 {
@@ -14,32 +14,29 @@ class QueryLdapDirectory extends Command
      *
      * @var string
      */
-    protected $signature = 'ldap:query {connection}';
+    protected $signature = 'ldap:query';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Query the specified ldap directory for recipients.';
+    protected $description = 'Query the ldap directory for recipients.';
 
     /**
      * Execute the console command.
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(GetIgnoredLdapDomains $getIgnoredLdapDomains)
     {
-        $connection = $this->argument('connection');
+        RefreshLdapRecipients::dispatch(
+            (string) Str::uuid(),
+            'ldap',
+            'System',
+            $getIgnoredLdapDomains->execute(),
+        );
 
-        if (! $connectionModel = LdapDirectory::where('connection', '=', $connection)->first()) {
-            $this->error('The provided connection does not exist.');
-
-            return false;
-        }
-
-        LdapRecipientQuery::run($connectionModel, new User(['username' => 'System']));
-
-        return true;
+        return 0;
     }
 }

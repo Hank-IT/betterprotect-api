@@ -2,7 +2,6 @@
 
 namespace App\Services\BetterprotectPolicy\Commands;
 
-use App\Services\Authentication\Models\User;
 use App\Services\BetterprotectPolicy\Jobs\BetterprotectPolicyInstallation;
 use App\Services\Server\Models\Server;
 use Illuminate\Console\Command;
@@ -37,12 +36,12 @@ class InstallPolicy extends Command
             if (! $serverModel = Server::where('hostname', '=', $server)->first()) {
                 $this->error('The provided server does not exist.');
 
-                return false;
+                return 1;
             }
         }
 
         BetterprotectPolicyInstallation::dispatchSync($serverModel, (string) Str::uuid(), 'System');
 
-        return true;
+        return 0;
     }
 }

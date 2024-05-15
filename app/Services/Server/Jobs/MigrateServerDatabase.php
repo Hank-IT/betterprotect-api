@@ -2,13 +2,17 @@
 
 namespace App\Services\Server\Jobs;
 
+use App\Services\Server\Factories\DatabaseFactory;
 use App\Services\Server\Models\Server;
 use App\Services\Tasks\Actions\CreateTask;
 use App\Services\Tasks\Actions\UpdateTask;
-use App\Services\Tasks\Models\Task;
+use App\Services\Tasks\Events\TaskCreated;
+use App\Services\Tasks\Events\TaskFailed;
+use App\Services\Tasks\Events\TaskFinished;
+use App\Services\Tasks\Events\TaskProgress;
+use App\Services\Tasks\Events\TaskStarted;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -26,29 +30,30 @@ class MigrateServerDatabase implements ShouldQueue
      */
     public function __construct(
         protected Server $server,
-        protected Authenticatable $user,
+        protected string $dispatchingUserName,
+        protected string $uniqueTaskId,
         protected string $database,
-    ) {}
+    ) {
+        TaskCreated::dispatch($this->uniqueTaskId, 'migrate-server-db', $dispatchingUserName);
+    }
 
     /**
      * Execute the job.
      *
      * @return void
      */
-    public function handle(CreateTask $createTask, UpdateTask $updateTask)
+    public function handle(DatabaseFactory $databaseFactory)
     {
         Config::set('database.default', 'mysql');
 
-        $task = $createTask->execute(
-            'Datenbank ' . $this->database . ' auf Server ' . $this->server->hostname . ' wird aktualisiert...',
-           'migrate-server-db',
-            $this->user->username,
-        );
+        TaskStarted::dispatch($this->uniqueTaskId, Carbon::now());
 
-        $serverDatabase = app($this->database, ['server' => $this->server]);
+        TaskProgress::dispatch($this->uniqueTaskId, sprintf('Database %s on server %s is migrating...', $this->database, $this->server->hostname));
 
-        $serverDatabase->migrate() == 0
-            ? $updateTask->execute($task, 'Datenbank ' . $this->database . ' erfolgreich aktualisiert.', Task::STATUS_FINISHED, Carbon::now())
-            : $updateTask->execute($task, 'Datenbank ' . $this->database . ' konnte nicht aktualisiert werden.', Task::STATUS_ERROR, Carbon::now());
+        $database = $databaseFactory->make($this->database, $this->server->getDatabaseDetails($this->database));
+
+        $database->migrate() == 0
+            ? TaskFinished::dispatch($this->uniqueTaskId, sprintf('Database %s was successfully migrated.', $this->database), Carbon::now())
+            : TaskFailed::dispatch($this->uniqueTaskId, sprintf('Database %s was not migrated.', $this->database), Carbon::now());
     }
 }

@@ -16,9 +16,6 @@ class ServerMonitoring
         // Check if ssh reachable
         // Get queue items
 
-
-
-
         if (! $server->logDatabase()->available()) {
             throw ValidationException::withMessages(['log_db_host' => 'Datenbank ist nicht verfügbar.']);
         }

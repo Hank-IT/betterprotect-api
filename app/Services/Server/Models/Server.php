@@ -9,7 +9,6 @@ use Database\Factories\ServerFactory;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
 
 class Server extends Model
 {
@@ -32,25 +31,14 @@ class Server extends Model
         return app(ServerConsole::class, ['server' => $this]);
     }
 
-    public function postfixDatabaseDetails(): DatabaseDetails
+    public function getDatabaseDetails(string $database): DatabaseDetails
     {
         return new DatabaseDetails([
-            'hostname' => $this->postfix_db_host,
-            'database' => $this->postfix_db_name,
-            'username' => $this->postfix_db_user,
-            'password' => decrypt($this->postfix_db_password),
-            'port' => $this->postfix_db_port,
-        ]);
-    }
-
-    public function logDatabaseDetails(): DatabaseDetails
-    {
-        return new DatabaseDetails([
-            'hostname' => $this->log_db_host,
-            'database' => $this->log_db_name,
-            'username' => $this->log_db_user,
-            'password' => decrypt($this->log_db_password),
-            'port' => $this->log_db_port,
+            'hostname' => $this->{"{$database}_db_host"},
+            'database' => $this->{"{$database}_db_name"},
+            'username' => $this->{"{$database}_db_user"},
+            'password' => decrypt($this->{"{$database}_db_password"}),
+            'port' => $this->{"{$database}_db_port"},
         ]);
     }
 
