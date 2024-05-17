@@ -2,73 +2,38 @@
 
 namespace App\Services\Server\Jobs;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
-use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
+use App\Services\Server\Actions\GetServerState;
+use App\Services\Server\Actions\StoreServerStateInCache;
+use App\Services\Server\Models\Server;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
-class ServerMonitoring
+class ServerMonitoring implements ShouldQueue
 {
-    public function run()
-    {
-        // ToDo
-        // Run every minute
-        // Check if databases are reachable
-        // Check if ssh reachable
-        // Get queue items
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-        if (! $server->logDatabase()->available()) {
-            throw ValidationException::withMessages(['log_db_host' => 'Datenbank ist nicht verfügbar.']);
-        }
+    protected array $checks = [
+        \App\Services\Server\Checks\LogDatabaseAvailable::class,
+        \App\Services\Server\Checks\PostfixDatabaseAvailable::class,
+        \App\Services\Server\Checks\SshConnection::class,
+        \App\Services\Server\Checks\SudoExecutable::class,
+        \App\Services\Server\Checks\PostsuperExecutable::class,
+        \App\Services\Server\Checks\PostqueueExecutable::class,
+    ];
 
-        if (! $server->postfixDatabase()->available()) {
-            throw ValidationException::withMessages(['postfix_db_host' => 'Datenbank ist nicht verfügbar.']);
-        }
-    }
+    public function handle(
+        GetServerState $getServerState,
+        StoreServerStateInCache $storeServerStateInCache,
+    ): void {
+        Server::all()->each(function (Server $server) use($getServerState, $storeServerStateInCache) {
+            $storeServerStateInCache->execute(
+                $server->hostname, $getServerState->execute($server, $this->checks)
+            );
 
-    protected function validateConsole()
-    {
-        try {
-            return tap($console = $this->server->console(), function($console) {
-                $console->available();
-            })->access();
-        } catch(ErrorException $exception) {
-            throw ValidationException::withMessages(['ssh_user' => 'Verbindung fehlgeschlagen.']);
-        } catch(PublicKeyMismatchException $exception) {
-            Log::debug($this->server->hostname . ' public key: ' . $console->getPublicKey());
-            throw ValidationException::withMessages(['ssh_public_key' => 'Public Key stimmt nicht überein.']);
-        }
-    }
-
-    protected function validateSudo()
-    {
-        $this->console->bin($this->server->ssh_command_sudo . ' -h')->exec();
-
-        Log::debug($this->console->getOutput());
-
-        if ($this->console->getExitStatus() !== 0) {
-            throw ValidationException::withMessages(['ssh_command_sudo' => 'Befehl konnte nicht ausgeführt werden.']);
-        }
-    }
-
-    protected function validatePostqueue()
-    {
-        $this->console->sudo($this->server->ssh_command_sudo . ' -n')->bin($this->server->ssh_command_postqueue)->param('-j')->exec();
-
-        Log::debug($this->console->getOutput());
-
-        if ($this->console->getExitStatus() !== 0) {
-            throw ValidationException::withMessages(['ssh_command_postqueue' => 'Befehl konnte nicht ausgeführt werden.']);
-        }
-    }
-
-    protected function validatePostsuper()
-    {
-        $this->console->sudo($this->server->ssh_command_sudo . ' -n')->bin($this->server->ssh_command_postsuper)->exec();
-
-        Log::debug($this->console->getOutput());
-
-        if ($this->console->getExitStatus() !== 0) {
-            throw ValidationException::withMessages(['ssh_command_postsuper' => 'Befehl konnte nicht ausgeführt werden.']);
-        }
+            // ToDo: Broadcast state
+        });
     }
 }

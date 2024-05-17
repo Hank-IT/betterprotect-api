@@ -1,33 +1,21 @@
 <?php
 
-namespace App\Services\MailLogging\LegacyPostfixParser;
+namespace App\Services\PostfixQueue;
 
-use App\Exceptions\ErrorException;
-use App\Services\Server\Models\Server;
+use App\Services\PostfixQueue\Contracts\DataDriver as DataDriverContract;
+use App\Services\PostfixQueue\Dtos\PostfixQueueEntry;
+use App\Services\PostfixQueue\Dtos\PostfixQueueEntryRecipients;
 
-class Queue
+class PostfixQueue
 {
-    protected $server;
+    public function __construct(protected DataDriverContract $dataDriver) {}
 
-    public function __construct(Server $server)
+    /**
+     * @return PostfixQueueEntry[]
+     */
+    public function get(): array
     {
-        $this->server = $server;
-    }
-
-    public function get()
-    {
-        $console = $this->server->console()->access();
-
-        $console->sudo($this->server->ssh_command_sudo)
-            ->bin($this->server->ssh_command_postqueue)
-            ->param('-j')
-            ->exec();
-
-        if ($console->getExitStatus() !== 0) {
-            throw new ErrorException;
-        }
-
-        $output = $console->getOutput();
+        $output = $this->dataDriver->get();
 
         // each mail is its own json object
         $output = explode("\n", $output);
@@ -38,52 +26,24 @@ class Queue
         $mails = [];
 
         foreach($output as $mail) {
-            $mail = json_decode($mail, true);
-            $mail['server'] = $this->server->hostname;
-            $mail['server_id'] = $this->server->id;
-            $mails[] = $mail;
+            $payload = json_decode($mail, true);
+
+            $recipients = [];
+            foreach($payload['recipients'] ?? [] as $recipient) {
+                $recipients = new PostfixQueueEntryRecipients($recipient['address'], $recipient['delay_reason']);
+            }
+
+            $mails[] = new PostfixQueueEntry(
+                $payload['queue_name'],
+                $payload['queue_id'],
+                $payload['arrival_time'],
+                $payload['message_size'],
+                $payload['forced_expire'],
+                $payload['sender'],
+                $recipients,
+            );
         }
 
         return $mails;
-    }
-
-    public function flush()
-    {
-        $console = $this->server->console()->access();
-
-        $console->sudo($this->server->ssh_command_sudo)
-            ->bin($this->server->ssh_command_postqueue)
-            ->param('-f')
-            ->exec();
-
-        if ($console->getExitStatus() !== 0) {
-            throw new ErrorException;
-        }
-
-        return $console->getOutput();
-    }
-
-    /**
-     * @param $queueId
-     * @return mixed
-     * @throws ErrorException
-     * @throws \MrCrankHank\ConsoleAccess\Exceptions\MissingCommandException
-     * @throws \MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException
-     */
-    public function deleteMail($queueId)
-    {
-        $console = $this->server->console()->access();
-
-        $console->sudo($this->server->ssh_command_sudo)
-            ->bin($this->server->ssh_command_postsuper)
-            ->param('-d')
-            ->param($queueId)
-            ->exec();
-
-        if ($console->getExitStatus() !== 0) {
-            throw new ErrorException;
-        }
-
-        return $console->getOutput();
     }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Services\Rules\Actions;
 
-use App\Services\Helpers\IPv4;
+use App\Services\Helpers\Actions\IsValidIpv4Net;
 use Illuminate\Validation\ValidationException;
 
 class ValidateClient
 {
+    public function __construct(protected IsValidIpv4Net $isValidIpv4Net) {}
+
     public function execute(string $clientType, string $clientPayload): void
     {
         switch ($clientType) {
@@ -25,7 +27,7 @@ class ValidateClient
                 }
                 break;
             case 'client_ipv4_net':
-                if (! IPv4::isValidIPv4Net($clientPayload)) {
+                if (! $this->isValidIpv4Net->execute($clientPayload)) {
                     throw ValidationException::withMessages([
                         'client_payload' => 'Muss ein gültiges IPv4 Netz sein.'
                     ]);

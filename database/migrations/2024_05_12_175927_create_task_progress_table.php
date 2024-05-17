@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('task_progresses', function (Blueprint $table) {
+        Schema::create('task_progress', function (Blueprint $table) {
             $table->uuid('id');
             $table->foreignUuid('task_id')->constrained();
             $table->text('description');

@@ -3,10 +3,8 @@
 namespace App\Services\Server\Models;
 
 use App\Services\Server\dtos\DatabaseDetails;
-use App\Services\Server\Filesystem;
 use App\Services\Server\ServerConsole;
 use Database\Factories\ServerFactory;
-use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,11 +38,6 @@ class Server extends Model
             'password' => decrypt($this->{"{$database}_db_password"}),
             'port' => $this->{"{$database}_db_port"},
         ]);
-    }
-
-    public function filesystem(): FilesystemContract
-    {
-        return app(Filesystem::class)->getFilesystem();
     }
 
     public function getSshPrivateKeyAttribute()

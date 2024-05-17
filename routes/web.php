@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\API\PostfixQueueController;
 use App\Http\Controllers\Charts\MailFlowChartController;
 use App\Http\Controllers\MailLogging\LegacyServerLogController;
 use App\Http\Controllers\MailLogging\ServerLogController;
-use App\Http\Controllers\ServerQueueController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhoisController;
 use Illuminate\Support\Facades\Broadcast;
@@ -23,9 +23,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     /**
      * Server Mail Queue
      */
-    Route::get('/server/queue', [ServerQueueController::class, 'index'])->middleware('role:readonly')->name('server.queue.show');
-    Route::post('/server/queue', [ServerQueueController::class, 'store'])->middleware('role:editor')->name('server.queue.store');
-    Route::delete('/server/{server}/queue', [ServerQueueController::class, 'destroy'])->middleware('role:editor')->name('server.queue.destroy');
+    Route::get('/server/queue', [PostfixQueueController::class, 'index'])->middleware('role:readonly')->name('server.queue.show');
+    Route::post('/server/queue', [PostfixQueueController::class, 'store'])->middleware('role:editor')->name('server.queue.store');
+    Route::delete('/server/{server}/queue', [PostfixQueueController::class, 'destroy'])->middleware('role:editor')->name('server.queue.destroy');
 
     /**
      * User

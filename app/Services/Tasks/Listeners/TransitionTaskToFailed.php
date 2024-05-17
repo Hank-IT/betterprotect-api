@@ -4,7 +4,6 @@ namespace App\Services\Tasks\Listeners;
 
 use App\Services\Tasks\Events\TaskFailed;
 use App\Services\Tasks\Events\TaskProgress;
-use App\Services\Tasks\Events\TaskStarted;
 use App\Services\Tasks\Models\Task as EloquentTask;
 
 class TransitionTaskToFailed

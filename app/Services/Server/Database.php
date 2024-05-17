@@ -2,6 +2,7 @@
 
 namespace App\Services\Server;
 
+use Exception;
 use App\Services\Server\dtos\DatabaseDetails;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Facades\Artisan;
@@ -36,10 +37,7 @@ class Database
         });
     }
 
-    /**
-     * @return bool
-     */
-    public function needsMigrate()
+    public function needsMigrate(): bool
     {
         return tap(Artisan::call('migrate:check', [
             '--database' => $this->getConnectionString(),
@@ -52,18 +50,18 @@ class Database
         }) !== 0;
     }
 
-    public function available()
+    public function available(): bool
     {
         try {
             $this->getConnection()->getPdo();
-        } catch (\Exception $e) {
+        } catch (Exception) {
             return false;
         }
 
         return true;
     }
 
-    public function getOutput()
+    public function getOutput(): string
     {
         return $this->output;
     }
@@ -73,12 +71,12 @@ class Database
         return DB::connection($this->getConnectionString());
     }
 
-    public function getConnectionString()
+    public function getConnectionString(): string
     {
         return str_replace('.', '_', $this->databaseDetails->getHostname()) . '_' . $this->name;
     }
 
-    protected function config()
+    protected function config(): array
     {
         return [
             'driver' => 'mysql',
@@ -96,7 +94,7 @@ class Database
         ];
     }
 
-    protected function getMigrationPath()
+    protected function getMigrationPath(): string
     {
         return 'database' . DIRECTORY_SEPARATOR . $this->name . '-migrations';
     }

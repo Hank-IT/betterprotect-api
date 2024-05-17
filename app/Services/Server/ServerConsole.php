@@ -3,27 +3,20 @@
 namespace App\Services\Server;
 
 use App\Services\Server\Models\Server;
-use MrCrankHank\ConsoleAccess\Adapters\SshAdapter;
+use HankIT\ConsoleAccess\Adapters\SshAdapter\Adapter as SshAdapter;
+use HankIT\ConsoleAccess\Interfaces\AdapterInterface;
 use MrCrankHank\ConsoleAccess\ConsoleAccess;
 
 class ServerConsole
 {
-    protected $server;
+    protected AdapterInterface $adapter;
 
-    protected $output;
-
-    protected $adapter;
-
-    /**
-     * ServerConsole constructor.
-     * @param Server $server
-     * @throws \MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException
-     */
-    public function __construct(Server $server)
+    public function __construct(protected Server $server)
     {
-        $this->server = $server;
-
-        $this->adapter = new SshAdapter($this->server->hostname, $this->server->ssh_user, $this->server->ssh_public_key);
+        // ToDo
+        $this->adapter = new SshAdapter(
+            $this->server->hostname, $this->server->ssh_user, $this->server->ssh_public_key
+        );
     }
 
     /**

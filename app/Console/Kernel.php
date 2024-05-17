@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Services\PostfixQueue\Jobs\GetPostfixQueue;
+use App\Services\Server\Jobs\ServerMonitoring;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -30,7 +32,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
+        $schedule->job(GetPostfixQueue::class)->everyMinute();
+        $schedule->job(ServerMonitoring::class)->everyMinute();
     }
 
     /**

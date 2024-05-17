@@ -2,40 +2,20 @@
 
 namespace App\Services\PostfixQueue\Dtos;
 
-class PostfixQueueEntry
+class PostfixQueueEntryRecipients
 {
-    public function getQueueName(): string
-    {
+    public function __construct(
+        protected string $address,
+        protected string $delayReason,
+    ) {}
 
+    public function getAddress(): string
+    {
+        return $this->address;
     }
 
-    public function getQueueId(): string
+    public function getDelayReason(): string
     {
-
-    }
-
-    public function getArrivalTime(): string
-    {
-
-    }
-
-    public function getMessageSize(): string
-    {
-
-    }
-
-    public function getForcedExpire(): bool
-    {
-
-    }
-
-    public function getSender(): string
-    {
-
-    }
-
-    public function getRecipients(): array
-    {
-
+        return $this->delayReason;
     }
 }

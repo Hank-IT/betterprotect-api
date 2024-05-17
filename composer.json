@@ -23,6 +23,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.0",
         "opensearch-project/opensearch-php": "^2.2",
+        "predis/predis": "^2.0",
         "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-csp": "^2.4",
         "spatie/laravel-ignition": "^2.0"

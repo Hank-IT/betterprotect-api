@@ -3,10 +3,9 @@
 namespace App\Services\PostfixQueue\Actions;
 
 use App\Services\PostfixQueue\Dtos\PostfixQueueEntry;
-use App\Services\Server\Models\Server;
 use Illuminate\Support\Facades\Cache;
 
-class GetPostfixQueueEntriesFromCacheOrRetrieveAndCache
+class GetPostfixQueueEntriesFromCache
 {
     public function __construct(
         protected GetPostfixQueueCacheKeyForServer $getPostfixQueueCacheKeyForServer,

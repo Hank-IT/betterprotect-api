@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Helpers;
+namespace App\Services\Helpers\Actions;
 
-class IPv4
+class IsValidIpv4Net
 {
-    public static function isValidIPv4Net($ipv4Network)
+    public function execute(string $ipv4Network)
     {
         return preg_match('#^(?:((?:0)|(?:2(?:(?:[0-4][0-9])|(?:5[0-5])))|(?:1?[0-9]{1,2}))\.((?:0)|(?:2(?:(?:[0-4][0-9])|(?:5[0-5])))|(?:1?[0-9]{1,2}))\.((?:0)|(?:2(?:(?:[0-4][0-9])|(?:5[0-5])))|(?:1?[0-9]{1,2}))\.((?:0)|(?:2(?:(?:[0-4][0-9])|(?:5[0-5])))|(?:1?[0-9]{1,2}))(?:/((?:(?:0)|(?:3[0-2])|(?:[1-2]?[0-9]))))?)$#', $ipv4Network);
     }

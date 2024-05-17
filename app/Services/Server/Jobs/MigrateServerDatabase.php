@@ -4,8 +4,6 @@ namespace App\Services\Server\Jobs;
 
 use App\Services\Server\Factories\DatabaseFactory;
 use App\Services\Server\Models\Server;
-use App\Services\Tasks\Actions\CreateTask;
-use App\Services\Tasks\Actions\UpdateTask;
 use App\Services\Tasks\Events\TaskCreated;
 use App\Services\Tasks\Events\TaskFailed;
 use App\Services\Tasks\Events\TaskFinished;

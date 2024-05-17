@@ -104,20 +104,4 @@ return [
             'expire' => 60,
         ],
     ],
-
-
-    'ldap_schemas' => [
-        'active_directory' => [
-            'name' => 'Active Directory',
-            'class' => \Adldap\Schemas\ActiveDirectory::class
-        ],
-        'openldap' => [
-            'name' => 'OpenLdap',
-            'class' =>  \Adldap\Schemas\OpenLDAP::class,
-        ],
-        'freeipa' => [
-            'name' => 'FreeIPA',
-            'class' => \Adldap\Schemas\FreeIPA::class,
-        ]
-    ]
 ];

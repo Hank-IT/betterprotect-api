@@ -5,7 +5,7 @@ namespace App\Services\PostfixQueue\Actions;
 use App\Services\PostfixQueue\PostfixQueue;
 use App\Services\Server\Models\Server;
 
-class GetPostfixQueueForServer
+class GetPostfixQueueEntriesFromServer
 {
     public function execute(Server $server): array
     {
@@ -13,9 +13,5 @@ class GetPostfixQueueForServer
         $adapter = null;
 
         return new PostfixQueue($adapter);
-
-
-        // ToDo: Update server_states table, if not reachable
-        // ToDo: Update server_states table with mails in queue count
     }
 }
