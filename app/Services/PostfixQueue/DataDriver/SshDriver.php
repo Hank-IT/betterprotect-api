@@ -2,21 +2,21 @@
 
 namespace App\Services\PostfixQueue\DataDriver;
 
+use App\Services\Server\dtos\SSHDetails;
 use Exception;
 use App\Services\PostfixQueue\Contracts\DataDriver as DataDriverContract;
-use App\Services\Server\Actions\GetConsoleForServer;
-use App\Services\Server\Models\Server;
+use App\Services\Server\Actions\GetConsole;
 
 class SshDriver implements DataDriverContract
 {
-    public function __construct(protected Server $server) {}
+    public function __construct(protected SSHDetails $sshDetails) {}
 
-    public function get(GetConsoleForServer $getConsoleForServer): string
+    public function get(GetConsole $getConsole): string
     {
-        $console = $getConsoleForServer->execute($this->server);
+        $console = $getConsole->execute($this->sshDetails);
 
-        $console->sudo($this->server->ssh_command_sudo)
-            ->bin($this->server->ssh_command_postqueue)
+        $console->sudo($this->sshDetails->getSudoCommand())
+            ->bin($this->sshDetails->getPostqueueCommand())
             ->param('-j')
             ->exec();
 

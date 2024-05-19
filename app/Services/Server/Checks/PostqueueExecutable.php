@@ -2,21 +2,23 @@
 
 namespace App\Services\Server\Checks;
 
-use App\Services\Server\Actions\GetConsoleForServer;
+use App\Services\Server\Actions\GetConsole;
 use App\Services\Server\Contracts\ServerMonitoringCheck;
 use App\Services\Server\Models\Server;
 use Illuminate\Support\Facades\Log;
 
 class PostqueueExecutable implements ServerMonitoringCheck
 {
-    public function __construct(protected GetConsoleForServer $getConsoleForServer) {}
+    public function __construct(protected GetConsole $getConsole) {}
 
     public function getState(Server $server): bool
     {
-        $console = $this->getConsoleForServer->execute($server);
+        $sshDetails = $server->getSSHDetails();
 
-        $console->sudo($server->ssh_command_sudo . ' -n')
-            ->bin($server->ssh_command_postqueue)
+        $console = $this->getConsole->execute($sshDetails);
+
+        $console->sudo($sshDetails->getSudoCommand() . ' -n')
+            ->bin($sshDetails->getPostqueueCommand())
             ->param('-j')
             ->exec();
 

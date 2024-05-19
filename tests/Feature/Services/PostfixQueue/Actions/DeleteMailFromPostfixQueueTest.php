@@ -2,12 +2,14 @@
 
 namespace Tests\Feature\Services\PostfixQueue\Actions;
 
+use App\Services\Server\dtos\SSHDetails;
 use Exception;
 use App\Services\PostfixQueue\Actions\DeleteMailFromPostfixQueue;
+use Hamcrest\Core\IsInstanceOf;
 use HankIT\ConsoleAccess\ConsoleAccess;
 use Illuminate\Support\Str;
 use Mockery;
-use App\Services\Server\Actions\GetConsoleForServer;
+use App\Services\Server\Actions\GetConsole;
 use App\Services\Server\Models\Server;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -19,15 +21,15 @@ class DeleteMailFromPostfixQueueTest extends TestCase
         $queueId = (string) Str::uuid();
         $output = fake()->word;
 
-        $server = Server::factory()->create();
+        $sshDetails = SSHDetails::factory()->make();
 
-        $consoleClient = Mockery::mock(ConsoleAccess::class, function(MockInterface $mock) use($server, $queueId, $output) {
+        $consoleClient = Mockery::mock(ConsoleAccess::class, function(MockInterface $mock) use($sshDetails, $queueId, $output) {
             $mock->shouldReceive('sudo')->withArgs([
-                $server->ssh_command_sudo
+                $sshDetails->getSudoCommand()
             ])->andReturn($mock);
 
             $mock->shouldReceive('bin')->withArgs([
-                $server->ssh_command_postsuper
+                $sshDetails->getPostsuperCommand()
             ])->andReturn($mock);
 
             $mock->shouldReceive('param')->withArgs([
@@ -45,16 +47,14 @@ class DeleteMailFromPostfixQueueTest extends TestCase
             $mock->shouldReceive('getOutput')->andReturn($output);
         });
 
-        $this->mock(GetConsoleForServer::class, function(MockInterface $mock) use($server, $consoleClient) {
+        $this->mock(GetConsole::class, function(MockInterface $mock) use($sshDetails, $consoleClient) {
             $mock->shouldReceive('execute')->once()->withArgs([
-                Mockery::on(function($arg) use($server) {
-                    return $server->getKey() === $arg->getKey();
-                })
+                IsInstanceOf::anInstanceOf(SSHDetails::class),
             ])->andReturn($consoleClient);
         });
 
         $this->assertEquals(
-            $output, app(DeleteMailFromPostfixQueue::class)->execute($server, $queueId)
+            $output, app(DeleteMailFromPostfixQueue::class)->execute($sshDetails, $queueId)
         );
     }
 
@@ -64,15 +64,15 @@ class DeleteMailFromPostfixQueueTest extends TestCase
 
         $this->expectException(Exception::class);
 
-        $server = Server::factory()->create();
+        $sshDetails = SSHDetails::factory()->make();
 
-        $consoleClient = Mockery::mock(ConsoleAccess::class, function(MockInterface $mock) use($server, $queueId) {
+        $consoleClient = Mockery::mock(ConsoleAccess::class, function(MockInterface $mock) use($sshDetails, $queueId) {
             $mock->shouldReceive('sudo')->withArgs([
-                $server->ssh_command_sudo
+                $sshDetails->getSudoCommand()
             ])->andReturn($mock);
 
             $mock->shouldReceive('bin')->withArgs([
-                $server->ssh_command_postsuper
+                $sshDetails->getPostsuperCommand()
             ])->andReturn($mock);
 
             $mock->shouldReceive('param')->withArgs([
@@ -90,14 +90,12 @@ class DeleteMailFromPostfixQueueTest extends TestCase
             $mock->shouldReceive('getOutput')->never();
         });
 
-        $this->mock(GetConsoleForServer::class, function(MockInterface $mock) use($server, $consoleClient) {
+        $this->mock(GetConsole::class, function(MockInterface $mock) use($sshDetails, $consoleClient) {
             $mock->shouldReceive('execute')->once()->withArgs([
-                Mockery::on(function($arg) use($server) {
-                    return $server->getKey() === $arg->getKey();
-                })
+                IsInstanceOf::anInstanceOf(SSHDetails::class),
             ])->andReturn($consoleClient);
         });
 
-        app(DeleteMailFromPostfixQueue::class)->execute($server, $queueId);
+        app(DeleteMailFromPostfixQueue::class)->execute($sshDetails, $queueId);
     }
 }

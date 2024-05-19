@@ -3,19 +3,19 @@
 namespace App\Services\PostfixQueue\Actions;
 
 use App\Exceptions\ErrorException;
-use App\Services\Server\Actions\GetConsoleForServer;
-use App\Services\Server\Models\Server;
+use App\Services\Server\Actions\GetConsole;
+use App\Services\Server\dtos\SSHDetails;
 
 class FlushPostfixQueue
 {
-    public function __construct(protected GetConsoleForServer $getConsoleForServer) {}
+    public function __construct(protected GetConsole $getConsole) {}
 
-    public function execute(Server $server): string
+    public function execute(SSHDetails $sshDetails): string
     {
-        $console = $this->getConsoleForServer->execute($server);
+        $console = $this->getConsole->execute($sshDetails);
 
-        $console->sudo($server->ssh_command_sudo)
-            ->bin($server->ssh_command_postqueue)
+        $console->sudo($sshDetails->getSudoCommand())
+            ->bin($sshDetails->getPostqueueCommand())
             ->param('-f')
             ->exec();
 

@@ -3,7 +3,7 @@
 namespace App\Services\Server\Models;
 
 use App\Services\Server\dtos\DatabaseDetails;
-use App\Services\Server\ServerConsole;
+use App\Services\Server\dtos\SSHDetails;
 use Database\Factories\ServerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,9 +31,17 @@ class Server extends Model
         ]);
     }
 
-    public function getSshPrivateKeyAttribute()
+    public function getSSHDetails(): SSHDetails
     {
-        return decrypt($this->attributes['ssh_private_key']);
+        return new SSHDetails([
+            'hostname' => $this->hostname,
+            'user' => $this->ssh_user,
+            'public_key' => $this->ssh_public_key,
+            'private_Key' => decrypt($this->ssh_private_key),
+            'postqueue_command' => $this->ssh_command_postqueue,
+            'postsuper_command' => $this->ssh_command_postsuper,
+            'sudo_command' => $this->ssh_command_sudo,
+        ]);
     }
 
     protected static function newFactory()

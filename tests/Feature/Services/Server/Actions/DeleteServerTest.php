@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Server\Actions;
+namespace Tests\Feature\Services\Server\Actions;
 
 use App\Services\Server\Actions\DeleteServer;
 use App\Services\Server\Models\Server;
