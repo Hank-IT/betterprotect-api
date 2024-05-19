@@ -5,6 +5,7 @@ namespace App\Services\PostfixQueue;
 use App\Services\PostfixQueue\Contracts\DataDriver as DataDriverContract;
 use App\Services\PostfixQueue\Dtos\PostfixQueueEntry;
 use App\Services\PostfixQueue\Dtos\PostfixQueueEntryRecipients;
+use Illuminate\Support\Facades\App;
 
 class PostfixQueue
 {
@@ -15,7 +16,7 @@ class PostfixQueue
      */
     public function get(): array
     {
-        $output = $this->dataDriver->get();
+        $output = App::call([$this->dataDriver, 'get']);
 
         // each mail is its own json object
         $output = explode("\n", $output);

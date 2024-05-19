@@ -2,24 +2,26 @@
 
 namespace App\Services\PostfixQueue\Actions;
 
-use App\Exceptions\ErrorException;
+use Exception;
+use App\Services\Server\Actions\GetConsoleForServer;
+use App\Services\Server\Models\Server;
 
 class DeleteMailFromPostfixQueue
 {
-    public function execute(string $queueId): string
+    public function __construct(protected GetConsoleForServer $getConsoleForServer) {}
+
+    public function execute(Server $server, string $queueId): string
     {
-        // ToDo
+        $console = $this->getConsoleForServer->execute($server);
 
-        $console = $this->server->console()->access();
-
-        $console->sudo($this->server->ssh_command_sudo)
-            ->bin($this->server->ssh_command_postsuper)
+        $console->sudo($server->ssh_command_sudo)
+            ->bin($server->ssh_command_postsuper)
             ->param('-d')
             ->param($queueId)
             ->exec();
 
         if ($console->getExitStatus() !== 0) {
-            throw new ErrorException;
+            throw new Exception;
         }
 
         return $console->getOutput();

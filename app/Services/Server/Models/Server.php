@@ -20,15 +20,6 @@ class Server extends Model
         'last_policy_install' => 'datetime',
     ];
 
-    /**
-     * @throws PublicKeyMismatchException
-     * @throws \MrCrankHank\ConsoleAccess\Exceptions\ConnectionNotPossibleException
-     */
-    public function console()
-    {
-        return app(ServerConsole::class, ['server' => $this]);
-    }
-
     public function getDatabaseDetails(string $database): DatabaseDetails
     {
         return new DatabaseDetails([

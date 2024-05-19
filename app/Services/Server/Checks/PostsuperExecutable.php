@@ -2,23 +2,28 @@
 
 namespace App\Services\Server\Checks;
 
+use App\Services\Server\Actions\GetConsoleForServer;
 use App\Services\Server\Contracts\ServerMonitoringCheck;
 use App\Services\Server\Models\Server;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 
 class PostsuperExecutable implements ServerMonitoringCheck
 {
+    public function __construct(protected GetConsoleForServer $getConsoleForServer) {}
 
-    public function getState(Server $server): mixed
+
+    public function getState(Server $server): bool
     {
-        $this->console->sudo($this->server->ssh_command_sudo . ' -n')->bin($this->server->ssh_command_postsuper)->exec();
+        $console = $this->getConsoleForServer->execute($server);
 
-        Log::debug($this->console->getOutput());
+        $console->sudo($server->ssh_command_sudo . ' -n')
+            ->bin($server->ssh_command_postsuper)
+            ->exec();
 
-        if ($this->console->getExitStatus() !== 0) {
-            throw ValidationException::withMessages(['ssh_command_postsuper' => 'Befehl konnte nicht ausgeführt werden.']);
-        }
+        Log::debug($console->getOutput());
+
+        return $console->getExitStatus() === 0;
+
     }
 
     public function getKey(): string

@@ -4,13 +4,10 @@ namespace App\Services\Server\Actions;
 
 use App\Services\Server\Contracts\ServerMonitoringCheck;
 use App\Services\Server\dtos\ServerState;
-use App\Services\Server\Factories\DatabaseFactory;
 use App\Services\Server\Models\Server;
 
 class GetServerState
 {
-    public function __construct(protected DatabaseFactory $databaseFactory) {}
-
     /**
      * @param $checks ServerMonitoringCheck[]
      */
@@ -19,7 +16,9 @@ class GetServerState
         $state = [];
 
         foreach ($checks as $check) {
-            $state[$check->getKey()] = $check->getState($server);
+            $instance = app($check);
+
+            $state[$instance->getKey()] = $instance->getState($server);
         }
 
         return new ServerState($state);
