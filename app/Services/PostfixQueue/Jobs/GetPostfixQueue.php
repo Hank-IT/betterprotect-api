@@ -26,9 +26,9 @@ class GetPostfixQueue implements ShouldQueue
         ) {
             $state = $getServerStateFromCache->execute($server->hostname);
 
-            if ($state->getSshConnectionState()) {
+            if ($state->getSshConnectionState()->getAvailable()) {
                 $storePostfixQueueInCache->execute(
-                    $server->hostname, $getPostfixQueueEntriesFromServer->execute($server)
+                    $server->hostname, $getPostfixQueueEntriesFromServer->execute($server->getSSHDetails())
                 );
             }
         });

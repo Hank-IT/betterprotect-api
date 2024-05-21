@@ -4,7 +4,7 @@ namespace Tests\Feature\Services\BetterprotectPolicy\Commands;
 
 use App\Services\BetterprotectPolicy\Jobs\BetterprotectPolicyInstallation;
 use App\Services\Server\Models\Server;
-use Illuminate\Foundation\Testing\TestCase;
+use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
 
 class InstallPolicyTest extends TestCase

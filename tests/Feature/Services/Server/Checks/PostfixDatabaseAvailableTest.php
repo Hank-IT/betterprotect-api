@@ -28,7 +28,7 @@ class PostfixDatabaseAvailableTest extends TestCase
             ])->andReturn($databaseMock);
         });
 
-        $this->assertTrue(app(PostfixDatabaseAvailable::class)->getState($server));
+        $this->assertTrue(app(PostfixDatabaseAvailable::class)->getState($server)->getAvailable());
     }
 
     public function test_unavailable()
@@ -45,7 +45,7 @@ class PostfixDatabaseAvailableTest extends TestCase
             ])->andReturn($databaseMock);
         });
 
-        $this->assertFalse(app(PostfixDatabaseAvailable::class)->getState($server));
+        $this->assertFalse(app(PostfixDatabaseAvailable::class)->getState($server)->getAvailable());
     }
 
     public function test_get_key()

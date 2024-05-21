@@ -31,7 +31,7 @@ class PostfixQueue
 
             $recipients = [];
             foreach($payload['recipients'] ?? [] as $recipient) {
-                $recipients = new PostfixQueueEntryRecipients($recipient['address'], $recipient['delay_reason']);
+                $recipients[] = new PostfixQueueEntryRecipients($recipient['address'], $recipient['delay_reason']);
             }
 
             $mails[] = new PostfixQueueEntry(

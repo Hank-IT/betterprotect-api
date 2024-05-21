@@ -15,7 +15,7 @@
         "directorytree/ldaprecord": "^3.6",
         "directorytree/ldaprecord-laravel": "^3.3",
         "doctrine/dbal": "^3.0",
-        "hankit/console-access": "^4.1",
+        "hankit/console-access": "^4.2",
         "io-developer/php-whois": "^4.1",
         "laravel/fortify": "^1.21",
         "laravel/framework": "^11.0",

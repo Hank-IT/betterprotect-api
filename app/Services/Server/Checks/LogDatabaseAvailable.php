@@ -3,6 +3,7 @@
 namespace App\Services\Server\Checks;
 
 use App\Services\Server\Contracts\ServerMonitoringCheck;
+use App\Services\Server\dtos\ServerStateCheckResult;
 use App\Services\Server\Factories\DatabaseFactory;
 use App\Services\Server\Models\Server;
 
@@ -10,11 +11,13 @@ class LogDatabaseAvailable implements ServerMonitoringCheck
 {
     public function __construct(protected DatabaseFactory $databaseFactory) {}
 
-    public function getState(Server $server): mixed
+    public function getState(Server $server): ServerStateCheckResult
     {
-        return $this->databaseFactory->make(
+        $state = $this->databaseFactory->make(
             'log', $server->getDatabaseDetails('log')
         )->available();
+
+        return new ServerStateCheckResult($state);
     }
 
     public function getKey(): string

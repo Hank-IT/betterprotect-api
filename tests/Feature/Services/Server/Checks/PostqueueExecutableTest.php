@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Services\Server\Checks;
 
+use Exception;
 use App\Services\Server\Checks\PostqueueExecutable;
 use App\Services\Server\dtos\SSHDetails;
 use Hamcrest\Core\IsInstanceOf;
@@ -35,10 +36,10 @@ class PostqueueExecutableTest extends TestCase
             ])->andReturn($consoleMock);
         });
 
-        $this->assertTrue(app(PostqueueExecutable::class)->getState($server));
+        $this->assertTrue(app(PostqueueExecutable::class)->getState($server)->getAvailable());
     }
 
-    public function test_error()
+    public function test_unavailable()
     {
         $server = Server::factory()->create();
 
@@ -60,7 +61,31 @@ class PostqueueExecutableTest extends TestCase
             ])->andReturn($consoleMock);
         });
 
-        $this->assertFalse(app(PostqueueExecutable::class)->getState($server));
+        $this->assertFalse(app(PostqueueExecutable::class)->getState($server)->getAvailable());
+    }
+
+    public function test_error()
+    {
+        $server = Server::factory()->create();
+
+        $sshDetails = $server->getSSHDetails();
+
+        $consoleMock = Mockery::mock(ConsoleAccess::class, function (MockInterface $mock) use ($sshDetails) {
+            $mock->shouldReceive('sudo')->once()->withArgs([$sshDetails->getSudoCommand() . ' -n'])->andReturn($mock);
+            $mock->shouldReceive('bin')->once()->withArgs([$sshDetails->getPostqueueCommand()])->andReturn($mock);
+            $mock->shouldReceive('param')->once()->withArgs(['-j'])->andReturn($mock);
+            $mock->shouldReceive('exec')->once()->andThrow(Exception::class);
+            $mock->shouldReceive('getOutput')->once()->andReturn('output');
+        });
+
+        $this->mock(GetConsole::class, function(MockInterface $mock) use($server, $consoleMock) {
+            $mock->shouldReceive('execute')->once()->withArgs([
+                IsInstanceOf::anInstanceOf(SSHDetails::class),
+
+            ])->andReturn($consoleMock);
+        });
+
+        $this->assertFalse(app(PostqueueExecutable::class)->getState($server)->getAvailable());
     }
 
     public function test_get_key()

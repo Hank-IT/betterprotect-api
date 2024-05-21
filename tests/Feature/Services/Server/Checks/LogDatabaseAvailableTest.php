@@ -28,7 +28,7 @@ class LogDatabaseAvailableTest extends TestCase
             ])->andReturn($databaseMock);
         });
 
-        $this->assertTrue(app(LogDatabaseAvailable::class)->getState($server));
+        $this->assertTrue(app(LogDatabaseAvailable::class)->getState($server)->getAvailable());
     }
 
     public function test_unavailable()
@@ -45,7 +45,7 @@ class LogDatabaseAvailableTest extends TestCase
             ])->andReturn($databaseMock);
         });
 
-        $this->assertFalse(app(LogDatabaseAvailable::class)->getState($server));
+        $this->assertFalse(app(LogDatabaseAvailable::class)->getState($server)->getAvailable());
     }
 
     public function test_get_key()

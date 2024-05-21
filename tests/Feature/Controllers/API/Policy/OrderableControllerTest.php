@@ -3,7 +3,6 @@
 namespace Tests\Feature\Controllers\API\Policy;
 
 use App\Services\Milter\Models\MilterException;
-use http\Client;
 use Mockery;
 use App\Services\Authentication\Models\User;
 use App\Services\Order\Actions\MoveItemDown;
