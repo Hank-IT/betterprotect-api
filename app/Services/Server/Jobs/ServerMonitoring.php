@@ -4,6 +4,7 @@ namespace App\Services\Server\Jobs;
 
 use App\Services\Server\Actions\GetServerState;
 use App\Services\Server\Actions\StoreServerStateInCache;
+use App\Services\Server\Events\ServerMonitored;
 use App\Services\Server\Models\Server;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -29,11 +30,13 @@ class ServerMonitoring implements ShouldQueue
         StoreServerStateInCache $storeServerStateInCache,
     ): void {
         Server::all()->each(function (Server $server) use($getServerState, $storeServerStateInCache) {
+            $state = $getServerState->execute($server, $this->checks);
+
             $storeServerStateInCache->execute(
                 $server->hostname, $getServerState->execute($server, $this->checks)
             );
 
-            // ToDo: Broadcast state
+            ServerMonitored::dispatch($state);
         });
     }
 }

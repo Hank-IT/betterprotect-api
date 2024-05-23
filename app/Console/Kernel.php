@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Services\Tasks\Commands\TaskCleanCommand::class,
-        \App\Services\Authentication\Commands\CreateUser::class,
+        \App\Services\User\Commands\CreateUser::class,
         \App\Services\Server\Commands\MigrateCheckCommand::class,
         \App\Services\BetterprotectPolicy\Commands\InstallPolicy::class,
         \App\Services\Transport\Commands\StoreTransportRule::class,

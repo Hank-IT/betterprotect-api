@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Services\Authentication\Commands;
+namespace App\Services\User\Commands;
 
-use App\Services\Authentication\Models\User;
+use App\Services\User\Actions\CreateUser as CreateUserAction;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Hash;
 
 class CreateUser extends Command
 {
@@ -27,17 +26,13 @@ class CreateUser extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(CreateUserAction $createUser)
     {
         $username = $this->ask('What is the username?');
 
         $password = $this->secret('What is the password?');
 
-        User::create([
-            'username' => $username,
-            'password' => Hash::make($password),
-            'role' => 'administrator',
-        ]);
+        $createUser->execute($username, $password, 'administrator');
 
         $this->info('User ' . $username . ' was created successfully.');
     }

@@ -3,69 +3,49 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Services\PostfixQueue\PostfixQueue;
+use App\Services\Pagination\Actions\PaginateArray;
+use App\Services\PostfixQueue\Actions\DeleteMailFromPostfixQueue;
+use App\Services\PostfixQueue\Actions\FlushPostfixQueue;
+use App\Services\PostfixQueue\Actions\GetPostfixQueueEntriesFromCache;
+use App\Services\PostfixQueue\Resources\PostfixQueueEntry;
 use App\Services\Server\Models\Server;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class PostfixQueueController extends Controller
 {
-    public function index(Request $request)
-    {
-        $this->validate($request, [
-            'currentPage' => 'required|int',
-            'perPage' => 'required|int',
+    public function index(
+        Server                          $server,
+        Request                         $request,
+        GetPostfixQueueEntriesFromCache $getPostfixQueueEntriesFromCache,
+        PaginateArray                   $paginateArray,
+    ) {
+        $data = $request->validate([
+            'page_number' => ['required', 'integer'],
+            'page_size' => ['required', 'integer'],
         ]);
 
-        $mails = [];
-        Server::where('ssh_feature_enabled', '=', true)->get()->each(function($server) use(&$mails) {
-            $mails[] = app(PostfixQueue::class, ['server' => $server])->get();
-        });
+        $entries = $getPostfixQueueEntriesFromCache->execute($server->hostname);
 
-        if (empty($mails)) {
-            $mails = [];
-        } else {
-            $mails = collect(array_merge(...$mails));
-
-            // Paginate
-            $count = $mails->count();
-            $offset = ($request->currentPage-1) * $request->perPage;
-            $mails = array_slice($mails->toArray(), $offset, $request->perPage);
-            $mails = new LengthAwarePaginator($mails, $count, $request->perPage, $request->currentPage);
-        }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => null,
-            'data' => $mails,
-        ]);
+        return PostfixQueueEntry::collection(
+            $paginateArray->execute($entries, $data['page_number'], $data['page_size']),
+        );
     }
 
-    public function store()
+    public function store(Server $server, FlushPostfixQueue $flushPostfixQueue)
     {
-        Server::where('ssh_feature_enabled')->get()->each(function($server) {
-            app(PostfixQueue::class, ['server' => $server])->flush();
-        });
+        $flushPostfixQueue->execute($server->getSSHDetails());
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Mail Queue erfolgreich geflushed.',
-            'data' => null,
-        ]);
+        return response(status: 200);
     }
 
-    public function destroy(Request $request, Server $server)
+    public function destroy(Request $request, Server $server, DeleteMailFromPostfixQueue $deleteMailFromPostfixQueue)
     {
-        $this->validate($request, [
-            'queue_id' => 'required|string'
+        $data = $request->validate([
+            'queue_id' => ['required', 'string'],
         ]);
 
-        $output = app(PostfixQueue::class, ['server' => $server])->deleteMail($request->queue_id);
+        $deleteMailFromPostfixQueue->execute($server->getSSHDetails(), $data['queue_id']);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Mail erfolgreich gelöscht.',
-            'data' => $output,
-        ]);
+        return response(status: 200);
     }
 }

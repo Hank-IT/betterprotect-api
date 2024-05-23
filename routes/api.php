@@ -14,6 +14,9 @@ use App\Http\Controllers\API\TaskController;
 use App\Http\Controllers\API\Policy\RecipientLdapController;
 use App\Http\Controllers\API\BetterprotectPolicyController;
 use App\Http\Controllers\API\Server\ServerSchemaController;
+use App\Http\Controllers\API\PostfixQueueCountController;
+use App\Http\Controllers\API\PostfixQueueController;
+use App\Http\Controllers\API\UserController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/v1/servers', [ServerController::class, 'index'])->name('api.v1.server.index')->middleware('role:readonly');
@@ -21,6 +24,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/v1/servers', [ServerController::class, 'store'])->name('api.v1.server.store')->middleware('role:administrator');
     Route::put('/v1/servers/{server}', [ServerController::class, 'update'])->name('api.v1.server.update')->middleware('role:administrator');
     Route::delete('/v1/servers/{server}', [ServerController::class, 'destroy'])->name('api.v1.server.destroy')->middleware('role:administrator');
+
+    Route::get('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'index'])->name('api.v1.server.postfix-queue.index')->middleware('role:readonly');
+    Route::post('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'store'])->name('api.v1.server.postfix-queue.store')->middleware('role:editor');
+    Route::delete('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'destroy'])->name('api.v1.server.postfix-queue.store')->middleware('role:editor');
+
+    Route::get('/v1/servers/{server}/postfix-queue/count', PostfixQueueCountController::class)->name('api.v1.server.postfix-queue.count')->middleware('role:readonly');
 
     Route::get('/server/{server}/schema', [ServerSchemaController::class, 'show'])->name('api.v1.server.schema.check')->middleware('role:readonly');
     Route::post('/server/{server}/schema', [ServerSchemaController::class, 'store'])->name('api.v1.server.schema.migrate')->middleware('role:editor');
@@ -58,4 +67,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::patch('v1/policy/activation/{activatableEntitiesEnum}/{id}', ActivatableController::class)->middleware('role:editor')->name('api.v1.activation.update');
 
     Route::get('v1/tasks', TaskController::class)->middleware('role:readonly')->name('api.v1.tasks.index');
+
+    Route::get('v1/user', [UserController::class, 'index'])->middleware('role:administrator')->name('api.v1.user.index');
+    Route::post('v1/user', [UserController::class, 'store'])->middleware('role:administrator')->name('api.v1.user.store');
+    Route::get('v1/user/{user}', [UserController::class, 'show'])->middleware('role:administrator')->name('api.v1.user.show');
+    Route::patch('v1/user/{user}', [UserController::class, 'update'])->middleware('role:administrator')->name('api.v1.user.update');
+    Route::delete('v1/user/{user}', [UserController::class, 'destroy'])->middleware('role:administrator')->name('api.v1.user.destroy');
 });

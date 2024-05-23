@@ -2,7 +2,7 @@
 
 namespace App\Services\Transport\Commands;
 
-use App\Services\Transport\Models\Transport;
+use App\Services\Transport\Actions\DeleteTransportsByDataSource;
 use Illuminate\Console\Command;
 
 class CleanTransportRulesByDataSource extends Command
@@ -26,10 +26,10 @@ class CleanTransportRulesByDataSource extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(DeleteTransportsByDataSource $deleteTransportsByDataSource)
     {
-        Transport::where('data_source', '=', $this->argument('data_source'))->delete();
+        $deleteTransportsByDataSource->execute($this->argument('data_source'));
 
-        return true;
+        return 0;
     }
 }

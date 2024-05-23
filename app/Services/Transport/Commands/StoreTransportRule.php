@@ -2,9 +2,11 @@
 
 namespace App\Services\Transport\Commands;
 
-use App\Services\Transport\Models\Transport;
+use App\Services\Transport\Actions\CreateTransport;
+use App\Services\Transport\Actions\ValidateCreateTransport;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class StoreTransportRule extends Command
 {
@@ -27,7 +29,7 @@ class StoreTransportRule extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(CreateTransport $createTransport, ValidateCreateTransport $validateCreateTransport)
     {
         $data = [
             'domain' => $this->argument('domain'),
@@ -39,24 +41,24 @@ class StoreTransportRule extends Command
             'data_source' => $this->option('data_source'),
         ];
 
-        $validator = Validator::make($data, [
-            'domain' => 'required|string|unique:transports',
-            'transport' => 'nullable|string',
-            'nexthop_type' => 'nullable|string|in:ipv4,ipv6,hostname',
-            'nexthop' => 'nullable|string',
-            'nexthop_port' => 'nullable|integer|max:65535|required_unless:nexthop_type,null',
-            'nexthop_mx' => 'nullable|boolean',
-            'data_source' => 'nullable|string',
-        ]);
+        $validator = $validateCreateTransport->execute($data);
 
         if ($validator->fails()) {
-            $this->error('The provided data is invalid.');
+            $this->error(sprintf('The provided data is invalid. Errors: %s', json_encode($validator->errors())));
 
-            return false;
+            return 1;
         }
 
-        Transport::create($data);
+        $createTransport->execute(
+            $data['domain'],
+            $data['transport'],
+            $data['nexthop_type'],
+            $data['nexthop'],
+            $data['nexthop_port'],
+            $data['nexthop_mx'],
+            $data['data_source'],
+        );
 
-        return true;
+        return 0;
     }
 }

@@ -35,4 +35,9 @@ class ServerState
     {
         return $this->state['ssh-connection'];
     }
+
+    public function toArray(): array
+    {
+        return $this->state;
+    }
 }

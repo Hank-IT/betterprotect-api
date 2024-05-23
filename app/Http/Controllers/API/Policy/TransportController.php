@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Transport\Actions\CreateTransport;
 use App\Services\Transport\Actions\DeleteManyTransports;
 use App\Services\Transport\Actions\PaginateTransports;
+use App\Services\Transport\Actions\ValidateCreateTransport;
 use App\Services\Transport\Resources\TransportResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -26,37 +27,19 @@ class TransportController extends Controller
         );
     }
 
-    public function store(Request $request, CreateTransport $createTransport)
-    {
-        $validator = Validator::make($request->all(), [
-            'domain' => ['required', 'string', Rule::unique('transports')],
-            'transport' => ['nullable', 'string'],
-            'nexthop_type' => ['nullable', 'string', Rule::in(['ipv4,ipv6,hostname'])],
-            'nexthop' => ['nullable', 'string'],
-            'nexthop_port' => ['nullable', 'integer', 'max:65535', 'required_unless:nexthop_type,null'],
-            'nexthop_mx' => ['nullable', 'boolean'],
-        ]);
-
-        $validator->sometimes('nexthop', ['required'], function ($input) {
-            return $input->nexthope_type != null;
-        });
-
-        $validator->sometimes('nexthop', ['required', 'ipv4'], function ($input) {
-            return $input->nexthop_type === 'ipv4';
-        });
-
-        $validator->sometimes('nexthop', ['required', 'ipv6'], function ($input) {
-            return $input->nexthop_type === 'ipv6';
-        });
+    public function store(
+        Request $request, CreateTransport $createTransport, ValidateCreateTransport $validateCreateTransport
+    ) {
+        $data = $validateCreateTransport->execute($request->all())->validate();
 
         return new TransportResource(
             $createTransport->execute(
-                $request->input('domain'),
-                $request->input('transport'),
-                $request->input('nexthop_type'),
-                $request->input('nexthop'),
-                $request->input('nexthop_port'),
-                $request->input('nexthop_mx'),
+                $data['domain'],
+                $data['transport'],
+                $data['nexthop_type'],
+                $data['nexthop'],
+                $data['nexthop_port'],
+                $data['nexthop_mx'],
                 'local',
             )
         );
