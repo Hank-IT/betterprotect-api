@@ -2,7 +2,9 @@
 
 namespace App\Services\Server\dtos;
 
-class ServerState
+use Illuminate\Contracts\Support\Arrayable;
+
+class ServerState implements Arrayable
 {
     public function __construct(protected array $state) {}
 

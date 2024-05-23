@@ -2,7 +2,9 @@
 
 namespace App\Services\Server\dtos;
 
-class ServerStateCheckResult
+use Illuminate\Contracts\Support\Arrayable;
+
+class ServerStateCheckResult implements Arrayable
 {
     public function __construct(protected bool $available, protected ?string $description = null) {}
 
@@ -14,5 +16,13 @@ class ServerStateCheckResult
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function toArray()
+    {
+        return [
+            'available' => $this->getAvailable(),
+            'description' => $this->getDescription(),
+        ];
     }
 }
