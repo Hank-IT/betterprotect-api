@@ -7,17 +7,9 @@ use App\Services\Authentication\Models\User;
 
 class Authorizer
 {
-    /**
-     * @var User
-     */
-    protected $user;
+    protected User $user;
 
-    /**
-     * Available roles with priority
-     *
-     * @var array
-     */
-    protected $roles = [
+    protected array $roles = [
         'readonly' => [
             'priority' => 10,
         ],
@@ -32,11 +24,6 @@ class Authorizer
         ],
     ];
 
-    /**
-     * Authorizer constructor.
-     * @param User $user
-     * @throws ErrorException
-     */
     public function __construct(User $user)
     {
         if (! $user->exists) {
@@ -46,21 +33,12 @@ class Authorizer
         $this->user = $user;
     }
 
-    /**
-     * @param string $role
-     * @return bool
-     * @throws ErrorException
-     */
-    public function isRole(string $role)
+    public function isRole(string $role): bool
     {
         return $this->getUserRolePriority() >= $this->getTargetRolePriority($role);
     }
 
-    /**
-     * @return mixed
-     * @throws ErrorException
-     */
-    protected function getUserRolePriority()
+    protected function getUserRolePriority(): int
     {
         if (! isset($this->roles[$this->user->role])) {
             throw new ErrorException('Die angegebene Rolle existiert nicht.');
@@ -69,12 +47,7 @@ class Authorizer
         return $this->roles[$this->user->role]['priority'];
     }
 
-    /**
-     * @param string $role
-     * @return mixed
-     * @throws ErrorException
-     */
-    protected function getTargetRolePriority(string $role)
+    protected function getTargetRolePriority(string $role): int
     {
         if (! isset($this->roles[$role])) {
             throw new ErrorException('Die angegebene Rolle existiert nicht.');
