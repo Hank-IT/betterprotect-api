@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Services\Tasks\Enums\TaskStatusEnum;
 use App\Services\Tasks\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,7 +20,7 @@ class TaskFactory extends Factory
             'task' => 'testing',
             'started_at' => Carbon::now()->subHour(),
             'ended_at' => Carbon::now(),
-            'status' => 0,
+            'status' => TaskStatusEnum::QUEUED->value,
         ];
     }
 }

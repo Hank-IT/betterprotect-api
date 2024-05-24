@@ -18,7 +18,7 @@ class Role
     public function handle($request, Closure $next, $role)
     {
         if (! app(Authorizer::class, ['user' => $request->user()])->isRole($role)) {
-            throw new AuthorizationException('Sie sind nicht für die angeforderte Aktion berechtigt.');
+            throw new AuthorizationException;
         }
 
         return $next($request);

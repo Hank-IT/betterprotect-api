@@ -2,8 +2,7 @@
 
 namespace App\Services\Tasks\Commands;
 
-use App\Services\Tasks\Models\Task;
-use Carbon\Carbon;
+use App\Services\Tasks\Actions\TimeoutTasks;
 use Illuminate\Console\Command;
 
 class TaskCleanCommand extends Command
@@ -27,14 +26,10 @@ class TaskCleanCommand extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(TimeoutTasks $timeoutTasks)
     {
-        Task::query()
-            ->where('startDate', '<=', Carbon::now()->subHour(2))
-            ->whereNull('endDate')
-            ->get()
-            ->each(function($task) {
-                $task->update(['message' => 'Timeout', 'status' => Task::STATUS_ERROR]);
-        });
+        $timeoutTasks->execute();
+
+        return 0;
     }
 }

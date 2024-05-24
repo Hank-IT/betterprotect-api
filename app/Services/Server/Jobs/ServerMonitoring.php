@@ -32,9 +32,7 @@ class ServerMonitoring implements ShouldQueue
         Server::all()->each(function (Server $server) use($getServerState, $storeServerStateInCache) {
             $state = $getServerState->execute($server, $this->checks);
 
-            $storeServerStateInCache->execute(
-                $server->hostname, $getServerState->execute($server, $this->checks)
-            );
+            $storeServerStateInCache->execute($server->hostname, $state);
 
             ServerMonitored::dispatch($state);
         });

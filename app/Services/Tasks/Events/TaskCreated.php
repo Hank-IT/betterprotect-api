@@ -2,7 +2,7 @@
 
 namespace App\Services\Tasks\Events;
 
-use App\Services\Tasks\Models\Task;
+use App\Services\Tasks\Enums\TaskStatusEnum;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -20,7 +20,7 @@ class TaskCreated implements ShouldBroadcast
         public string $id,
         public string $task,
         public string $username,
-        public string $status = Task::STATUS_QUEUED,
+        public string $status = TaskStatusEnum::QUEUED->value,
     ) {}
 
     public function broadcastOn()
