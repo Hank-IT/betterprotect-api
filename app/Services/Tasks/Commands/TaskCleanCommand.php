@@ -29,7 +29,8 @@ class TaskCleanCommand extends Command
      */
     public function handle()
     {
-        Task::where('startDate', '<=', Carbon::now()->subHour(2))
+        Task::query()
+            ->where('startDate', '<=', Carbon::now()->subHour(2))
             ->whereNull('endDate')
             ->get()
             ->each(function($task) {

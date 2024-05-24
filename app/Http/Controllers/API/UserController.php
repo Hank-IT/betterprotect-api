@@ -8,7 +8,7 @@ use App\Services\User\Actions\CreateUser;
 use App\Services\User\Actions\DeleteUser;
 use App\Services\User\Actions\UpdateUser;
 use App\Services\User\Resources\UserResource;
-use App\Services\Users\Actions\PaginateUsers;
+use App\Services\User\Actions\PaginateUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -22,7 +22,6 @@ class UserController extends Controller
             'page_size' => ['required', 'integer'],
             'search' => ['nullable', 'string'],
         ]);
-
 
         return UserResource::collection(
             $paginateUsers->execute($data['page_number'], $data['page_size'], $data['search'] ?? null)

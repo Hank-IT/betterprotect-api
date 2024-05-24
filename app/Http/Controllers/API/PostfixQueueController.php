@@ -7,7 +7,7 @@ use App\Services\Pagination\Actions\PaginateArray;
 use App\Services\PostfixQueue\Actions\DeleteMailFromPostfixQueue;
 use App\Services\PostfixQueue\Actions\FlushPostfixQueue;
 use App\Services\PostfixQueue\Actions\GetPostfixQueueEntriesFromCache;
-use App\Services\PostfixQueue\Resources\PostfixQueueEntry;
+use App\Services\PostfixQueue\Resources\PostfixQueueEntryResource;
 use App\Services\Server\Models\Server;
 use Illuminate\Http\Request;
 
@@ -26,7 +26,7 @@ class PostfixQueueController extends Controller
 
         $entries = $getPostfixQueueEntriesFromCache->execute($server->hostname);
 
-        return PostfixQueueEntry::collection(
+        return PostfixQueueEntryResource::collection(
             $paginateArray->execute($entries, $data['page_number'], $data['page_size']),
         );
     }

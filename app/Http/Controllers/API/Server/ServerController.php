@@ -9,7 +9,6 @@ use App\Services\Server\Actions\DeleteServer;
 use App\Services\Server\Actions\UpdateServer;
 use App\Services\Server\dtos\DatabaseDetails;
 use App\Services\Server\Models\Server;
-use App\Services\Server\Resources\ServerIndexResource;
 use App\Services\Server\Resources\ServerResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -18,7 +17,7 @@ class ServerController extends Controller
 {
     public function index()
     {
-        return ServerIndexResource::collection(Server::all());
+        return ServerResource::collection(Server::all());
     }
 
     public function show(Server $server)

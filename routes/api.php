@@ -26,8 +26,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/v1/servers/{server}', [ServerController::class, 'destroy'])->name('api.v1.server.destroy')->middleware('role:administrator');
 
     Route::get('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'index'])->name('api.v1.server.postfix-queue.index')->middleware('role:readonly');
-    Route::post('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'store'])->name('api.v1.server.postfix-queue.store')->middleware('role:editor');
-    Route::delete('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'destroy'])->name('api.v1.server.postfix-queue.store')->middleware('role:editor');
+    Route::post('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'store'])->name('api.v1.server.postfix-queue.flush')->middleware('role:editor');
+    Route::delete('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'destroy'])->name('api.v1.server.postfix-queue.destroy')->middleware('role:editor');
 
     Route::get('/v1/servers/{server}/postfix-queue/count', PostfixQueueCountController::class)->name('api.v1.server.postfix-queue.count')->middleware('role:readonly');
 

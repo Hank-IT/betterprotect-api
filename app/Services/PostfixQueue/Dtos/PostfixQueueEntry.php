@@ -7,7 +7,7 @@ use Carbon\Carbon;
 class PostfixQueueEntry
 {
     /**
-     * @param $recipients PostfixQueueEntryRecipients[]
+     * @param $recipients PostfixQueueEntryRecipient[]
      */
     public function __construct(
         protected string $queueName,
@@ -50,7 +50,7 @@ class PostfixQueueEntry
     }
 
     /**
-     * @return PostfixQueueEntryRecipients[]
+     * @return PostfixQueueEntryRecipient[]
      */
     public function getRecipients(): array
     {

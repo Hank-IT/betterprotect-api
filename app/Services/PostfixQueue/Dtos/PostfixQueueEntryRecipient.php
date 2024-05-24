@@ -2,7 +2,7 @@
 
 namespace App\Services\PostfixQueue\Dtos;
 
-class PostfixQueueEntryRecipients
+class PostfixQueueEntryRecipient
 {
     public function __construct(
         protected string $address,

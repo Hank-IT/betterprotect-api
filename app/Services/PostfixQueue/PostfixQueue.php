@@ -4,7 +4,7 @@ namespace App\Services\PostfixQueue;
 
 use App\Services\PostfixQueue\Contracts\DataDriver as DataDriverContract;
 use App\Services\PostfixQueue\Dtos\PostfixQueueEntry;
-use App\Services\PostfixQueue\Dtos\PostfixQueueEntryRecipients;
+use App\Services\PostfixQueue\Dtos\PostfixQueueEntryRecipient;
 use Illuminate\Support\Facades\App;
 
 class PostfixQueue
@@ -31,7 +31,7 @@ class PostfixQueue
 
             $recipients = [];
             foreach($payload['recipients'] ?? [] as $recipient) {
-                $recipients[] = new PostfixQueueEntryRecipients($recipient['address'], $recipient['delay_reason']);
+                $recipients[] = new PostfixQueueEntryRecipient($recipient['address'], $recipient['delay_reason']);
             }
 
             $mails[] = new PostfixQueueEntry(

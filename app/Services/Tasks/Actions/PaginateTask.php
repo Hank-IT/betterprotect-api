@@ -11,6 +11,6 @@ class PaginateTask
     {
         return Task::query()
             ->with('taskProgresses')
-            ->orderByDesc('startDate')->paginate($pageSize, ['*'], $pageNumber);
+            ->orderByDesc('started_at')->paginate($pageSize, ['*'], $pageNumber);
     }
 }
