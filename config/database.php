@@ -93,4 +93,13 @@ return [
 
     ],
 
+    'opensearch' => [
+        'default' => [
+            'host' => env('OPENSEARCH_HOST', 'https://opensearch:9200'),
+            'username' => env('OPENSEARCH_USER'),
+            'password' => env('OPENSEARCH_PASSWORD'),
+            'ssl_verification' => (bool) env('OPENSEARCH_SSL_VERIFICATION', true),
+        ]
+    ]
+
 ];

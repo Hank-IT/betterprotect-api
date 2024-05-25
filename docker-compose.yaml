@@ -157,7 +157,7 @@ services:
             discovery.type: single-node
             node.name: opensearch
             OPENSEARCH_JAVA_OPTS: "-Xms2048m -Xmx4096m"
-            OPENSEARCH_INITIAL_ADMIN_PASSWORD: password
+            OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
         volumes:
             - opensearch-data:/usr/share/opensearch/data
             - ./config.yml:/usr/share/opensearch/plugins/opensearch-security/securityconfig/config.yml

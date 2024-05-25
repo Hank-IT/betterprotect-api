@@ -16,7 +16,7 @@ class MoveItemDown
             ->where($orderable->getOrderColumn(), '=', $orderable->getOrderColumnValue() + 1)
             ->decrement($orderable->getOrderColumn());
 
-        $orderable->increment($orderable->getOrderColumn());
+        $orderable->query()->increment($orderable->getOrderColumn());
 
         $this->fixItemOrder->execute($orderable);
     }

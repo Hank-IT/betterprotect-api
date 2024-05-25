@@ -14,37 +14,7 @@ WORKDIR /app
 
 COPY --from=composer  /app .
 
-RUN php artisan event:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan VueTranslation:generate
-
-FROM node:19-alpine as node
-
-WORKDIR /app
-
-COPY --from=composer  /app .
-
-RUN npm ci && \
-    npm run prod && \
-    rm -f .env.testing && \
-    rm -f .eslintrc.js && \
-    rm -f .gitattributes && \
-    rm -f .gitignore && \
-    rm -f auth.json && \
-    rm -f build.xml && \
-    rm -f composer.lock && \
-    rm -f env.properties.example && \
-    rm -f package.json && \
-    rm -f package-lock.json && \
-    rm -f phpstorm.config.js && \
-    rm -f phpunit.xml && \
-    rm -f readme.md && \
-    rm -f webpack.mix.js && \
-    rm -rf node_modules && \
-    rm -rf docker && \
-    rm -rf .git && \
-    rm -rf tests
+RUN php artisan event:cache && php artisan route:cache
 
 FROM php:8.2-fpm-alpine as production
 ARG FPM_MAX_CHILDREN=96
@@ -57,6 +27,18 @@ ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
     PHP_OPCACHE_MAX_ACCELERATED_FILES="10000" \
     PHP_OPCACHE_MEMORY_CONSUMPTION="192" \
     PHP_OPCACHE_MAX_WASTED_PERCENTAGE="10"
+
+RUN rm -f .env.testing && \
+    rm -f .gitattributes && \
+    rm -f .gitignore && \
+    rm -f auth.json && \
+    rm -f composer.lock && \
+    rm -f phpstorm.config.js && \
+    rm -f phpunit.xml && \
+    rm -f readme.md && \
+    rm -rf docker && \
+    rm -rf .git && \
+    rm -rf tests
 
 RUN echo "clear_env = no" >> /usr/local/etc/php-fpm.d/zz-docker.conf && \
     echo "pm = dynamic" >> /usr/local/etc/php-fpm.d/zz-docker.conf && \
@@ -90,7 +72,7 @@ RUN docker-php-ext-configure gd --with-jpeg && \
 
 RUN apk del .build-dependencies-in-virtual-world && rm -rf /tmp/pear
 
-COPY --from=node --chown=root:www-data /app /var/www/html
+COPY --from=artisan --chown=root:www-data /app /var/www/html
 COPY --chown=root:root --chmod=0755 docker/fpm/deploy.sh /deploy.sh
 COPY --chown=root:root docker/fpm/sudo /etc/sudoers.d/bp
 COPY --chown=root:root --chmod=0755 \

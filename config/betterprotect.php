@@ -10,5 +10,15 @@ return [
     /*
      *
      */
-    'ldap_query_ignored_domains' => env('LDAP_QUERY_IGNORED_DOMAINS')
+    'ldap_query_ignored_domains' => env('LDAP_QUERY_IGNORED_DOMAINS'),
+
+    /*
+     *
+     */
+    'opensearch-postfix-archive' => env('OPENSEARCH_POSTFIX_ARCHIVE', 'postfix-archive-*'),
+
+    /*
+     *
+     */
+    'opensearch-postfix-parsed' => env('OPENSEARCH_POSTFIX_PARSED', 'postfix-parsed-*'),
 ];
