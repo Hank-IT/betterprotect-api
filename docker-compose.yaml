@@ -98,15 +98,6 @@ services:
     redis:
         image: redis
 
-    mix:
-        image: node:19-alpine
-        working_dir: /home/node/app
-        entrypoint: npm run watch
-        networks:
-            - traefik
-        volumes:
-            - ./:/home/node/app
-
     ssh-mx00:
         build:
             context: .

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => 'Betterprotect',
+    'name' => 'betterprotect-api',
 
     'version' => '1.11',
 
@@ -177,7 +177,6 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\AuthSettingsServiceProvider::class,
 
     ],
 

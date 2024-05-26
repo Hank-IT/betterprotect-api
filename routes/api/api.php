@@ -19,9 +19,12 @@ use App\Http\Controllers\API\Server\ServerSchemaController;
 use App\Http\Controllers\API\PostfixQueueCountController;
 use App\Http\Controllers\API\PostfixQueueController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\AuthUserController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Broadcast::routes();
+
+    Route::get('/v1/auth-user', AuthUserController::class)->name('api.v1.auth-user.show');
 
     Route::get('/v1/servers', [ServerController::class, 'index'])->name('api.v1.server.index')->middleware('role:readonly');
     Route::get('/v1/servers/{server}', [ServerController::class, 'show'])->name('api.v1.server.show')->middleware('role:readonly');
