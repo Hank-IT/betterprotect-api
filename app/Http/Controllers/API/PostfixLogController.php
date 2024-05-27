@@ -9,7 +9,6 @@ use App\Services\PostfixLog\RefactorMeParser;
 use App\Services\PostfixLog\Resources\PostfixLogRowResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class PostfixLogController extends Controller
 {
