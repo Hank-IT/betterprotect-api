@@ -9,6 +9,7 @@ use App\Services\Server\Actions\DeleteServer;
 use App\Services\Server\Actions\UpdateServer;
 use App\Services\Server\dtos\DatabaseDetails;
 use App\Services\Server\Models\Server;
+use App\Services\Server\Resources\ServerFullResource;
 use App\Services\Server\Resources\ServerResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -22,7 +23,7 @@ class ServerController extends Controller
 
     public function show(Server $server)
     {
-        return new ServerResource($server);
+        return new ServerFullResource($server);
     }
 
     public function store(Request $request, CreateServer $createServer)
@@ -94,7 +95,7 @@ class ServerController extends Controller
 
             'ssh_user' => ['required', 'string'],
             'ssh_public_key' => ['required', 'string'],
-            'ssh_private_key' => ['required', 'string'],
+            'ssh_private_key' => ['nullable', 'string'],
             'ssh_command_sudo' => ['required', 'string'],
             'ssh_command_postqueue' => ['required', 'string'],
             'ssh_command_postsuper' => ['required', 'string'],
@@ -110,7 +111,7 @@ class ServerController extends Controller
             $data['postfix_db_host'],
             $data['postfix_db_name'],
             $data['postfix_db_user'],
-            $processPassword->execute($data['postfix_db_password'], $server->postfix_db_password),
+            $processPassword->execute($data['postfix_db_password'] ?? null, decrypt($server->postfix_db_password)),
             $data['postfix_db_port'],
         );
 
@@ -118,7 +119,7 @@ class ServerController extends Controller
             $data['log_db_host'],
             $data['log_db_name'],
             $data['log_db_user'],
-            $processPassword->execute($data['log_db_password'], $server->log_db_password),
+            $processPassword->execute($data['log_db_password'] ?? null, decrypt($server->log_db_password)),
             $data['log_db_port'],
         );
 
@@ -129,7 +130,7 @@ class ServerController extends Controller
             $logDb,
             $data['ssh_user'],
             $data['ssh_public_key'],
-            $processPassword->execute($data['ssh_private_key'], $server->ssh_private_key),
+            $processPassword->execute($data['ssh_private_key'] ?? null, decrypt($server->ssh_private_key)),
             $data['ssh_command_sudo'],
             $data['ssh_command_postqueue'],
             $data['ssh_command_postsuper'],

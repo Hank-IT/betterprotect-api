@@ -6,6 +6,7 @@ use App\Services\Server\Contracts\ServerMonitoringCheck;
 use App\Services\Server\dtos\ServerStateCheckResult;
 use App\Services\Server\Factories\DatabaseFactory;
 use App\Services\Server\Models\Server;
+use Carbon\Carbon;
 
 class LogDatabaseAvailable implements ServerMonitoringCheck
 {
@@ -17,7 +18,7 @@ class LogDatabaseAvailable implements ServerMonitoringCheck
             'log', $server->getDatabaseDetails('log')
         )->available();
 
-        return new ServerStateCheckResult($state);
+        return new ServerStateCheckResult($state, Carbon::now(), 'Error: Log database is unavailable.');
     }
 
     public function getKey(): string

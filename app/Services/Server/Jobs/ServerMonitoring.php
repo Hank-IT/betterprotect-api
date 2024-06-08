@@ -6,6 +6,7 @@ use App\Services\Server\Actions\GetServerState;
 use App\Services\Server\Actions\StoreServerStateInCache;
 use App\Services\Server\Events\ServerMonitored;
 use App\Services\Server\Models\Server;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -33,6 +34,10 @@ class ServerMonitoring implements ShouldQueue
             $state = $getServerState->execute($server, $this->checks);
 
             $storeServerStateInCache->execute($server->hostname, $state);
+
+            $server->update([
+                'monitored_at' => Carbon::now(),
+            ]);
 
             ServerMonitored::dispatch($state);
         });

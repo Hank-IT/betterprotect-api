@@ -20,6 +20,7 @@ use App\Http\Controllers\API\PostfixQueueCountController;
 use App\Http\Controllers\API\PostfixQueueController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\AuthUserController;
+use App\Http\Controllers\API\Server\ServerStateController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Broadcast::routes();
@@ -31,6 +32,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/v1/servers', [ServerController::class, 'store'])->name('api.v1.server.store')->middleware('role:administrator');
     Route::put('/v1/servers/{server}', [ServerController::class, 'update'])->name('api.v1.server.update')->middleware('role:administrator');
     Route::delete('/v1/servers/{server}', [ServerController::class, 'destroy'])->name('api.v1.server.destroy')->middleware('role:administrator');
+    Route::get('/v1/servers/{server}/state', ServerStateController::class)->name('api.v1.server.state')->middleware('role:readonly');
 
     Route::get('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'index'])->name('api.v1.server.postfix-queue.index')->middleware('role:readonly');
     Route::post('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'store'])->name('api.v1.server.postfix-queue.flush')->middleware('role:editor');

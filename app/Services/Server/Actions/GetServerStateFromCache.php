@@ -11,7 +11,7 @@ class GetServerStateFromCache
         protected GetServerStateCacheKeyForServer $getServerStateCacheKeyForServer,
     ) {}
 
-    public function execute(string $hostname): ServerState
+    public function execute(string $hostname): ?ServerState
     {
         return Cache::get($this->getServerStateCacheKeyForServer->execute($hostname));
     }

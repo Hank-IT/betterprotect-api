@@ -8,7 +8,6 @@ class ProcessPassword
     {
         // Empty string means we clear the password
         if ($password === '') {
-
             return '';
         }
 

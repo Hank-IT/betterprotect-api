@@ -71,9 +71,6 @@ services:
         environment:
             PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
             PHP_OPCACHE_ENABLE: 0
-        deploy:
-            mode: replicated
-            replicas: 6
         user: "${UID:-1000}:${UID:-1000}"
         volumes:
             - "./:/var/www/html"
@@ -86,9 +83,6 @@ services:
         environment:
             PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
             PHP_OPCACHE_ENABLE: 0
-        deploy:
-            mode: replicated
-            replicas: 6
         user: "${UID:-1000}:${UID:-1000}"
         volumes:
             - "./:/var/www/html"

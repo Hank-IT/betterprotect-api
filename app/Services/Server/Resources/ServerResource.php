@@ -13,6 +13,7 @@ class ServerResource extends JsonResource
             'id' => $this->getKey(),
             'hostname' => $this->hostname,
             'last_policy_install' => $this->last_policy_install,
+            'monitored_at' => $this->monitored_at,
         ];
     }
 }

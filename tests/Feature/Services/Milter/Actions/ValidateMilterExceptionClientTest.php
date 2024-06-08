@@ -43,6 +43,11 @@ class ValidateMilterExceptionClientTest extends TestCase
             ],
             [
                 'client_ipv4_net',
+                '10.0.0.0/33',
+                ValidationException::class,
+            ],
+            [
+                'client_ipv4_net',
                 '192.168.0.1',
                 ValidationException::class,
             ]

@@ -38,7 +38,7 @@ class ValidateClientTest extends TestCase
             ],
             [
                 'client_ipv4_net',
-                '127.0.0.1',
+                '127.0.0.0/33',
                 ValidationException::class,
             ],
         ];

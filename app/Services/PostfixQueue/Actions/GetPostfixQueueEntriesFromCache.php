@@ -14,7 +14,7 @@ class GetPostfixQueueEntriesFromCache
     /**
      * @return PostfixQueueEntry[]
      */
-    public function execute(string $hostname): array
+    public function execute(string $hostname): ?array
     {
         return Cache::get($this->getPostfixQueueCacheKeyForServer->execute($hostname));
     }

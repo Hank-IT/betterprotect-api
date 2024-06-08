@@ -2,11 +2,13 @@
 
 namespace App\Services\Server\Checks;
 
+use Carbon\Carbon;
 use Exception;
 use App\Services\Server\Actions\GetConsole;
 use App\Services\Server\Contracts\ServerMonitoringCheck;
 use App\Services\Server\dtos\ServerStateCheckResult;
 use App\Services\Server\Models\Server;
+use phpseclib3\Exception\NoKeyLoadedException;
 
 class PostqueueExecutable implements ServerMonitoringCheck
 {
@@ -16,7 +18,24 @@ class PostqueueExecutable implements ServerMonitoringCheck
     {
         $sshDetails = $server->getSSHDetails();
 
-        $console = $this->getConsole->execute($sshDetails);
+        try {
+            $console = $this->getConsole->execute($sshDetails);
+        } catch (NoKeyLoadedException $exception) {
+            return new ServerStateCheckResult(
+                false,
+                Carbon::now(),
+                sprintf(
+                    'Error: Unable to read private key, Details: %s',
+                    $exception->getMessage()
+                )
+            );
+        } catch (Exception $exception) {
+            return new ServerStateCheckResult(
+                false,
+                Carbon::now(),
+                sprintf('Error: Unable to get ssh connection., Details: %s', $exception->getMessage())
+            );
+        }
 
         try {
             $console->sudo($sshDetails->getSudoCommand() . ' -n')
@@ -26,12 +45,14 @@ class PostqueueExecutable implements ServerMonitoringCheck
         } catch(Exception $exception) {
             return new ServerStateCheckResult(
                 false,
+                Carbon::now(),
                 sprintf('Error: %s, Details: %s', $exception->getMessage(), $console->getOutput())
             );
         }
 
         return new ServerStateCheckResult(
             $console->getExitStatus() === 0,
+            Carbon::now(),
             sprintf('Details: %s', $console->getOutput())
         );
     }

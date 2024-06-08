@@ -18,6 +18,7 @@ class Server extends Model
 
     protected $casts = [
         'last_policy_install' => 'datetime',
+        'monitored_at' => 'datetime',
     ];
 
     public function getDatabaseDetails(string $database): DatabaseDetails

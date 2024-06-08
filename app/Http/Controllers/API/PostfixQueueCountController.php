@@ -9,9 +9,11 @@ class PostfixQueueCountController
 {
     public function __invoke(Server $server, GetPostfixQueueEntriesFromCache $getPostfixQueueEntriesFromCache)
     {
+        $entries = $getPostfixQueueEntriesFromCache->execute($server->hostname);
+
         return response()->json([
             'data' => [
-                'count' => count($getPostfixQueueEntriesFromCache->execute($server->hostname)),
+                'count' => is_countable($entries) ? count($entries): null,
             ]
         ]);
     }
