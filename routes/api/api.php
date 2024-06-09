@@ -43,11 +43,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/server/{server}/schema', [ServerSchemaController::class, 'show'])->name('api.v1.server.schema.check')->middleware('role:readonly');
     Route::post('/server/{server}/schema', [ServerSchemaController::class, 'store'])->name('api.v1.server.schema.migrate')->middleware('role:editor');
 
-    Route::post('/v1/policy/{server}/installation', [BetterprotectPolicyController::class, 'store'])->middleware('role:authorizer')->name('api.v1.policy.installation');
-
     Route::get('/v1/policy/rules', [RuleController::class, 'index'])->name('api.v1.rule.index')->middleware('role:readonly');
     Route::post('/v1/policy/rules', [RuleController::class, 'store'])->name('api.v1.rule.store')->middleware('role:authorizer');
     Route::delete('/v1/policy/rules/{clientSenderAccess}', [RuleController::class, 'destroy'])->name('api.v1.rule.destroy')->middleware('role:authorizer');
+
+    Route::post('/v1/policy/{server}/installation', [BetterprotectPolicyController::class, 'store'])->middleware('role:authorizer')->name('api.v1.policy.installation');
 
     Route::get('/v1/policy/recipients', [RecipientController::class, 'index'])->name('api.v1.recipients.index')->middleware('role:readonly');
     Route::post('/v1/policy/recipients', [RecipientController::class, 'store'])->name('api.v1.recipients.store')->middleware('role:authorizer');
