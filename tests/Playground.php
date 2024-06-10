@@ -4,12 +4,18 @@ namespace Tests;
 
 use App\Services\PostfixLog\Actions\GetParsedPostfixLogsFromOpensearch;
 use App\Services\PostfixLog\RefactorMeParser;
+use App\Services\Recipients\Models\RelayRecipient;
 use Carbon\Carbon;
 
 class Playground extends TestCase
 {
     public function test()
     {
+
+        //RelayRecipient::factory()->count(100)->create();
+
+        //return;
+
         $pageSize = 15;
         $pageNumber = 1;
 

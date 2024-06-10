@@ -2,11 +2,17 @@
 
 namespace App\Services\Server\Actions;
 
+use App\Services\PostfixQueue\Actions\DeletePostfixQueueFromCache;
 use App\Services\Server\dtos\DatabaseDetails;
 use App\Services\Server\Models\Server;
 
 class UpdateServer
 {
+    public function __construct(
+        protected DeletePostfixQueueFromCache $deletePostfixQueueFromCache,
+        protected DeleteServerStateFromCache $deleteServerStateFromCache,
+    ) {}
+
     public function execute(
         Server $server,
         string $hostname,
@@ -41,5 +47,8 @@ class UpdateServer
             'ssh_command_postqueue' => $postqueue,
             'ssh_command_postsuper' => $postsuper,
         ]);
+
+        $this->deleteServerStateFromCache->execute($server->hostname);
+        $this->deleteServerStateFromCache->execute($server->hostname);
     }
 }

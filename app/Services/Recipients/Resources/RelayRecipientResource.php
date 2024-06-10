@@ -11,6 +11,7 @@ class RelayRecipientResource extends JsonResource
     {
         return [
             'id' => $this->getKey(),
+            'payload' => $this->payload,
             'data_source' => $this->data_source,
             'action' => $this->action,
             'created_at' => $this->created_at,
