@@ -15,6 +15,6 @@ class PaginateRecipients
             $query->where('payload', 'LIKE', '%' . $search . '%');
         }
 
-        return $query->paginate($pageSize, ['*'], $pageNumber);
+        return $query->paginate($pageSize, ['*'], '', $pageNumber);
     }
 }
