@@ -3,7 +3,6 @@
 namespace App\Services\Rules\Actions;
 
 use App\Services\Order\Actions\FixItemOrder;
-use App\Services\Order\Actions\OrderItems;
 use App\Services\Rules\Models\ClientSenderAccess;
 
 class CreateClientSenderAccess
@@ -19,6 +18,8 @@ class CreateClientSenderAccess
         ?string $message,
         ?string $description,
     ): ClientSenderAccess {
+        $minPriority = ClientSenderAccess::query()->max('priority');
+
         $model = ClientSenderAccess::create([
             'client_type' => $clientType,
             'client_payload' => $clientPayload,
@@ -27,6 +28,7 @@ class CreateClientSenderAccess
             'action' => $action,
             'message' => $message,
             'description' => $description,
+            'priority' => $minPriority + 1
         ]);
 
         $this->fixItemOrder->execute($model);

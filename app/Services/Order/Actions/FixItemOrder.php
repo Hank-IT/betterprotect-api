@@ -13,12 +13,9 @@ class FixItemOrder
         $orderable
             ->query()
             ->orderBy($orderable->getOrderColumn())->get()->each(function (Orderable $model) use (&$priority) {
-                $model->query()->update([
-                    $model->getOrderColumn() => $priority,
-                ]);
+                $model->updateOrder($priority);
 
                 $priority++;
             });
-
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Services\Order\Contracts;
 
-use Illuminate\Database\Eloquent\Builder;
-
 interface Orderable
 {
     public function getOrderColumn(): string;
@@ -11,4 +9,8 @@ interface Orderable
     public function getOrderColumnValue(): int;
 
     public static function query();
+
+    public function incrementOrder(): void;
+
+    public function decrementOrder(): void;
 }

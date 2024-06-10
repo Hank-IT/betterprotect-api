@@ -14,11 +14,14 @@ class Playground extends TestCase
         $pageNumber = 1;
 
         $result = app(GetParsedPostfixLogsFromOpensearch::class)->execute(
-            Carbon::parse('2024-05-22 00:00'), Carbon::parse('2024-05-22 23:59'), 0, 100, null
+            Carbon::parse('2024-05-22 00:00'), Carbon::parse('2024-05-22 23:59'), 0, 10000, null
         );
+
+        dump(count($result));
 
         $parser = new RefactorMeParser;
 
         dump($parser->parse($result));
+        dump(count($parser->parse($result)));
     }
 }

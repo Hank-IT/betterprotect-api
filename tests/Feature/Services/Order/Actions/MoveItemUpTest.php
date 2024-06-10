@@ -11,12 +11,22 @@ class MoveItemUpTest extends TestCase
 {
     public function test()
     {
+        ClientSenderAccess::truncate();
+
+        $otherRule = ClientSenderAccess::factory()->create([
+            'priority' => 2,
+        ]);
+
         $rule = ClientSenderAccess::factory()->create([
             'priority' => 3,
         ]);
 
         app(MoveItemUp::class)->execute($rule);
 
-        $this->assertEquals(1, $rule->priority);
+        $otherRule->refresh();
+        $rule->refresh();
+
+        $this->assertEquals(0, $rule->priority);
+        $this->assertEquals(1, $otherRule->priority);
     }
 }

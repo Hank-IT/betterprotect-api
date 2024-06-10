@@ -10,12 +10,14 @@ class FixItemOrderTest extends TestCase
 {
     public function test()
     {
+        ClientSenderAccess::truncate();
+
         $zeroRule = ClientSenderAccess::factory()->create([
             'priority' => 0,
         ]);
 
-        $firstRule = ClientSenderAccess::factory()->create([
-            'priority' => 1,
+        $thirdRule = ClientSenderAccess::factory()->create([
+            'priority' => 3,
         ]);
 
         $fifthRule = ClientSenderAccess::factory()->create([
@@ -25,9 +27,11 @@ class FixItemOrderTest extends TestCase
         app(FixItemOrder::class)->execute(new ClientSenderAccess);
 
         $zeroRule->refresh();
+        $thirdRule->refresh();
+        $fifthRule->refresh();
 
-        $this->assertEquals(1, $firstRule->priority);
-        $this->assertEquals(2, $zeroRule->priority);
-        $this->assertEquals(5, $fifthRule->priority);
+        $this->assertEquals(0, $zeroRule->priority);
+        $this->assertEquals(1, $thirdRule->priority);
+        $this->assertEquals(2, $fifthRule->priority);
     }
 }

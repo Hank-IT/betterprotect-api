@@ -12,11 +12,13 @@ class MoveItemUp
     {
         $this->fixItemOrder->execute($orderable);
 
+        $orderable->refresh();
+
         $orderable->query()
             ->where($orderable->getOrderColumn(), '=', $orderable->getOrderColumnValue() - 1)
             ->increment($orderable->getOrderColumn());
 
-        $orderable->query()->decrement($orderable->getOrderColumn());
+        $orderable->decrementOrder();
 
         $this->fixItemOrder->execute($orderable);
     }

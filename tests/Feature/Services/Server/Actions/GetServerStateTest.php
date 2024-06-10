@@ -6,6 +6,7 @@ use App\Services\Server\Actions\GetServerState;
 use App\Services\Server\Checks\LogDatabaseAvailable;
 use App\Services\Server\dtos\ServerStateCheckResult;
 use App\Services\Server\Models\Server;
+use Carbon\Carbon;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
@@ -16,7 +17,7 @@ class GetServerStateTest extends TestCase
         $server = Server::factory()->create();
 
         $this->mock(LogDatabaseAvailable::class, function(MockInterface $mock) {
-            $mock->shouldReceive('getState')->once()->andReturn(new ServerStateCheckResult(true));
+            $mock->shouldReceive('getState')->once()->andReturn(new ServerStateCheckResult(true, Carbon::now()));
             $mock->shouldReceive('getKey')->once()->andReturn('log-database-available');
         });
 

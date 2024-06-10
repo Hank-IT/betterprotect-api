@@ -10,6 +10,8 @@ class ClientSenderAccessRepositoryTest extends TestCase
 {
     public function test()
     {
+        ClientSenderAccess::truncate();
+
         $activeSender = ClientSenderAccess::factory()->count(2)->create([
             'active' => true,
         ]);

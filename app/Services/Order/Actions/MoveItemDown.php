@@ -12,11 +12,16 @@ class MoveItemDown
     {
         $this->fixItemOrder->execute($orderable);
 
+        $orderable->refresh();
+
+        // Decrement the value of the orderable entity after the one we are currently
+        // processing. If there is one it will have the same value as the $orderable.
+        // The query method gives us a new query independent of the $orderable model
         $orderable->query()
             ->where($orderable->getOrderColumn(), '=', $orderable->getOrderColumnValue() + 1)
             ->decrement($orderable->getOrderColumn());
 
-        $orderable->query()->increment($orderable->getOrderColumn());
+        $orderable->incrementOrder();
 
         $this->fixItemOrder->execute($orderable);
     }

@@ -4,6 +4,7 @@ namespace Tests\Feature\Services\Server\Jobs;
 
 use App\Services\Server\Actions\StoreServerStateInCache;
 use App\Services\Server\Events\ServerMonitored;
+use Carbon\Carbon;
 use Hamcrest\Core\IsInstanceOf;
 use Mockery;
 use App\Services\Server\Actions\GetServerState;
@@ -22,17 +23,19 @@ class ServerMonitoringTest extends TestCase
     {
         Event::fake();
 
+        Server::truncate();
+
         $job = new ServerMonitoring();
 
         $server = Server::factory()->create();
 
         $state = new ServerState([
-            'postfix-database-available' => new ServerStateCheckResult(true),
-            'log-database-available' => new ServerStateCheckResult(true),
-            'postqueue-executable' => new ServerStateCheckResult(true),
-            'postsuper-executable' => new ServerStateCheckResult(true),
-            'sudo-executable' => new ServerStateCheckResult(true),
-            'ssh-connection' => new ServerStateCheckResult(true),
+            'postfix-database-available' => new ServerStateCheckResult(true, Carbon::now()),
+            'log-database-available' => new ServerStateCheckResult(true, Carbon::now()),
+            'postqueue-executable' => new ServerStateCheckResult(true, Carbon::now()),
+            'postsuper-executable' => new ServerStateCheckResult(true, Carbon::now()),
+            'sudo-executable' => new ServerStateCheckResult(true, Carbon::now()),
+            'ssh-connection' => new ServerStateCheckResult(true, Carbon::now()),
         ]);
 
         $this->mock(GetServerState::class, function(MockInterface $mock) use($server, $state) {

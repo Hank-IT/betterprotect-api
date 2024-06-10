@@ -6,6 +6,7 @@ use App\Services\PostfixQueue\Actions\GetPostfixQueueEntriesFromServer;
 use App\Services\PostfixQueue\Actions\StorePostfixQueueInCache;
 use App\Services\Server\dtos\ServerStateCheckResult;
 use App\Services\Server\dtos\SSHDetails;
+use Carbon\Carbon;
 use Hamcrest\Core\IsInstanceOf;
 use Mockery;
 use App\Services\PostfixQueue\Jobs\GetPostfixQueue;
@@ -20,12 +21,14 @@ class GetPostfixQueueTest extends TestCase
 {
     public function test_successful()
     {
+        Server::truncate();
+
         $server = Server::factory()->create();
 
         $rows = ['test'];
 
         $serverStateMock = Mockery::mock(ServerState::class, function(MockInterface $mock) {
-            $mock->shouldReceive('getSshConnectionState')->once()->andReturn(new ServerStateCheckResult(true));
+            $mock->shouldReceive('getSshConnectionState')->once()->andReturn(new ServerStateCheckResult(true, Carbon::now()));
         });
 
         $this->mock(GetServerStateFromCache::class, function(MockInterface $mock) use($server, $serverStateMock) {
@@ -52,12 +55,12 @@ class GetPostfixQueueTest extends TestCase
 
     public function test_failure()
     {
+        Server::truncate();
+
         $server = Server::factory()->create();
 
-        $rows = ['test'];
-
         $serverStateMock = Mockery::mock(ServerState::class, function(MockInterface $mock) {
-            $mock->shouldReceive('getSshConnectionState')->once()->andReturn(new ServerStateCheckResult(false));
+            $mock->shouldReceive('getSshConnectionState')->once()->andReturn(new ServerStateCheckResult(false, Carbon::now()));
         });
 
         $this->mock(GetServerStateFromCache::class, function(MockInterface $mock) use($server, $serverStateMock) {
