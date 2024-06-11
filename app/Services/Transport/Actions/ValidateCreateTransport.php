@@ -13,7 +13,7 @@ class ValidateCreateTransport
         $validator = Validator::make($data, [
             'domain' => ['required', 'string', Rule::unique('transports')],
             'transport' => ['nullable', 'string'],
-            'nexthop_type' => ['nullable', 'string', Rule::in(['ipv4,ipv6,hostname'])],
+            'nexthop_type' => ['nullable', 'string', Rule::in(['ipv4', 'ipv6', 'hostname'])],
             'nexthop' => ['nullable', 'string'],
             'nexthop_port' => ['nullable', 'integer', 'max:65535', 'required_unless:nexthop_type,null'],
             'nexthop_mx' => ['nullable', 'boolean'],

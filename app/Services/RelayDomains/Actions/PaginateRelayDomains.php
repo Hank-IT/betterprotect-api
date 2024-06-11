@@ -16,6 +16,6 @@ class PaginateRelayDomains
             $query->where('domain', 'LIKE', '%' . $search . '%');
         }
 
-        return $query->paginate($pageSize, ['*'], $pageNumber);
+        return $query->paginate($pageSize, ['*'], '', $pageNumber);
     }
 }
