@@ -2,6 +2,7 @@
 
 namespace App\Services\Tasks\Events;
 
+use App\Services\Tasks\Enums\TaskStatusEnum;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -18,6 +19,7 @@ class TaskProgress implements ShouldBroadcastNow
     public function __construct(
         public string $id,
         public string $description,
+        public string $status = TaskStatusEnum::RUNNING->value,
     ) {}
 
     public function broadcastOn()

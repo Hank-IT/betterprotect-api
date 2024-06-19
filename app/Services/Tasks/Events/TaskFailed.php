@@ -2,6 +2,7 @@
 
 namespace App\Services\Tasks\Events;
 
+use App\Services\Tasks\Enums\TaskStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -20,6 +21,7 @@ class TaskFailed implements ShouldBroadcastNow
         public string $id,
         public string $description,
         public Carbon $endedAt,
+        public string $status = TaskStatusEnum::ERROR->value,
     ) {}
 
     public function broadcastOn()
@@ -30,5 +32,15 @@ class TaskFailed implements ShouldBroadcastNow
     public function broadcastAs(): string
     {
         return 'task.failed';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'id' => $this->id,
+            'description' => $this->description,
+            'ended_at' => $this->endedAt,
+            'status' => $this->status,
+        ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Tasks\Events;
 
+use App\Services\Tasks\Enums\TaskStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -19,6 +20,7 @@ class TaskStarted implements ShouldBroadcastNow
     public function __construct(
         public string $id,
         public Carbon $startedAt,
+        public string $status = TaskStatusEnum::RUNNING->value,
     ) {}
 
     public function broadcastOn()
@@ -29,5 +31,14 @@ class TaskStarted implements ShouldBroadcastNow
     public function broadcastAs(): string
     {
         return 'task.started';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'id' => $this->id,
+            'started_at' => $this->startedAt,
+            'status' => $this->status,
+        ];
     }
 }
