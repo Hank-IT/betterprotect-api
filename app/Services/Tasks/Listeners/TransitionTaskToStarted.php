@@ -17,10 +17,5 @@ class TransitionTaskToStarted
             'started_at' => $event->startedAt,
             'status' => TaskStatusEnum::RUNNING->value,
         ]);
-
-        TaskProgress::dispatch(
-            $event->id,
-            'The task started.',
-        );
     }
 }

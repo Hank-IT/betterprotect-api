@@ -19,7 +19,8 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    // ToDo
+    'allowed_origins' => ['https://betterprotect.dev.hank-it.com'],
 
     'allowed_origins_patterns' => [],
 

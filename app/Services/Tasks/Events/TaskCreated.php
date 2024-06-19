@@ -27,4 +27,9 @@ class TaskCreated implements ShouldBroadcast
     {
         return new PrivateChannel('task');
     }
+
+    public function broadcastAs(): string
+    {
+        return 'task.created';
+    }
 }

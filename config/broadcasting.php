@@ -39,8 +39,8 @@ return [
                 'host' => env('WEBSOCKET_HOST', 'websockets'),
                 'port' => env('WEBSOCKET_PORT', 6001),
                 'scheme' => env('WEBSOCKET_SCHEME', 'http'),
-                'encrypted' => true,
-                'useTLS' => env('WEBSOCKET_SCHEME') === 'https',
+                'encrypted' => false,
+                'useTLS' => false,
             ],
             'client_options' => [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html

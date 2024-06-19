@@ -16,10 +16,5 @@ class CreateTask
             'username' => $event->username,
             'status' => $event->status,
         ]);
-
-        TaskProgress::dispatch(
-            $event->id,
-            'The task is queued for execution.',
-        );
     }
 }

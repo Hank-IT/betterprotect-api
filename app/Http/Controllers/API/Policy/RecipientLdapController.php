@@ -18,7 +18,7 @@ class RecipientLdapController extends Controller
             'ldap',
             Auth::user()->username,
             $getIgnoredLdapDomains->execute(),
-        );
+        )->onQueue('task');
 
         return response(status: Response::HTTP_ACCEPTED);
     }

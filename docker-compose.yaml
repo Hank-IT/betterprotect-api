@@ -111,7 +111,7 @@ services:
     websockets:
         image: quay.io/soketi/soketi:89604f268623cf799573178a7ba56b7491416bde-16-debian
         environment:
-            DEBUG: '0'
+            DEBUG: '1'
             SOKETI_DEFAULT_APP_ID: ${WEBSOCKET_APP_ID}
             SOKETI_DEFAULT_APP_KEY: ${WEBSOCKET_APP_KEY}
             SOKETI_DEFAULT_APP_SECRET: ${WEBSOCKET_APP_SECRET}

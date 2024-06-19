@@ -17,10 +17,5 @@ class TransitionTaskToFailed
             'ended_at' => $event->endedAt,
             'status' => TaskStatusEnum::ERROR->value,
         ]);
-
-        TaskProgress::dispatch(
-            $event->id,
-            $event->description,
-        );
     }
 }

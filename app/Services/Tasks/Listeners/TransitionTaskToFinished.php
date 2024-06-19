@@ -17,10 +17,5 @@ class TransitionTaskToFinished
             'ended_at' => $event->endedAt,
             'status' => TaskStatusEnum::FINISHED->value,
         ]);
-
-        TaskProgress::dispatch(
-            $event->id,
-            $event->description,
-        );
     }
 }
