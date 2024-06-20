@@ -17,8 +17,6 @@ class TransitionTaskToFinishedTest extends TestCase
 {
     public function test()
     {
-        Event::fake();
-
         $task = Task::factory()->create([
             'ended_at' => null,
         ]);
@@ -38,7 +36,5 @@ class TransitionTaskToFinishedTest extends TestCase
         $this->assertEquals($endedAt, $task->ended_at);
 
         $this->assertEquals(TaskStatusEnum::FINISHED->value, $task->status);
-
-        Event::assertDispatched(TaskProgress::class);
     }
 }

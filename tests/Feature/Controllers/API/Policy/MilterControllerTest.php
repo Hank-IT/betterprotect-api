@@ -4,12 +4,16 @@ namespace Tests\Feature\Controllers\API\Policy;
 
 use App\Services\Authentication\Models\User;
 use App\Services\Milter\Models\Milter;
+use App\Services\Milter\Models\MilterException;
 use Tests\TestCase;
 
 class MilterControllerTest extends TestCase
 {
     public function testIndex()
     {
+        MilterException::truncate();
+        Milter::truncate();
+
         $user = User::factory()->create();
 
         $this->be($user);

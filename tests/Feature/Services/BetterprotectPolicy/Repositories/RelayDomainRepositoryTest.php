@@ -14,6 +14,8 @@ class RelayDomainRepositoryTest extends TestCase
 {
     public function test()
     {
+        RelayDomain::truncate();
+
         $activeDomains = RelayDomain::factory()->count(2)->create([
             'active' => true,
         ]);

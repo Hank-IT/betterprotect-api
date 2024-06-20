@@ -11,13 +11,11 @@ class CreateUser
         string $username,
         string $password,
         string $role,
-        ?string $email = null,
     ): User {
         return User::create([
             'username' => $username,
             'password' => Hash::make($password),
             'role' => $role,
-            'email' => $email,
         ]);
     }
 }

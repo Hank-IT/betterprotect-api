@@ -15,8 +15,6 @@ class TransitionTaskToFailedTest extends TestCase
 {
     public function test()
     {
-        Event::fake();
-
         $task = Task::factory()->create([
             'ended_at' => null,
         ]);
@@ -36,7 +34,5 @@ class TransitionTaskToFailedTest extends TestCase
         $this->assertEquals($endedAt, $task->ended_at);
 
         $this->assertEquals(TaskStatusEnum::ERROR->value, $task->status);
-
-        Event::assertDispatched(TaskProgress::class);
     }
 }

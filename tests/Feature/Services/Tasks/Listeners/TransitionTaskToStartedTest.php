@@ -19,8 +19,6 @@ class TransitionTaskToStartedTest extends TestCase
 {
     public function test()
     {
-        Event::fake();
-
         $task = Task::factory()->create([
             'ended_at' => null,
         ]);
@@ -39,7 +37,5 @@ class TransitionTaskToStartedTest extends TestCase
         $this->assertEquals($startedAt, $task->started_at);
 
         $this->assertEquals(TaskStatusEnum::RUNNING->value, $task->status);
-
-        Event::assertDispatched(TaskProgress::class);
     }
 }

@@ -21,6 +21,8 @@ use App\Http\Controllers\API\PostfixQueueController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\AuthUserController;
 use App\Http\Controllers\API\Server\ServerStateController;
+use App\Http\Controllers\API\UserRoleController;
+use App\Http\Controllers\API\UserPasswordController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Broadcast::routes();
@@ -79,8 +81,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('v1/user', [UserController::class, 'index'])->middleware('role:administrator')->name('api.v1.user.index');
     Route::post('v1/user', [UserController::class, 'store'])->middleware('role:administrator')->name('api.v1.user.store');
-    Route::get('v1/user/{user}', [UserController::class, 'show'])->middleware('role:administrator')->name('api.v1.user.show');
-    Route::patch('v1/user/{user}', [UserController::class, 'update'])->middleware('role:administrator')->name('api.v1.user.update');
+    Route::patch('v1/user/{user}/role', UserRoleController::class)->middleware('role:administrator')->name('api.v1.user.role.update');
+    Route::patch('v1/user/{user}/password', UserPasswordController::class)->middleware('role:administrator')->name('api.v1.user.role.password');
     Route::delete('v1/user/{user}', [UserController::class, 'destroy'])->middleware('role:administrator')->name('api.v1.user.destroy');
 
     Route::get('v1/postfix/log', PostfixLogController::class)->middleware('role:readonly')->name('api.v1.postfix.log.show');

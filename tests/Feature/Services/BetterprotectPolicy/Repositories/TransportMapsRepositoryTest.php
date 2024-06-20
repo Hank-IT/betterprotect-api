@@ -10,6 +10,8 @@ class TransportMapsRepositoryTest extends TestCase
 {
     public function test()
     {
+        Transport::truncate();
+
         $activeTransports = Transport::factory()->count(2)->create([
             'active' => true,
         ]);

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Authentication\Models\User;
 use App\Services\User\Actions\CreateUser;
 use App\Services\User\Actions\DeleteUser;
-use App\Services\User\Actions\UpdateUser;
+use App\Services\User\Actions\UpdateUserRole;
 use App\Services\User\Resources\UserResource;
 use App\Services\User\Actions\PaginateUsers;
 use Illuminate\Http\Request;
@@ -33,32 +33,14 @@ class UserController extends Controller
         $data = $request->validate([
             'username' => ['required', 'string', Rule::unique('users')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'email' => ['nullable', 'email'],
             'role' => ['required', Rule::in(['readonly', 'authorizer', 'editor', 'administrator'])],
         ]);
 
         $user = $createUser->execute(
-            $data['username'], $data['password'], $data['role'], $data['email'] ?? null,
+            $data['username'], $data['password'], $data['role']
         );
 
         return new UserResource($user);
-    }
-
-    public function show(User $user)
-    {
-        return new UserResource($user);
-    }
-
-    public function update(Request $request, User $user, UpdateUser $updateUser)
-    {
-        $data = $request->validate([
-            'email' => ['nullable', 'email'],
-            'role' => ['required', Rule::in(['readonly', 'authorizer', 'editor', 'administrator'])],
-        ]);
-
-        $updateUser->execute($user, $data['role'], $data['email'] ?? null);
-
-        return response(status: 200);
     }
 
     public function destroy(User $user, DeleteUser $deleteUser)

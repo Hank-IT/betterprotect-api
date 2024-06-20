@@ -4,13 +4,12 @@ namespace App\Services\User\Actions;
 
 use App\Services\Authentication\Models\User;
 
-class UpdateUser
+class UpdateUserRole
 {
-    public function execute(User $user, string $role, ?string $email): void
+    public function execute(User $user, string $role): void
     {
         $user->update([
             'role' => $role,
-            'email' => $email,
         ]);
     }
 }
