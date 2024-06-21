@@ -40,7 +40,7 @@ class InstallPolicy extends Command
             }
         }
 
-        BetterprotectPolicyInstallation::dispatchSync($serverModel, (string) Str::uuid(), 'System');
+        BetterprotectPolicyInstallation::dispatch($serverModel, (string) Str::uuid(), 'System')->onQueue('task');
 
         return 0;
     }

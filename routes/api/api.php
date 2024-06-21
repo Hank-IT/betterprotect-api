@@ -49,7 +49,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/v1/policy/rules', [RuleController::class, 'store'])->name('api.v1.rule.store')->middleware('role:authorizer');
     Route::delete('/v1/policy/rules/{clientSenderAccess}', [RuleController::class, 'destroy'])->name('api.v1.rule.destroy')->middleware('role:authorizer');
 
-    Route::post('/v1/policy/{server}/installation', [BetterprotectPolicyController::class, 'store'])->middleware('role:authorizer')->name('api.v1.policy.installation');
+    Route::post('/v1/policy/installation', BetterprotectPolicyController::class)->middleware('role:authorizer')->name('api.v1.policy.installation');
 
     Route::get('/v1/policy/recipients', [RecipientController::class, 'index'])->name('api.v1.recipients.index')->middleware('role:readonly');
     Route::post('/v1/policy/recipients', [RecipientController::class, 'store'])->name('api.v1.recipients.store')->middleware('role:authorizer');
@@ -73,9 +73,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('v1/policy/relay-domain', [RelayDomainController::class, 'store'])->middleware('role:editor')->name('api.v1.relay-domain.store');
     Route::delete('v1/policy/relay-domain/{relayDomain}', [RelayDomainController::class, 'destroy'])->middleware('role:editor')->name('api.v1.relay-domain.destroy');
 
-    Route::patch('v1/policy/order/{orderableEntitiesEnum}/{id}/{mode}', OrderableController::class)->middleware('role:editor')->name('api.v1.order.store');
+    Route::patch('v1/policy/order/{orderableEntitiesEnum}/{id}/{mode}', OrderableController::class)->middleware('role:authorizer')->name('api.v1.order.store');
 
-    Route::patch('v1/policy/activation/{activatableEntitiesEnum}/{id}', ActivatableController::class)->middleware('role:editor')->name('api.v1.activation.update');
+    Route::patch('v1/policy/activation/{activatableEntitiesEnum}/{id}', ActivatableController::class)->middleware('role:authorizer')->name('api.v1.activation.update');
 
     Route::get('v1/tasks', TaskController::class)->middleware('role:readonly')->name('api.v1.tasks.index');
 

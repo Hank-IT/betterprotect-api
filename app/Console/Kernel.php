@@ -34,6 +34,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(GetPostfixQueue::class)->everyMinute();
         $schedule->job(ServerMonitoring::class)->everyMinute();
+        $schedule->command('task:clean')->everyMinute();
     }
 
     /**

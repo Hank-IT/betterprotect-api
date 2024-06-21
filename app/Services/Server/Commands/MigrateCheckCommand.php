@@ -2,6 +2,7 @@
 
 namespace App\Services\Server\Commands;
 
+use Exception;
 use Illuminate\Database\Console\Migrations\BaseCommand;
 use Illuminate\Database\Migrations\Migrator;
 
@@ -50,14 +51,10 @@ class MigrateCheckCommand extends BaseCommand
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
-        $this->migrator->setConnection($this->option('database'));
-
-        $files = $this->migrator->getMigrationFiles($this->getMigrationPaths());
+        $files = $this->getFiles();
 
         $pendingMigrations = array_diff(
             array_keys($files),
@@ -66,25 +63,34 @@ class MigrateCheckCommand extends BaseCommand
 
         if ($pendingMigrations) {
             $this->table(['Pending migrations'], array_map(function ($migration) {
-                return [ $migration ];
+                return [$migration];
             }, $pendingMigrations));
+
             return 1;
         }
 
         $this->info('No pending migrations.');
+
         return 0;
+    }
+
+    protected function getFiles(): array
+    {
+        return $this->migrator->usingConnection($this->option('database'), function () {
+            return $this->migrator->getMigrationFiles($this->getMigrationPaths());
+        });
     }
 
     /**
      * Gets ran migrations with repository check
-     *
-     * @return array
      */
-    public function getRanMigrations()
+    public function getRanMigrations(): array
     {
-        if (! $this->migrator->repositoryExists()) {
-            return [];
-        }
-        return $this->migrator->getRepository()->getRan();
+        return $this->migrator->usingConnection($this->option('database'), function () {
+            if (!$this->migrator->repositoryExists()) {
+                return [];
+            }
+            return $this->migrator->getRepository()->getRan();
+        });
     }
 }

@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Log;
 
 class Database
 {
-    protected $output;
+    protected string $output;
 
     public function __construct(protected string $name, protected DatabaseDetails $databaseDetails)
     {
-        Config::set('database.connections.' . $this->name, $this->config());
+        Config::set('database.connections.' . $this->getConnectionString(), $this->config());
     }
 
     public function migrate()
@@ -28,8 +28,6 @@ class Database
             '--force' => 'true']),
             function() {
                 $this->output = Artisan::output();
-
-                Log::debug($this->output);
 
                 // Reset the config. Apparently the artisan command
                 // updates the default database connection.

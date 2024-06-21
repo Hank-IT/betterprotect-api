@@ -16,7 +16,10 @@ class TimeoutTasks
             ->whereNull('ended_at')
             ->get()
             ->each(function($task) {
-                $task->update(['status' => TaskStatusEnum::ERROR]);
+                $task->update([
+                    'status' => TaskStatusEnum::ERROR,
+                    'ended_at' => Carbon::now(),
+                ]);
 
                 EloquentTaskProgress::create([
                     'task_id' => $task->getKey(),

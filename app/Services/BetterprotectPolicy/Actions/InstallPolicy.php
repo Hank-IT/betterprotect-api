@@ -11,13 +11,14 @@ use App\Services\Tasks\Events\TaskProgress;
 use App\Services\Tasks\Events\TaskStarted;
 use Carbon\Carbon;
 use Illuminate\Database\ConnectionInterface;
+use Exception;
 
 class InstallPolicy
 {
     public function __construct(
         protected BetterprotectPolicy $betterprotectPolicy,
-        protected DatabaseFactory $databaseFactory,
-    ){}
+        protected DatabaseFactory     $databaseFactory,
+    ) {}
 
     public function execute(Server $server, string $uniqueTaskId): void
     {
@@ -27,17 +28,37 @@ class InstallPolicy
 
         $database = $this->databaseFactory->make('postfix', $server->getDatabaseDetails('postfix'));
 
-        if ($database->needsMigrate()) {
+        try {
+            if (! $database->available()) {
+                TaskFailed::dispatch(
+                    $uniqueTaskId,
+                    sprintf('Database on server %s is not available.', $server->hostname),
+                    Carbon::now(),
+                );
+
+                return;
+            }
+
+            if ($database->needsMigrate()) {
+                TaskFailed::dispatch(
+                    $uniqueTaskId,
+                    sprintf('Database on server %s needs migration before policy installation.', $server->hostname),
+                    Carbon::now(),
+                );
+
+                return;
+            }
+        } catch(Exception $exception) {
             TaskFailed::dispatch(
                 $uniqueTaskId,
-                sprintf('Database on server %s needs migration before policy installation.', $server->hostname),
+                sprintf('Failed to check the database on server %s. Message: %s', $server->hostname, $exception->getMessage()),
                 Carbon::now(),
             );
 
             return;
         }
 
-        foreach($this->betterprotectPolicy->get() as $dto) {
+        foreach ($this->betterprotectPolicy->get() as $dto) {
             TaskProgress::dispatch($uniqueTaskId, $dto->getDescription());
 
             $this->insert(

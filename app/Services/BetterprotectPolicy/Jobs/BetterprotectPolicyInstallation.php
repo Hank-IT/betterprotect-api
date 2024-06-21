@@ -15,6 +15,10 @@ class BetterprotectPolicyInstallation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 1;
+
+    public $timeout = 300;
+
     public function __construct(
         protected Server $server,
         protected string $uniqueTaskId,

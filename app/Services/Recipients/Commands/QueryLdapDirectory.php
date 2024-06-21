@@ -35,7 +35,7 @@ class QueryLdapDirectory extends Command
             'ldap',
             'System',
             $getIgnoredLdapDomains->execute(),
-        );
+        )->onQueue('task');
 
         return 0;
     }
