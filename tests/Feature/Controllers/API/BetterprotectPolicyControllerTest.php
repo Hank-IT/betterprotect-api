@@ -19,7 +19,9 @@ class BetterprotectPolicyControllerTest extends TestCase
 
         $this->be($user);
 
-        $this->postJson(route('api.v1.policy.installation', $server->getKey()))->assertSuccessful();
+        $this->postJson(route('api.v1.policy.installation'), [
+            'server_id' => [$server->getKey()]
+        ])->assertSuccessful();
 
         Queue::assertPushed(BetterprotectPolicyInstallation::class);
     }

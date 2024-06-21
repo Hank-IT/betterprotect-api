@@ -17,7 +17,7 @@ class CreateUserTest extends TestCase
             ->assertSuccessful();
 
         $this->assertDatabaseHas('users', [
-            'username' => 'test',
+            'username' => fake()->userName(),
             'role' => 'administrator',
         ]);
 

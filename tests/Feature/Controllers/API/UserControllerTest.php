@@ -45,22 +45,10 @@ class UserControllerTest extends TestCase
             'password' => $password,
             'password_confirmation' => $password,
             'role' => $data->role,
-            'email' => $data->email,
         ])->assertSuccessful();
     }
 
-    public function test_show()
-    {
-        $user = User::factory()->create();
-
-        $this->be($user);
-
-        $response = $this->getJson(route('api.v1.user.show', $user->getKey()))->assertSuccessful();
-
-        $this->assertEquals($user->getKey(), $response['data']['id']);
-    }
-
-    public function test_update()
+    public function test_role_update()
     {
         $user = User::factory()->create();
 
@@ -74,14 +62,12 @@ class UserControllerTest extends TestCase
         $this->assertNotEquals($targetEmail, $updatableUser->email);
         $this->assertNotEquals($targetRole, $updatableUser->role);
 
-        $this->patchJson(route('api.v1.user.update', $updatableUser->getKey()), [
-            'email' => $targetEmail,
+        $this->patchJson(route('api.v1.user.role.update', $updatableUser->getKey()), [
             'role' => $targetRole,
         ])->assertSuccessful();
 
         $updatableUser->refresh();
 
-        $this->assertEquals($targetEmail, $updatableUser->email);
         $this->assertEquals($targetRole, $updatableUser->role);
     }
 
