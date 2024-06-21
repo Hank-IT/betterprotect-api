@@ -67,6 +67,7 @@ services:
 
     queue-default:
         image: bp-fpm
+        restart: always
         entrypoint: docker-dev-queue-listen-default-entrypoint
         environment:
             PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
@@ -79,6 +80,7 @@ services:
 
     queue-task:
         image: bp-fpm
+        restart: always
         entrypoint: docker-dev-queue-listen-task-entrypoint
         environment:
             PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1

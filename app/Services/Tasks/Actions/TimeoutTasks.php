@@ -3,6 +3,7 @@
 namespace App\Services\Tasks\Actions;
 
 use App\Services\Tasks\Enums\TaskStatusEnum;
+use App\Services\Tasks\Events\TaskFailed;
 use App\Services\Tasks\Models\Task;
 use Carbon\Carbon;
 use App\Services\Tasks\Models\TaskProgress as EloquentTaskProgress;
@@ -16,15 +17,16 @@ class TimeoutTasks
             ->whereNull('ended_at')
             ->get()
             ->each(function($task) {
-                $task->update([
-                    'status' => TaskStatusEnum::ERROR,
-                    'ended_at' => Carbon::now(),
-                ]);
-
                 EloquentTaskProgress::create([
                     'task_id' => $task->getKey(),
                     'description' => 'Timeout',
                 ]);
+
+                TaskFailed::dispatch(
+                    $task->getKey(),
+                    'Task failed due to timeout.',
+                    Carbon::now(),
+                );
             });
     }
 }
