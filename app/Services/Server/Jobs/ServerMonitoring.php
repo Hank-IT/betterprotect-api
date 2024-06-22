@@ -17,6 +17,10 @@ class ServerMonitoring implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 1;
+
+    public $timeout = 120;
+
     protected array $checks = [
         \App\Services\Server\Checks\LogDatabaseAvailable::class,
         \App\Services\Server\Checks\PostfixDatabaseAvailable::class,
