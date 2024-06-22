@@ -19,6 +19,7 @@ class TaskFailed implements ShouldBroadcastNow
      */
     public function __construct(
         public string $id,
+        public string $task,
         public string $description,
         public Carbon $endedAt,
         public string $status = TaskStatusEnum::ERROR->value,
@@ -38,6 +39,7 @@ class TaskFailed implements ShouldBroadcastNow
     {
         return [
             'id' => $this->id,
+            'task' => $this->task,
             'description' => $this->description,
             'ended_at' => $this->endedAt,
             'status' => $this->status,

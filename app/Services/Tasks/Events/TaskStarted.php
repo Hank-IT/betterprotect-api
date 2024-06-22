@@ -19,6 +19,7 @@ class TaskStarted implements ShouldBroadcastNow
      */
     public function __construct(
         public string $id,
+        public string $task,
         public Carbon $startedAt,
         public string $status = TaskStatusEnum::RUNNING->value,
     ) {}
@@ -37,6 +38,7 @@ class TaskStarted implements ShouldBroadcastNow
     {
         return [
             'id' => $this->id,
+            'task' => $this->task,
             'started_at' => $this->startedAt,
             'status' => $this->status,
         ];

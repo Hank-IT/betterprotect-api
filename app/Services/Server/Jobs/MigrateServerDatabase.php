@@ -44,14 +44,14 @@ class MigrateServerDatabase implements ShouldQueue
     {
         Config::set('database.default', 'mysql');
 
-        TaskStarted::dispatch($this->uniqueTaskId, Carbon::now());
+        TaskStarted::dispatch($this->uniqueTaskId, 'migrate-server-db', Carbon::now());
 
-        TaskProgress::dispatch($this->uniqueTaskId, sprintf('Database %s on server %s is migrating...', $this->database, $this->server->hostname));
+        TaskProgress::dispatch($this->uniqueTaskId, 'migrate-server-db', sprintf('Database %s on server %s is migrating...', $this->database, $this->server->hostname));
 
         $database = $databaseFactory->make($this->database, $this->server->getDatabaseDetails($this->database));
 
         $database->migrate() == 0
-            ? TaskFinished::dispatch($this->uniqueTaskId, sprintf('Database %s was successfully migrated.', $this->database), Carbon::now())
-            : TaskFailed::dispatch($this->uniqueTaskId, sprintf('Database %s was not migrated.', $this->database), Carbon::now());
+            ? TaskFinished::dispatch($this->uniqueTaskId, 'migrate-server-db', sprintf('Database %s was successfully migrated.', $this->database), Carbon::now())
+            : TaskFailed::dispatch($this->uniqueTaskId, 'migrate-server-db', sprintf('Database %s was not migrated.', $this->database), Carbon::now());
     }
 }

@@ -22,9 +22,9 @@ class InstallPolicy
 
     public function execute(Server $server, string $uniqueTaskId): void
     {
-        TaskStarted::dispatch($uniqueTaskId, Carbon::now());
+        TaskStarted::dispatch($uniqueTaskId, 'install-policy', Carbon::now());
 
-        TaskProgress::dispatch($uniqueTaskId, sprintf('Policy is installing on server %s', $server->hostname));
+        TaskProgress::dispatch($uniqueTaskId, 'install-policy', sprintf('Policy is installing on server %s', $server->hostname));
 
         $database = $this->databaseFactory->make('postfix', $server->getDatabaseDetails('postfix'));
 
@@ -32,6 +32,7 @@ class InstallPolicy
             if (! $database->available()) {
                 TaskFailed::dispatch(
                     $uniqueTaskId,
+                    'install-policy',
                     sprintf('Database on server %s is not available.', $server->hostname),
                     Carbon::now(),
                 );
@@ -42,6 +43,7 @@ class InstallPolicy
             if ($database->needsMigrate()) {
                 TaskFailed::dispatch(
                     $uniqueTaskId,
+                    'install-policy',
                     sprintf('Database on server %s needs migration before policy installation.', $server->hostname),
                     Carbon::now(),
                 );
@@ -51,6 +53,7 @@ class InstallPolicy
         } catch(Exception $exception) {
             TaskFailed::dispatch(
                 $uniqueTaskId,
+                'install-policy',
                 sprintf('Failed to check the database on server %s. Message: %s', $server->hostname, $exception->getMessage()),
                 Carbon::now(),
             );
@@ -59,7 +62,7 @@ class InstallPolicy
         }
 
         foreach ($this->betterprotectPolicy->get() as $dto) {
-            TaskProgress::dispatch($uniqueTaskId, $dto->getDescription());
+            TaskProgress::dispatch($uniqueTaskId,  'install-policy', $dto->getDescription());
 
             $this->insert(
                 $database->getConnection(),
@@ -72,7 +75,7 @@ class InstallPolicy
 
         $server->save();
 
-        TaskFinished::dispatch($uniqueTaskId, sprintf('Policy successfully installed on %s', $server->hostname), Carbon::now());
+        TaskFinished::dispatch($uniqueTaskId, 'install-policy', sprintf('Policy successfully installed on %s', $server->hostname), Carbon::now());
     }
 
     protected function insert(ConnectionInterface $connection, string $table, array $data): void

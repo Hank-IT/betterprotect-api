@@ -10,7 +10,11 @@ class PaginateTask
     public function execute(int $pageNumber, int $pageSize): LengthAwarePaginator
     {
         return Task::query()
-            ->with('taskProgresses')
+            ->with([
+                'taskProgresses' => function ($query) {
+                    $query->orderByDesc('created_at');
+                }
+            ])
             ->orderByDesc('started_at')->paginate($pageSize, ['*'], $pageNumber);
     }
 }

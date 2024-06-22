@@ -23,6 +23,7 @@ use App\Http\Controllers\API\AuthUserController;
 use App\Http\Controllers\API\Server\ServerStateController;
 use App\Http\Controllers\API\UserRoleController;
 use App\Http\Controllers\API\UserPasswordController;
+use App\Http\Controllers\API\TaskRunningController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Broadcast::routes();
@@ -78,6 +79,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::patch('v1/policy/activation/{activatableEntitiesEnum}/{id}', ActivatableController::class)->middleware('role:authorizer')->name('api.v1.activation.update');
 
     Route::get('v1/tasks', TaskController::class)->middleware('role:readonly')->name('api.v1.tasks.index');
+    Route::get('v1/tasks/running', TaskRunningController::class)->middleware('role:readonly')->name('api.v1.tasks.running');
 
     Route::get('v1/user', [UserController::class, 'index'])->middleware('role:administrator')->name('api.v1.user.index');
     Route::post('v1/user', [UserController::class, 'store'])->middleware('role:administrator')->name('api.v1.user.store');

@@ -24,6 +24,7 @@ class TimeoutTasks
 
                 TaskFailed::dispatch(
                     $task->getKey(),
+                    $task->task,
                     'Task failed due to timeout.',
                     Carbon::now(),
                 );

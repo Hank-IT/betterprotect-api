@@ -18,6 +18,7 @@ class TaskProgress implements ShouldBroadcastNow
      */
     public function __construct(
         public string $id,
+        public string $task,
         public string $description,
         public string $status = TaskStatusEnum::RUNNING->value,
     ) {}

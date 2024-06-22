@@ -40,17 +40,18 @@ class RefreshLdapRecipients implements ShouldQueue
         FirstOrCreateRelayRecipient          $firstOrCreateRelayRecipient,
         PruneObsoleteRecipientsForDataSource $pruneObsoleteRecipientsForDataSource,
     ): void {
-        TaskStarted::dispatch($this->uniqueTaskId, Carbon::now());
+        TaskStarted::dispatch($this->uniqueTaskId, 'refresh-ldap-recipients', Carbon::now());
 
         try {
-            TaskProgress::dispatch($this->uniqueTaskId, 'Querying email addresses from ldap.');
+            TaskProgress::dispatch($this->uniqueTaskId, 'refresh-ldap-recipients', 'Querying email addresses from ldap.');
 
             $emailsFromLdap = $pullRecipientsFromLdap->execute($this->ignoredDomains);
 
-            TaskProgress::dispatch($this->uniqueTaskId, 'Querying email addresses from ldap successful.');
+            TaskProgress::dispatch($this->uniqueTaskId, 'refresh-ldap-recipients', 'Querying email addresses from ldap successful.');
         } catch(Exception $exception) {
             TaskFailed::dispatch(
                 $this->uniqueTaskId,
+                'refresh-ldap-recipients',
                 'An error occurred while querying the ldap for email addresses. Message: ' . $exception->getMessage(),
                 Carbon::now(),
             );
@@ -59,16 +60,17 @@ class RefreshLdapRecipients implements ShouldQueue
         }
 
         try {
-            TaskProgress::dispatch($this->uniqueTaskId, 'Inserting addresses into the database.');
+            TaskProgress::dispatch($this->uniqueTaskId, 'refresh-ldap-recipients', 'Inserting addresses into the database.');
 
             foreach($emailsFromLdap as $email) {
                 $firstOrCreateRelayRecipient->execute($email, $this->dataSource);
             }
 
-            TaskProgress::dispatch($this->uniqueTaskId, 'Inserting addresses into the database was successful.');
+            TaskProgress::dispatch($this->uniqueTaskId, 'refresh-ldap-recipients', 'Inserting addresses into the database was successful.');
         } catch(Exception $exception) {
             TaskFailed::dispatch(
                 $this->uniqueTaskId,
+                'refresh-ldap-recipients',
                 'An error occurred while inserting the addresses into the database. Message: ' . $exception->getMessage(),
                 Carbon::now(),
             );
@@ -77,14 +79,15 @@ class RefreshLdapRecipients implements ShouldQueue
         }
 
         try {
-            TaskProgress::dispatch($this->uniqueTaskId, 'Expunging obsolete records from the database.');
+            TaskProgress::dispatch($this->uniqueTaskId, 'refresh-ldap-recipients', 'Expunging obsolete records from the database.');
 
             $pruneObsoleteRecipientsForDataSource->execute($emailsFromLdap, $this->dataSource);
 
-            TaskProgress::dispatch($this->uniqueTaskId, 'Successfully expunged obsolete records from the database.');
+            TaskProgress::dispatch($this->uniqueTaskId, 'refresh-ldap-recipients', 'Successfully expunged obsolete records from the database.');
         } catch(Exception $exception) {
             TaskFailed::dispatch(
                 $this->uniqueTaskId,
+                'refresh-ldap-recipients',
                 'Failed to prune obsolete records from the database. Message: ' . $exception->getMessage(),
                 Carbon::now(),
             );
@@ -92,6 +95,6 @@ class RefreshLdapRecipients implements ShouldQueue
             throw $exception;
         }
 
-        TaskFinished::dispatch($this->uniqueTaskId, 'Successfully refreshed email addresses from ldap.', Carbon::now());
+        TaskFinished::dispatch($this->uniqueTaskId, 'refresh-ldap-recipients', 'Successfully refreshed email addresses from ldap.', Carbon::now());
     }
 }
