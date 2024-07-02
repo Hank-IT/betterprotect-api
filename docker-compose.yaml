@@ -38,6 +38,7 @@ services:
             - "./coverage:/opt/phpstorm-coverage"
         networks:
             - default
+            - opensearch
         depends_on:
             - database
             - redis
@@ -64,6 +65,9 @@ services:
         user: "${UID:-1000}:${UID:-1000}"
         volumes:
             - "./:/var/www/html"
+        networks:
+            - default
+            - opensearch
 
     queue-default:
         image: bp-fpm
@@ -77,6 +81,9 @@ services:
             - "./:/var/www/html"
         depends_on:
             - fpm
+        networks:
+            - default
+            - opensearch
 
     queue-task:
         image: bp-fpm
@@ -90,6 +97,9 @@ services:
             - "./:/var/www/html"
         depends_on:
             - fpm
+        networks:
+            - default
+            - opensearch
 
     redis:
         image: redis
@@ -129,48 +139,6 @@ services:
             - "traefik.http.routers.bp-soketi.middlewares=bp-soketi-stripprefix"
             - "traefik.http.middlewares.bp-soketi-stripprefix.stripprefix.prefixes=/ws"
 
-    opensearch:
-        image: opensearchproject/opensearch:2
-        restart: always
-        container_name: opensearch
-        ulimits:
-            memlock:
-                soft: -1 # Set memlock to unlimited (no soft or hard limit)
-                hard: -1
-            nofile:
-                soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
-                hard: 65536
-        environment:
-            discovery.type: single-node
-            node.name: opensearch
-            OPENSEARCH_JAVA_OPTS: "-Xms2048m -Xmx4096m"
-            OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
-        volumes:
-            - opensearch-data:/usr/share/opensearch/data
-            - ./config.yml:/usr/share/opensearch/plugins/opensearch-security/securityconfig/config.yml
-            - ./internal_users.yml:/usr/share/opensearch/plugins/opensearch-security/securityconfig/internal_users.yml
-        ports:
-            - 9200:9200
-            - 9600:9600
-        networks:
-            - default
-
-    opensearch-dashboards:
-        image: opensearchproject/opensearch-dashboards:2
-        container_name: opensearch-dashboards
-        restart: always
-        ports:
-            - 5601:5601
-        expose:
-            - "5601"
-        environment:
-            OPENSEARCH_HOSTS: '["https://opensearch:9200"]'
-        networks:
-            - default
-            - traefik
-        depends_on:
-            - opensearch
-
 volumes:
     database-storage:
     opensearch-data:
@@ -180,3 +148,5 @@ networks:
         external: true
     default:
         driver: bridge
+    opensearch:
+        external: true

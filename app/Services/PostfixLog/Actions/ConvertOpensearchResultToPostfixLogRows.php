@@ -2,22 +2,24 @@
 
 namespace App\Services\PostfixLog\Actions;
 
+use App\Services\PostfixLog\Dtos\OpensearchConvertedResults;
 use App\Services\PostfixLog\Dtos\PostfixLogRow;
+use App\Services\PostfixLog\Dtos\PostfixMail;
 
 class ConvertOpensearchResultToPostfixLogRows
 {
     /**
      * @return PostfixLogRow[]
      */
-    public function execute(array $result): array
+    public function execute(array $result): OpensearchConvertedResults
     {
         $objs = [];
         foreach($result['hits']['hits'] as $hit) {
-            $objs[] = new PostfixLogRow(
-                $hit['_source']['message'], $hit['_source']['program'], $hit['_source']['timestamp8601'], $hit['_source']['logsource']
-            );
+            $objs[] = new PostfixMail($hit['_source']);
         }
 
-        return $objs;
+        return new OpensearchConvertedResults(
+            $objs, $result['hits']['total']['value'], $result['hits']['total']['relation']
+        );
     }
 }

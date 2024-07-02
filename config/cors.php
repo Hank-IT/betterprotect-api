@@ -19,8 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    // ToDo
-    'allowed_origins' => ['https://betterprotect.dev.hank-it.com'],
+    'allowed_origins' => ['https://' . env('FRONTEND_DOMAIN', 'localhost')],
 
     'allowed_origins_patterns' => [],
 

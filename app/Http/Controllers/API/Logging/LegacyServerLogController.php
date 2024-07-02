@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Logging;
 
 use App\Http\Controllers\Controller;
 use App\Services\PostfixLog\LegacyPostfixParser\DatabasePostfixLog;

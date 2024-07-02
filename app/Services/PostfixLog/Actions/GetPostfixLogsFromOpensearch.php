@@ -2,13 +2,12 @@
 
 namespace App\Services\PostfixLog\Actions;
 
+use App\Services\PostfixLog\Dtos\LogSearchDto;
 use Carbon\Carbon;
 
 class GetPostfixLogsFromOpensearch
 {
-    public function __construct(protected GetOpensearchClient $getOpensearchClient)
-    {
-    }
+    public function __construct(protected GetOpensearchClient $getOpensearchClient) {}
 
     public function execute(
         string  $index,
@@ -16,7 +15,7 @@ class GetPostfixLogsFromOpensearch
         Carbon  $end,
         int     $from,
         int     $size,
-        ?string $search,
+        ?LogSearchDto $logSearchDto,
     ): array
     {
         $client = $this->getOpensearchClient->execute();
@@ -27,7 +26,6 @@ class GetPostfixLogsFromOpensearch
                     [
                         'range' => [
                             'timestamp8601' => [
-                                'time_zone' => config('app.timezone'),
                                 'gte' => $start,
                                 'lte' => $end,
                             ]
@@ -37,10 +35,13 @@ class GetPostfixLogsFromOpensearch
             ],
         ];
 
-        if ($search) {
+        if ($logSearchDto) {
             $query['bool']['filter'][] =  [
-                "match" => [
-                    "message" => $search,
+                "multi_match" => [
+                    "query" => $logSearchDto->getSearch(),
+                    'lenient' => true,
+                    'type' => 'phrase_prefix',
+                    'fields' => $logSearchDto->getFields(),
                 ]
             ];
         }
@@ -51,6 +52,13 @@ class GetPostfixLogsFromOpensearch
                 'from' => $from,
                 'size' => $size,
                 'query' => $query,
+                'sort' => [
+                    [
+                        'timestamp8601' => [
+                            'order' => 'desc',
+                        ]
+                    ]
+                ]
             ]
         ]);
     }
