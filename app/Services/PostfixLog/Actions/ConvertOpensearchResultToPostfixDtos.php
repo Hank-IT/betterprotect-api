@@ -3,13 +3,13 @@
 namespace App\Services\PostfixLog\Actions;
 
 use App\Services\PostfixLog\Dtos\OpensearchConvertedResults;
-use App\Services\PostfixLog\Dtos\PostfixLogRow;
+use App\Services\PostfixLog\Dtos\PostfixRawLogRow;
 use App\Services\PostfixLog\Dtos\PostfixMail;
 
-class ConvertOpensearchResultToPostfixLogRows
+class ConvertOpensearchResultToPostfixDtos
 {
     /**
-     * @return PostfixLogRow[]
+     * @return PostfixRawLogRow[]
      */
     public function execute(array $result): OpensearchConvertedResults
     {

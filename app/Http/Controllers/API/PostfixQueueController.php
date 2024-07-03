@@ -31,6 +31,15 @@ class PostfixQueueController extends Controller
         );
     }
 
+    public function show(Server $server, string $queueId, GetPostfixQueueEntriesFromCache $getPostfixQueueEntriesFromCache)
+    {
+        // ToDo
+
+        $entries = $getPostfixQueueEntriesFromCache->execute($server->hostname);
+
+
+    }
+
     public function store(Server $server, FlushPostfixQueue $flushPostfixQueue)
     {
         $flushPostfixQueue->execute($server->getSSHDetails());

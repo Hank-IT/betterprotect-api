@@ -67,6 +67,41 @@ class PostfixMail
         return $this->data['postfix_client_port'] ?? null;
     }
 
+    public function getClientCertSubject(): ?string
+    {
+        return $this->data['ccert_subject'] ?? null;
+    }
+
+    public function getClientCertIssuer(): ?string
+    {
+        return $this->data['ccert_issuer'] ?? null;
+    }
+
+    public function getClientCertFingerprint(): ?string
+    {
+        return $this->data['ccert_fingerprint'] ?? null;
+    }
+
+    public function getClientCertPublicKeyFingerprint(): ?string
+    {
+        return $this->data['ccert_pubkey_fingerprint'] ?? null;
+    }
+
+    public function getEncryptionProtocol(): ?string
+    {
+        return $this->data['encryption_protocol'] ?? null;
+    }
+
+    public function getEncryptionCipher(): ?string
+    {
+        return $this->data['encryption_cipher'] ?? null;
+    }
+
+    public function getEncryptionKeysize(): ?string
+    {
+        return $this->data['encryption_keysize'] ?? null;
+    }
+
     public function getHeaders(): array
     {
         if (empty($this->data['postfix_headers'])) {
@@ -96,39 +131,19 @@ class PostfixMail
         return $this->data['postfix_size'] ?? null;
     }
 
-    public function getTo(): ?string
+    public function getRecipients(): array
     {
-        return $this->data['postfix_to'] ?? null;
-    }
+        $recipients = [];
 
-    public function getRelayIp(): ?string
-    {
-        return $this->data['postfix_relay_ip'] ?? null;
-    }
+        if (! empty($this->data['postfix_to'])) {
+            $recipients[] = new PostfixRecipient($this->data);
+        }
 
-    public function getRelayHostname(): ?string
-    {
-        return $this->data['postfix_relay_hostname'] ?? null;
-    }
+        foreach($this->data['rcpt'] ?? [] as $recipient) {
+            $recipients[] = new PostfixRecipient($recipient);
+        }
 
-    public function getRelayService(): ?string
-    {
-        return $this->data['postfix_relay_service'] ?? null;
-    }
-
-    public function getRelayPort(): ?string
-    {
-        return $this->data['postfix_relay_port'] ?? null;
-    }
-
-    public function getRelayStatus(): ?string
-    {
-        return $this->data['postfix_relay_status'] ?? null;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->data['postfix_status'] ?? null;
+        return $recipients;
     }
 
     public function getStatusMessage(): ?string
@@ -169,31 +184,6 @@ class PostfixMail
     public function getStatusData(): ?string
     {
         return $this->data['postfix_status_data'] ?? null;
-    }
-
-    public function getSmtpResponse(): ?string
-    {
-        return $this->data['postfix_smtp_response'] ?? null;
-    }
-
-    public function getSmtpLostConnectionData(): ?string
-    {
-        return $this->data['postfix_smtp_lostconn_data'] ?? null;
-    }
-
-    public function getSmtpLostConnectionReason(): ?string
-    {
-        return $this->data['postfix_smtp_lostconn_reason'] ?? null;
-    }
-
-    public function getSmtpStage(): ?string
-    {
-        return $this->data['postfix_smtp_stage'] ?? null;
-    }
-
-    public function getPixWorkaround(): ?string
-    {
-        return $this->data['postfix_pix_workaround'] ?? null;
     }
 
     public function getBetterprotectPolicyDecision(): ?string

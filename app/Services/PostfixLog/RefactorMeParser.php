@@ -3,7 +3,7 @@
 namespace App\Services\PostfixLog;
 
 use App\Services\BetterprotectPolicy\Enums\PolicyDecisions;
-use App\Services\PostfixLog\Dtos\PostfixLogRow;
+use App\Services\PostfixLog\Dtos\PostfixRawLogRow;
 use Illuminate\Support\Str;
 
 class RefactorMeParser
@@ -11,7 +11,7 @@ class RefactorMeParser
     protected array $encryptionIndex = [];
 
     /**
-     * @param $rows PostfixLogRow[]
+     * @param $rows PostfixRawLogRow[]
      */
     public function parse(array $rows): array
     {

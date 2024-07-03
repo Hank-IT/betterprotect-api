@@ -5,11 +5,16 @@ namespace App\Services\PostfixLog\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostfixLogRowResource extends JsonResource
+class PostfixRawLogRowResource extends JsonResource
 {
     public function toArray(Request $request)
     {
         return [
+            'received_at' => $this->getReceivedAt(),
+            'message' => $this->getMessage(),
+        ];
+
+       /* return [
             'queue_id' => $this['queue_id'] ?? null,
             'client' => $this['client'] ?? null,
             'client_ip' => $this['client_ip'] ?? null,
@@ -32,6 +37,6 @@ class PostfixLogRowResource extends JsonResource
             'dsn' => $this['dsn'] ?? null,
             'status' => $this['status'] ?? null,
             'response' => $this['response'] ?? null,
-        ];
+        ];*/
     }
 }

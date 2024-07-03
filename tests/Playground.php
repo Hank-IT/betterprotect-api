@@ -3,7 +3,7 @@
 namespace Tests;
 
 use App\Services\Authentication\Models\User;
-use App\Services\PostfixLog\Actions\GetParsedPostfixLogsFromOpensearch;
+use App\Services\PostfixLog\Actions\GetAndConvertAggregatedPostfixMailsFromOpensearch;
 use App\Services\PostfixLog\RefactorMeParser;
 use App\Services\Recipients\Models\RelayRecipient;
 use Carbon\Carbon;

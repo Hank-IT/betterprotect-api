@@ -18,7 +18,7 @@ class PostfixDatabaseAvailable implements ServerMonitoringCheck
             'postfix', $server->getDatabaseDetails('postfix')
         )->available();
 
-        return new ServerStateCheckResult($state, Carbon::now(),'Error: Postfix database is unavailable.');
+        return new ServerStateCheckResult($state, Carbon::now(),$state ? '': 'Error: Postfix database is unavailable.');
     }
 
     public function getKey(): string

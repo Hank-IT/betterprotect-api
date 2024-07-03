@@ -4,18 +4,18 @@ namespace App\Services\PostfixLog\Actions;
 
 use App\Services\PostfixLog\Dtos\LogSearchDto;
 use App\Services\PostfixLog\Dtos\OpensearchConvertedResults;
-use App\Services\PostfixLog\Dtos\PostfixLogRow;
+use App\Services\PostfixLog\Dtos\PostfixRawLogRow;
 use Carbon\Carbon;
 
-class GetParsedPostfixLogsFromOpensearch
+class GetAndConvertAggregatedPostfixMailsFromOpensearch
 {
     public function __construct(
-        protected GetPostfixLogsFromOpensearch $getPostfixLogsFromOpensearch,
-        protected ConvertOpensearchResultToPostfixLogRows $convertOpensearchResultToPostfixLogRows,
+        protected GetAggregatedPostfixMailsFromOpensearch $getAggregatedPostfixMailsFromOpensearch,
+        protected ConvertOpensearchResultToPostfixDtos    $convertOpensearchResultToPostfixLogRows,
     ) {}
 
     /**
-     * @return PostfixLogRow[]
+     * @return PostfixRawLogRow[]
      */
     public function execute(
         ?Carbon $start,
@@ -24,7 +24,7 @@ class GetParsedPostfixLogsFromOpensearch
         int $size,
         ?LogSearchDto $logSearchDto,
     ): OpensearchConvertedResults {
-        $result =  $this->getPostfixLogsFromOpensearch->execute(
+        $result =  $this->getAggregatedPostfixMailsFromOpensearch->execute(
             config('betterprotect.opensearch-postfix-parsed'), $start, $end, $from, $size, $logSearchDto,
         );
 

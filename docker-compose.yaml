@@ -104,16 +104,16 @@ services:
     redis:
         image: redis
 
-    ssh-mx00:
+    ssh-mx00-syslog:
         build:
             context: .
             dockerfile: ./docker/ssh/Dockerfile
         image: bp-ssh
         environment:
-            LOCAL_PORT: ${SSH_LOCAL_PORT}
-            REMOTE_HOST: ${SSH_REMOTE_HOST}
-            REMOTE_PORT: ${SSH_REMOTE_PORT}
-            SSH_USER: ${SSH_USER}
+            LOCAL_PORT: ${SSH_SYSLOG_LOCAL_PORT}
+            REMOTE_HOST: ${SSH_SYSLOG_REMOTE_HOST}
+            REMOTE_PORT: ${SSH_SYSLOG_REMOTE_PORT}
+            SSH_USER: ${SSH_SYSLOG_USER}
             SSH_ID_FILE: /ssh.key
         volumes:
             - ./ssh.key:/ssh.key

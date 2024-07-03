@@ -18,7 +18,7 @@ class LogDatabaseAvailable implements ServerMonitoringCheck
             'log', $server->getDatabaseDetails('log')
         )->available();
 
-        return new ServerStateCheckResult($state, Carbon::now(), 'Error: Log database is unavailable.');
+        return new ServerStateCheckResult($state, Carbon::now(), $state ? '': 'Error: Log database is unavailable.');
     }
 
     public function getKey(): string

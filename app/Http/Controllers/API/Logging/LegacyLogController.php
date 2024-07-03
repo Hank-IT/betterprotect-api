@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class LegacyServerLogController extends Controller
+class LegacyLogController extends Controller
 {
     public function index(Request $request)
     {

@@ -2,12 +2,13 @@
 
 namespace App\Services\PostfixLog\Actions;
 
-class GetPostfixMailFromOpensearch
+class GetAggregatedPostfixMailFromOpensearch
 {
     public function __construct(
         protected GetOpensearchClient $getOpensearchClient) {}
 
-    public function execute(string $queueId): array {
+    public function execute(string $queueId): array
+    {
         $client = $this->getOpensearchClient->execute();
 
         $query = [

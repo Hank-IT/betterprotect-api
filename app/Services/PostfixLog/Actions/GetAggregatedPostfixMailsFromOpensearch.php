@@ -3,9 +3,10 @@
 namespace App\Services\PostfixLog\Actions;
 
 use App\Services\PostfixLog\Dtos\LogSearchDto;
+use App\Services\PostfixLog\Enums\SearchableFieldsEnum;
 use Carbon\Carbon;
 
-class GetPostfixLogsFromOpensearch
+class GetAggregatedPostfixMailsFromOpensearch
 {
     public function __construct(protected GetOpensearchClient $getOpensearchClient) {}
 
@@ -36,12 +37,20 @@ class GetPostfixLogsFromOpensearch
         ];
 
         if ($logSearchDto) {
+            $fields = [];
+
+            foreach($logSearchDto->getFields() as $field) {
+                $enum = SearchableFieldsEnum::from($field);
+
+                $fields = array_merge($fields, $enum->getFields());
+            }
+
             $query['bool']['filter'][] =  [
                 "multi_match" => [
                     "query" => $logSearchDto->getSearch(),
                     'lenient' => true,
                     'type' => 'phrase_prefix',
-                    'fields' => $logSearchDto->getFields(),
+                    'fields' => $fields,
                 ]
             ];
         }

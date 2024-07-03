@@ -2,8 +2,7 @@
 
 use App\Http\Controllers\API\AuthUserController;
 use App\Http\Controllers\API\BetterprotectPolicyController;
-use App\Http\Controllers\API\Logging\PostfixLogController;
-use App\Http\Controllers\API\Logging\PostfixLogDetailController;
+use App\Http\Controllers\API\Logging\AggregatedLogController;
 use App\Http\Controllers\API\Policy\ActivatableController;
 use App\Http\Controllers\API\Policy\MilterController;
 use App\Http\Controllers\API\Policy\MilterExceptionController;
@@ -25,6 +24,7 @@ use App\Http\Controllers\API\UserPasswordController;
 use App\Http\Controllers\API\UserRoleController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\Logging\RawLogController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Broadcast::routes();
@@ -88,6 +88,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::patch('v1/user/{user}/password', UserPasswordController::class)->middleware('role:administrator')->name('api.v1.user.role.password');
     Route::delete('v1/user/{user}', [UserController::class, 'destroy'])->middleware('role:administrator')->name('api.v1.user.destroy');
 
-    Route::get('v1/postfix/log', PostfixLogController::class)->middleware('role:readonly')->name('api.v1.postfix.log.index');
-    Route::get('v1/postfix/log/{queueId}', PostfixLogDetailController::class)->middleware('role:readonly')->name('api.v1.postfix.log.show');
+    Route::get('v1/logging/aggregated', [AggregatedLogController::class, 'index'])->middleware('role:readonly')->name('api.v1.logging.aggregated.index');
+    Route::get('v1/logging/aggregated/{queueId}',  [AggregatedLogController::class, 'show'])->middleware('role:readonly')->name('api.v1.logging.aggregated.show');
+
+    Route::get('v1/logging/raw',  [RawLogController::class, 'index'])->middleware('role:readonly')->name('api.v1.logging.raw.index');
 });
