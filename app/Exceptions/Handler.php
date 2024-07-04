@@ -4,8 +4,6 @@ namespace App\Exceptions;
 
 use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use MrCrankHank\ConsoleAccess\Exceptions\ConnectionNotPossibleException;
-use MrCrankHank\ConsoleAccess\Exceptions\PublicKeyMismatchException;
 
 class Handler extends ExceptionHandler
 {
@@ -14,9 +12,7 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [
-        \App\Exceptions\ErrorException::class,
-    ];
+    protected $dontReport = [];
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
@@ -35,21 +31,6 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        if (
-            $exception instanceof ErrorException or
-            $exception instanceof ConnectionNotPossibleException or
-            $exception instanceof PublicKeyMismatchException
-        )
-        {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $exception->getMessage(),
-                    'data' => [],
-                ], 500);
-            }
-        }
-
         return parent::render($request, $exception);
     }
 }

@@ -1,0 +1,2 @@
+www-data ALL = (root) NOPASSWD: /usr/sbin/update-ca-certificates
+bp ALL = (root) NOPASSWD: /usr/sbin/update-ca-certificates

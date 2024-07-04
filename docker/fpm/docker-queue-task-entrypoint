@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+sudo /usr/sbin/update-ca-certificates
+
+exec php artisan queue:work --queue=task

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => 'Betterprotect',
+    'name' => 'betterprotect-api',
 
     'version' => '1.11',
 
@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'Europe/Berlin'),
+    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -167,8 +167,7 @@ return [
         /*
          * Package Service Providers...
          */
-        \Adldap\Laravel\AdldapServiceProvider::class,
-        \Adldap\Laravel\AdldapAuthServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -178,7 +177,6 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\AuthSettingsServiceProvider::class,
 
     ],
 

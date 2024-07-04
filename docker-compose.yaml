@@ -1,0 +1,152 @@
+services:
+    web:
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+            args:
+                FPM_IMAGE: bp-fpm
+        image: bp-web
+        labels:
+            - traefik.http.routers.bp-web.rule=Host(`${APP_DOMAIN}`)
+            - "traefik.http.routers.bp-web.tls.certresolver=lets-encrypt"
+            - "traefik.http.routers.bp-web.tls=true"
+            - "traefik.http.services.bp-web.loadbalancer.server.port=8080"
+        environment:
+            FPM_SERVICE: fpm
+        ports:
+            - "8123:80"
+        networks:
+            - traefik
+            - default
+        volumes:
+            - "./:/var/www/html"
+        depends_on:
+            - fpm
+
+    fpm:
+        build:
+            context: .
+            dockerfile: ./docker/fpm/Dockerfile
+        environment:
+            PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
+            PHP_OPCACHE_ENABLE: 0
+        image: bp-fpm
+        user: "${UID:-1000}:${UID:-1000}"
+        volumes:
+            - "./docker/fpm/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
+            - "./:/var/www/html"
+            - "./coverage:/opt/phpstorm-coverage"
+        networks:
+            - default
+            - opensearch
+        depends_on:
+            - database
+            - redis
+            - websockets
+
+    database:
+        image: mariadb:10.10
+        ports:
+            - "3308:3306"
+        environment:
+            MARIADB_RANDOM_ROOT_PASSWORD: 'yes'
+            MYSQL_DATABASE: ${DB_DATABASE:?err}
+            MYSQL_USER: ${DB_USERNAME:?err}
+            MYSQL_PASSWORD: ${DB_PASSWORD:?err}
+        volumes:
+            - "database-storage:/var/lib/mysql"
+
+    scheduler:
+        image: bp-fpm
+        entrypoint: docker-scheduler-entrypoint
+        environment:
+            PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
+            PHP_OPCACHE_ENABLE: 0
+        user: "${UID:-1000}:${UID:-1000}"
+        volumes:
+            - "./:/var/www/html"
+        networks:
+            - default
+            - opensearch
+
+    queue-default:
+        image: bp-fpm
+        restart: always
+        entrypoint: docker-dev-queue-listen-default-entrypoint
+        environment:
+            PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
+            PHP_OPCACHE_ENABLE: 0
+        user: "${UID:-1000}:${UID:-1000}"
+        volumes:
+            - "./:/var/www/html"
+        depends_on:
+            - fpm
+        networks:
+            - default
+            - opensearch
+
+    queue-task:
+        image: bp-fpm
+        restart: always
+        entrypoint: docker-dev-queue-listen-task-entrypoint
+        environment:
+            PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
+            PHP_OPCACHE_ENABLE: 0
+        user: "${UID:-1000}:${UID:-1000}"
+        volumes:
+            - "./:/var/www/html"
+        depends_on:
+            - fpm
+        networks:
+            - default
+            - opensearch
+
+    redis:
+        image: redis
+
+    ssh-mx00-syslog:
+        build:
+            context: .
+            dockerfile: ./docker/ssh/Dockerfile
+        image: bp-ssh
+        environment:
+            LOCAL_PORT: ${SSH_SYSLOG_LOCAL_PORT}
+            REMOTE_HOST: ${SSH_SYSLOG_REMOTE_HOST}
+            REMOTE_PORT: ${SSH_SYSLOG_REMOTE_PORT}
+            SSH_USER: ${SSH_SYSLOG_USER}
+            SSH_ID_FILE: /ssh.key
+        volumes:
+            - ./ssh.key:/ssh.key
+        networks:
+            - default
+
+    websockets:
+        image: quay.io/soketi/soketi:89604f268623cf799573178a7ba56b7491416bde-16-debian
+        environment:
+            DEBUG: '1'
+            SOKETI_DEFAULT_APP_ID: ${WEBSOCKET_APP_ID}
+            SOKETI_DEFAULT_APP_KEY: ${WEBSOCKET_APP_KEY}
+            SOKETI_DEFAULT_APP_SECRET: ${WEBSOCKET_APP_SECRET}
+        networks:
+            - default
+            - traefik
+        labels:
+            - traefik.http.routers.bp-soketi.rule=Host(`${APP_DOMAIN}`) && PathPrefix(`/ws`)
+            - "traefik.http.routers.bp-soketi.entrypoints=websecure"
+            - "traefik.http.routers.bp-soketi.tls=true"
+            - "traefik.http.services.bp-soketi.loadbalancer.server.port=6001"
+            - "traefik.http.services.bp-soketi.loadbalancer.server.scheme=http"
+            - "traefik.http.routers.bp-soketi.middlewares=bp-soketi-stripprefix"
+            - "traefik.http.middlewares.bp-soketi-stripprefix.stripprefix.prefixes=/ws"
+
+volumes:
+    database-storage:
+    opensearch-data:
+
+networks:
+    traefik:
+        external: true
+    default:
+        driver: bridge
+    opensearch:
+        external: true

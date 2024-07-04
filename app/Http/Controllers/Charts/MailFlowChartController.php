@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Charts;
 
-use App\Models\Server;
+use App\Http\Controllers\Controller;
+use App\Services\Charts\MailFlowChart;
+use App\Services\Server\Actions\GetPostfixSyslogFromServer;
+use App\Services\Server\Models\Server;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Charts\MailFlowChart;
-use App\Postfix\DatabasePostfixLog;
-use App\Http\Controllers\Controller;
 
 class MailFlowChartController extends Controller
 {
@@ -19,7 +19,7 @@ class MailFlowChartController extends Controller
         ]);
 
         // Pull and parse logs for all enabled servers
-        $query = app(DatabasePostfixLog::class, [
+        $query = app(GetPostfixSyslogFromServer::class, [
             'servers' => Server::where('log_feature_enabled', '=', true)->get(),
             'parameter' => ['startDate' => $request->startDate, 'endDate' => $request->endDate]]);
 

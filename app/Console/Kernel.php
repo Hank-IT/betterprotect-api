@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Services\PostfixQueue\Jobs\GetPostfixQueue;
+use App\Services\Server\Jobs\ServerMonitoring;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,13 +15,13 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\TaskCleanCommand::class,
-        \App\Console\Commands\CreateUser::class,
-        \App\Console\Commands\MigrateCheckCommand::class,
-        \App\Console\Commands\InstallPolicy::class,
-        \App\Console\Commands\StoreTransportRule::class,
-        \App\Console\Commands\CleanTransportRulesByDataSource::class,
-        \App\Console\Commands\QueryLdapDirectory::class,
+        \App\Services\Tasks\Commands\TaskCleanCommand::class,
+        \App\Services\User\Commands\CreateUser::class,
+        \App\Services\Server\Commands\MigrateCheckCommand::class,
+        \App\Services\BetterprotectPolicy\Commands\InstallPolicy::class,
+        \App\Services\Transport\Commands\StoreTransportRule::class,
+        \App\Services\Transport\Commands\CleanTransportRulesByDataSource::class,
+        \App\Services\Recipients\Commands\QueryLdapDirectory::class,
     ];
 
     /**
@@ -30,7 +32,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
+        $schedule->job(GetPostfixQueue::class)->everyMinute();
+        $schedule->job(ServerMonitoring::class)->everyMinute();
+        $schedule->command('task:clean')->everyMinute();
     }
 
     /**
@@ -41,7 +45,5 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
-        require base_path('routes/console.php');
     }
 }

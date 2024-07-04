@@ -17,3 +17,8 @@ yarn-error.log
 /public/css/*
 /public/js/*
 /public/mix-manifest.json
+ssh.key
+opensearch/config.yml
+opensearch/internal_users.yml
+coverage
+.phpunit.cache

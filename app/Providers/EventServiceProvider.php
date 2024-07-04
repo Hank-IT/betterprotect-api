@@ -2,9 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -14,17 +11,21 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $listen = [];
-
-    /**
-     * Register any events for your application.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        parent::boot();
-
-        //
-    }
+    protected $listen = [
+        \App\Services\Tasks\Events\TaskStarted::class => [
+            \App\Services\Tasks\Listeners\TransitionTaskToStarted::class,
+        ],
+        \App\Services\Tasks\Events\TaskCreated::class => [
+            \App\Services\Tasks\Listeners\CreateTask::class,
+        ],
+        \App\Services\Tasks\Events\TaskFailed::class => [
+            \App\Services\Tasks\Listeners\TransitionTaskToFailed::class,
+        ],
+        \App\Services\Tasks\Events\TaskFinished::class => [
+            \App\Services\Tasks\Listeners\TransitionTaskToFinished::class,
+        ],
+        \App\Services\Tasks\Events\TaskProgress::class => [
+            \App\Services\Tasks\Listeners\CreateProgress::class,
+        ],
+    ];
 }

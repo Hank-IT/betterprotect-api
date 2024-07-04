@@ -66,14 +66,20 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'driver' => 'ldap',
+            'model' => LdapRecord\Models\ActiveDirectory\User::class,
+            'rules' => [
+                App\Services\Authentication\Ldap\Rules\OnlyConfiguredGroupMembers::class,
+            ],
+            'database' => [
+                'model' => App\Services\Authentication\Models\User::class,
+                'sync_passwords' => false,
+                'sync_attributes' => [
+                    'username' => 'samaccountname',
+                    'email' => 'mail',
+                ],
+            ],
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -98,20 +104,4 @@ return [
             'expire' => 60,
         ],
     ],
-
-
-    'ldap_schemas' => [
-        'active_directory' => [
-            'name' => 'Active Directory',
-            'class' => \Adldap\Schemas\ActiveDirectory::class
-        ],
-        'openldap' => [
-            'name' => 'OpenLdap',
-            'class' =>  \Adldap\Schemas\OpenLDAP::class,
-        ],
-        'freeipa' => [
-            'name' => 'FreeIPA',
-            'class' => \Adldap\Schemas\FreeIPA::class,
-        ]
-    ]
 ];
