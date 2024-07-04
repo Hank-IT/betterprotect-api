@@ -19,6 +19,7 @@ class PostfixMailRecipientResource extends JsonResource
             'delay_in_qmgr' => $this->getDelayInQmgr(),
             'delay_conn_setup' => $this->getDelayConnSetup(),
             'delay_transmission' => $this->getDelayTransmission(),
+            'delay_before_qmgr' => $this->getDelayBeforeQmgr(),
             'delay' => $this->getDelay(),
             'status' => $this->getStatus(),
             'smtp_response' => $this->getSmtpResponse(),

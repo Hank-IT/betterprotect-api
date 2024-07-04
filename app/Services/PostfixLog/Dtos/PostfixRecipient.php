@@ -41,6 +41,11 @@ class PostfixRecipient
         return $this->data['postfix_delay_in_qmgr'] ?? null;
     }
 
+    public function getDelayBeforeQmgr():? string
+    {
+        return $this->data['postfix_delay_before_qmgr'] ?? null;
+    }
+
     public function getDelayConnSetup(): ?string
     {
         return $this->data['postfix_delay_conn_setup'] ?? null;
