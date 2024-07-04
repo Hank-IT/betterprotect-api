@@ -7,7 +7,7 @@ use App\Services\Server\dtos\DatabaseDetails;
 
 class DatabaseFactory
 {
-    public function make(string $name, DatabaseDetails $databaseDetails)
+    public function make(string $name, DatabaseDetails $databaseDetails): Database
     {
         return new Database($name, $databaseDetails);
     }

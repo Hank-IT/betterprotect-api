@@ -25,6 +25,8 @@ use App\Http\Controllers\API\UserRoleController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Logging\RawLogController;
+use App\Http\Controllers\API\PostfixQueueRefreshController;
+use App\Http\Controllers\API\Server\ServerSyslogController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Broadcast::routes();
@@ -37,12 +39,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/v1/servers/{server}', [ServerController::class, 'update'])->name('api.v1.server.update')->middleware('role:administrator');
     Route::delete('/v1/servers/{server}', [ServerController::class, 'destroy'])->name('api.v1.server.destroy')->middleware('role:administrator');
     Route::get('/v1/servers/{server}/state', ServerStateController::class)->name('api.v1.server.state')->middleware('role:readonly');
-
-    Route::get('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'index'])->name('api.v1.server.postfix-queue.index')->middleware('role:readonly');
-    Route::post('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'store'])->name('api.v1.server.postfix-queue.flush')->middleware('role:editor');
-    Route::delete('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'destroy'])->name('api.v1.server.postfix-queue.destroy')->middleware('role:editor');
+    Route::get('/v1/servers/{server}/log', ServerSyslogController::class)->name('api.v1.server.log')->middleware('role:readonly');
 
     Route::get('/v1/servers/{server}/postfix-queue/count', PostfixQueueCountController::class)->name('api.v1.server.postfix-queue.count')->middleware('role:readonly');
+
+    Route::get('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'index'])->name('api.v1.server.postfix-queue.index')->middleware('role:readonly');
+    Route::get('/v1/servers/{server}/postfix-queue/{queueId}', [PostfixQueueController::class, 'show'])->name('api.v1.server.postfix-queue.]')->middleware('role:readonly');
+    Route::post('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'store'])->name('api.v1.server.postfix-queue.flush')->middleware('role:editor');
+    Route::delete('/v1/servers/{server}/postfix-queue', [PostfixQueueController::class, 'destroy'])->name('api.v1.server.postfix-queue.destroy')->middleware('role:editor');
+    Route::post('/v1/servers/{server}/postfix-queue/refresh', PostfixQueueRefreshController::class)->name('api.v1.server.postfix-queue.refresh')->middleware('role:editor');
 
     Route::get('/server/{server}/schema', [ServerSchemaController::class, 'show'])->name('api.v1.server.schema.check')->middleware('role:readonly');
     Route::post('/server/{server}/schema', [ServerSchemaController::class, 'store'])->name('api.v1.server.schema.migrate')->middleware('role:editor');

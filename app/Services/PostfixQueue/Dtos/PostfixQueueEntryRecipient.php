@@ -6,7 +6,7 @@ class PostfixQueueEntryRecipient
 {
     public function __construct(
         protected string $address,
-        protected string $delayReason,
+        protected ?string $delayReason,
     ) {}
 
     public function getAddress(): string
@@ -14,7 +14,7 @@ class PostfixQueueEntryRecipient
         return $this->address;
     }
 
-    public function getDelayReason(): string
+    public function getDelayReason(): ?string
     {
         return $this->delayReason;
     }
