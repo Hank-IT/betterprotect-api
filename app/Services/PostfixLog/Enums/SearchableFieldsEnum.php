@@ -16,6 +16,7 @@ enum SearchableFieldsEnum: string
     case POSTFIX_TO = 'postfix_to';
 
     case POSTFIX_HEADERS = 'postfix_headers';
+    case POSTFIX_STATUS = 'postfix_status';
 
     public function getFields(): array
     {
@@ -28,6 +29,7 @@ enum SearchableFieldsEnum: string
             SearchableFieldsEnum::POSTFIX_FROM => ['postfix_from'],
             SearchableFieldsEnum::POSTFIX_TO => ['postfix_to', 'rcpt.postfix_to'],
             SearchableFieldsEnum::POSTFIX_HEADERS => ['postfix_headers.value'],
+            SearchableFieldsEnum::POSTFIX_STATUS => ['rcpt.postfix_status', 'postfix_action', 'amavis_action'],
         };
     }
 }

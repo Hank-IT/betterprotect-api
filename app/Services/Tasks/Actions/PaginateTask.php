@@ -15,6 +15,7 @@ class PaginateTask
                     $query->orderByDesc('created_at');
                 }
             ])
-            ->orderByDesc('started_at')->paginate($pageSize, ['*'], $pageNumber);
+            ->orderByDesc('created_at')
+            ->paginate($pageSize, ['*'], '', $pageNumber);
     }
 }
