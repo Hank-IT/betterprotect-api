@@ -12,7 +12,7 @@ class PaginateTask
         return Task::query()
             ->with([
                 'taskProgresses' => function ($query) {
-                    $query->orderBy('id');
+                    $query->orderByDesc('id');
                 }
             ])
             ->orderByDesc('created_at')
