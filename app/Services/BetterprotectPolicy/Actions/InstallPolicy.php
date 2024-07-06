@@ -61,19 +61,29 @@ class InstallPolicy
             return;
         }
 
-        foreach ($this->betterprotectPolicy->get() as $dto) {
-            TaskProgress::dispatch($uniqueTaskId,  'install-policy', $dto->getDescription());
+        try {
+            foreach ($this->betterprotectPolicy->get() as $dto) {
+                TaskProgress::dispatch($uniqueTaskId,  'install-policy', $dto->getDescription());
 
-            $this->insert(
-                $database->getConnection(),
-                $dto->getTable(),
-                $dto->getDataRetriever()->execute(),
+                $this->insert(
+                    $database->getConnection(),
+                    $dto->getTable(),
+                    $dto->getDataRetriever()->execute(),
+                );
+            }
+
+            $server->last_policy_install = Carbon::now();
+
+            $server->save();
+        } catch(Exception $exception) {
+            TaskFailed::dispatch(
+                $uniqueTaskId,
+                'install-policy',
+                sprintf('Failed to install the policy on server %s. Message: %s', $server->hostname, $exception->getMessage()),
+                Carbon::now(),
             );
+            return;
         }
-
-        $server->last_policy_install = Carbon::now();
-
-        $server->save();
 
         TaskFinished::dispatch($uniqueTaskId, 'install-policy', sprintf('Policy successfully installed on %s', $server->hostname), Carbon::now());
     }
