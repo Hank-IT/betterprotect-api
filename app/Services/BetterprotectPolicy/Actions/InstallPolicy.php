@@ -67,7 +67,7 @@ class InstallPolicy
             $this->insert(
                 $database->getConnection(),
                 $dto->getTable(),
-                $dto->getDataRetriever()->get(),
+                $dto->getDataRetriever()->execute(),
             );
         }
 

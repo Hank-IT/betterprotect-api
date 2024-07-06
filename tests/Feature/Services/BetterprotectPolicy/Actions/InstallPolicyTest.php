@@ -40,7 +40,7 @@ class InstallPolicyTest extends TestCase
         $description = fake()->text;
 
         $dataRetrieverMock = Mockery::mock(BetterprotectPolicyDataRetriever::class, function(MockInterface $mock) use($data) {
-            $mock->shouldReceive('get')->once()->andReturn($data);
+            $mock->shouldReceive('execute')->once()->andReturn($data);
         });
 
         $policyDtoMock = Mockery::mock(BetterprotectPolicyDto::class, function(MockInterface $mock) use($dataRetrieverMock, $table, $description) {
