@@ -14,7 +14,7 @@ class TransitionTaskToFinished
 
         $task->update([
             'ended_at' => $event->endedAt,
-            'status' => $task->status,
+            'status' => $event->status,
         ]);
 
         TaskProgress::dispatch(
