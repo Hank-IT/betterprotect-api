@@ -13,7 +13,7 @@ class ProcessLdapEntityAsRecipient
     {
         $emails = [];
 
-        foreach ($ldapEntity->getFirstAttribute('proxyaddresses') as $proxyAddress) {
+        foreach ($ldapEntity->getAttribute('proxyaddresses') ?? [] as $proxyAddress) {
             $email = $this->sanitizeLdapEmail->execute($proxyAddress, $ignoredDomains);
 
             if (empty($email)) {
