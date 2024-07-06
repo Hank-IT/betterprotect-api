@@ -90,8 +90,6 @@ class InstallPolicy
 
     protected function insert(ConnectionInterface $connection, string $table, array $data): void
     {
-        $connection->beginTransaction();
-
         $connection->getPdo()->exec(sprintf('lock tables %s write', $table));
 
         $connection->table($table)->truncate();
@@ -99,7 +97,5 @@ class InstallPolicy
         $connection->table($table)->insert($data);
 
         $connection->getPdo()->exec('unlock tables');
-
-        $connection->commit();
     }
 }
