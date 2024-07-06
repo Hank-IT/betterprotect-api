@@ -76,7 +76,6 @@ return [
                 'sync_passwords' => false,
                 'sync_attributes' => [
                     'username' => 'samaccountname',
-                    'email' => 'mail',
                 ],
             ],
         ],

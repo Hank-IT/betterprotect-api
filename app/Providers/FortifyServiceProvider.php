@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Services\Authentication\Fortify\FailedTwoFactorLoginResponse;
 use App\Services\Authentication\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -20,14 +21,17 @@ class FortifyServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Fortify::authenticateUsing(function (Request $request) {
-            $user = User::where('username', $request->input('username'))->first();
+        Fortify::authenticateUsing(function ($request) {
+            $validated = Auth::validate([
+                'samaccountname' => $request->input('username'),
+                'password' => $request->input('password'),
+                'fallback' => [
+                    'username' => $request->input('username'),
+                    'password' => $request->input('password'),
+                ],
+            ]);
 
-            if ($user &&
-                Hash::check($request->input('password'), $user->password)
-            ) {
-                return $user;
-            }
+            return $validated ? Auth::getLastAttempted() : null;
         });
 
         $this->app->bind(FailedTwoFactorLoginResponseContract::class, FailedTwoFactorLoginResponse::class);
